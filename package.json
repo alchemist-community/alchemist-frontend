@@ -1,0 +1,52 @@
+{
+  "name": "ln2tbtc-client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ethersproject/abstract-signer": "^5.0.14",
+    "@node-lightning/invoice": "^0.11.0",
+    "@uniswap/v2-core": "^1.0.1",
+    "bn.js": "^5.1.3",
+    "ethers": "^5.0.32",
+    "qrcode": "^1.4.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.3",
+    "web3": "^1.2.11"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "format": "prettier --write \"src/**/*.ts*(x)\"",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "typescript": "^3.9.7",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^12.0.0",
+    "@types/qrcode": "^1.3.5",
+    "@types/react": "^16.9.48",
+    "@types/react-dom": "^16.9.0",
+    "prettier": "^2.1.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^10.4.9",
+    "@testing-library/user-event": "^7.1.2",
+    "jest-environment-jsdom-sixteen": "^1.0.3"
+  }
+}

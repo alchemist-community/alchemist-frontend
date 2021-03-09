@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap');
+
+#root {
+  height: 100%;
+  font-family: 'Work Sans', sans-serif;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
