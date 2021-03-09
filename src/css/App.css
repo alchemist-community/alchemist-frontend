@@ -466,6 +466,7 @@ corresponds to the arrow we want to display */
 }
 
 .modal a.close-modal {
+  cursor: pointer;
   position: absolute;
   top: -12.5px;
   right: -12.5px;
@@ -1222,10 +1223,6 @@ img {
   border-radius: 20px;
   -webkit-box-shadow: none;
   box-shadow: none;
-}
-
-.modal a.close-modal {
-  display: none;
 }
 
 /* ------- КНОПКИ ------- */

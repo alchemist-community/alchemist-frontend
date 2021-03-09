@@ -7,6 +7,7 @@ interface ModalProps {
   title: string;
   buttonText: string;
   onButtonClick: () => void;
+  onCloseClick?: () => void;
   type?: "normal" | "error" | "pending" | "success";
 }
 
@@ -49,7 +50,7 @@ const Modal: React.FC<ModalProps> = (props) => {
             </button>
           </div>
         </div>
-        <a href="#close-modal" rel="modal:close" className="close-modal ">
+        <a onClick={props.onCloseClick} rel="modal:close" className="close-modal ">
           Close
         </a>
       </div>

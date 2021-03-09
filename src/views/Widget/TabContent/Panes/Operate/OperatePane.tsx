@@ -87,6 +87,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 isOpen={modalIsOpen}
                 buttonText={"Withdraw"}
                 onButtonClick={withdraw}
+                onCloseClick={() => setModalIsOpen(false)}
               >
                 <div style={{ marginBottom: "2rem" }}>
                   Input the amount to withdraw
@@ -135,40 +136,6 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   </div>
                 );
               })}
-              {/* {crucibles.map(crucible=>
-                <div
-                key={crucible['id']}
-                >
-                <div className="form-group">
-                <Input
-                  disabled= {true}
-                  value={crucible['id']}
-                  name="id"
-                  label="ID "
-                  hint={
-                    <>
-                      ID of the NFT
-                    </>
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <Input
-                  disabled= {true}
-                  value={crucible['balance']}
-                  name="balance"
-                  type= "number"
-                  label="Amount "
-                  hint={
-                    <>
-                      Amount of LP tokens on it
-                    </>
-                  }
-                />
-              </div>
-              <hr></hr>
-                </div>)
-              } */}
               {isConnected ? (
                 <></>
               ) : (
