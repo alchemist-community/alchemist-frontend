@@ -6,6 +6,7 @@ import Notification from "../../../common/Notification";
 import { toMaxDecimalsRound } from "../../../utils";
 import Web3Context from "../../../../../Web3Context";
 import { getOwnedCrucibles } from "../../../../../contracts/getOwnedCrucibles";
+import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
 import Modal from "../../../../Modal";
 
 interface OperatePaneProps {
@@ -20,6 +21,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
   const [amount2Withdraw, setAmount2Withdraw] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedCrucible, setSelectedCrucible] = useState('');
 
   const [formValues, setFormValues] = useState({
     lnBalance: "",
@@ -69,7 +71,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   };
 
   //todo
-  const withdraw = () => {
+  const withdraw = async () => {
+    await unstakeAndClaim(selectedCrucible, amount2Withdraw);
     setModalIsOpen(false);
   };
 
@@ -94,6 +97,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     name="balance"
                     type="number"
                     label="Amount "
+                    placeholder="0.0"
                     onChange={formatAmount2Withdraw}
                   />
                 </div>
@@ -122,7 +126,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                           padding: "0rem 1rem",
                           minWidth: "0rem",
                         }}
-                        onClick={() => setModalIsOpen(true)}
+                        onClick={() => {
+                          setSelectedCrucible(crucible['id'])
+                          setModalIsOpen(true)
+                        }}
                       />
                     </span>
                   </div>

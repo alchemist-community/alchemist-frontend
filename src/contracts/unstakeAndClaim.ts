@@ -1,52 +1,34 @@
-/*
-task('unstake-and-claim', 'Unstake lp tokens and claim reward')
-  .addParam('crucible', 'Crucible vault contract')
-  .addParam('aludel', 'Aludel reward contract')
-  .addParam('recipient', 'Address to receive stake and reward')
-  .addParam('amount', 'Amount of staking tokens with decimals')
-  .addFlag('private', 'Use taichi network to avoid frontrunners')
-  .setAction(async (args, { ethers, run, network }) => {
-*/
+import IUniswapV2ERC20 from "@uniswap/v2-core/build/IUniswapV2ERC20.json";
+import { ethers } from "ethers";
+import { parseUnits } from "ethers/lib/utils";
+import { signPermission } from "./utils";
+import aludelAbi from "./aludelAbi";
+import Crucible from "./Crucible.json";
 
-/*
-export async function unstakeAndClaim(){
+export async function unstakeAndClaim(crucibleAddress:string, rawAmount:string){
+  const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+  const signer = provider.getSigner();
+
+  const walletAddress = await signer.getAddress();
+
     const args = {
-        crucible: '',
-        aludel: '',
-        recipient: '',
-        amount: ''
+        crucible: crucibleAddress,
+        aludel: '0xf0D415189949d913264A454F57f4279ad66cB24d',
+        recipient:walletAddress,
+        amount: rawAmount
     }
-    // log config
-
-    console.log('Network')
-    console.log('  ', network.name)
-    console.log('Task Args')
-    console.log(args)
-
-    // compile
-
-    await run('compile')
-
-    // get signer
-
-    let signer = (await ethers.getSigners())[0]
-    console.log('Signer')
-    console.log('  at', signer.address)
-    console.log('  ETH', formatEther(await signer.getBalance()))
-    const signerWallet = Wallet.fromMnemonic(process.env.DEV_MNEMONIC || '')
-    expect(signer.address).to.be.eq(signerWallet.address)
 
     // fetch contracts
 
-    const aludel = await ethers.getContractAt('Aludel', args.aludel, signer)
-    const stakingToken = await ethers.getContractAt(
-      IUniswapV2ERC20.abi,
+    const aludel = new ethers.Contract(args.aludel, aludelAbi, signer)
+    const stakingToken = new ethers.Contract(
       (await aludel.getAludelData()).stakingToken,
+      IUniswapV2ERC20.abi,
       signer,
     )
-    const crucible = await ethers.getContractAt(
-      'Crucible',
+    const crucible = new ethers.Contract(
       args.crucible,
+      Crucible.abi,
       signer,
     )
 
@@ -58,7 +40,9 @@ export async function unstakeAndClaim(){
 
     // validate balances
 
-    expect(await stakingToken.balanceOf(crucible.address)).to.be.gte(amount)
+    if(await stakingToken.balanceOf(crucible.address) < amount){
+      throw new Error("stop being poor")
+    }
 
     // craft permission
 
@@ -67,7 +51,7 @@ export async function unstakeAndClaim(){
     const permission = await signPermission(
       'Unlock',
       crucible,
-      signerWallet,
+      signer,
       aludel.address,
       stakingToken.address,
       amount,
@@ -83,32 +67,8 @@ export async function unstakeAndClaim(){
       permission,
     )
 
-    if (args.private) {
-      const gasPrice = await signer.getGasPrice()
-      const gasLimit = await signer.estimateGas(populatedTx)
-      const nonce = await signer.getTransactionCount()
-      const signerWallet = Wallet.fromMnemonic(
-        process.env.DEV_MNEMONIC || '',
-      ).connect(ethers.provider)
-
-      const signedTx = await signerWallet.signTransaction({
-        ...populatedTx,
-        gasPrice,
-        gasLimit,
-        nonce,
-      })
-
-      const taichi = new ethers.providers.JsonRpcProvider(
-        'https://api.taichi.network:10001/rpc/private',
-        'mainnet',
-      )
-
-      const unstakeTx = await taichi.sendTransaction(signedTx)
-      console.log(`  in https://taichi.network/tx/${unstakeTx.hash}`)
-    } else {
       const unstakeTx = await signer.sendTransaction(populatedTx)
       console.log('  in', unstakeTx.hash)
-    }
 
     console.log('Withdraw from crucible')
 
@@ -120,6 +80,3 @@ export async function unstakeAndClaim(){
 
     console.log('  in', withdrawTx?.hash)
   }
-  */
-
-export {};
