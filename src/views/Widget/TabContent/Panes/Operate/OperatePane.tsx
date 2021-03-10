@@ -1,12 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
-import ICONS from "../../../../../img/icons.svg";
-import ActionButton from "../../../common/ActionButton";
-import Input from "../../../common/Input";
-import Notification from "../../../common/Notification";
 import { toMaxDecimalsRound } from "../../../utils";
 import Web3Context from "../../../../../Web3Context";
 import { getOwnedCrucibles } from "../../../../../contracts/getOwnedCrucibles";
-import Modal from "../../../../Modal";
+import { Button } from "@chakra-ui/button";
 
 interface OperatePaneProps {
   handleInputChange?: (form: { [key: string]: string | number }) => void;
@@ -73,13 +69,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     setModalIsOpen(false);
   };
 
+  // todo - restyle, check Mint/OperatePane
   return (
-    <div className="tab-pane is_active">
-      <div className="tab-pane__content">
-        <div className="box-operation__content">
-          <div className="box-operation__operate operate">
-            <div className="operate__form">
-              <Modal
+    <div>
+      {/* <Modal
                 title={"Withdraw"}
                 isOpen={modalIsOpen}
                 buttonText={"Withdraw"}
@@ -97,38 +90,29 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     onChange={formatAmount2Withdraw}
                   />
                 </div>
-              </Modal>
-              {crucibles.map((crucible) => {
-                return (
-                  <div className="crucible-item">
-                    <span className="crucible-attribute">
-                      <span className="crucible-label">Balance:</span>{" "}
-                      {crucible["balance"]}
-                    </span>
-                    <span
-                      className="crucible-attribute"
-                      style={{ flexGrow: 1 }}
-                    >
-                      <span className="crucible-label">ID:</span>{" "}
-                      {crucible["id"]}
-                    </span>
-                    <span className="">
-                      <ActionButton
-                        text="Withdraw"
-                        type="primary"
-                        className="crucible-withdraw"
-                        buttonStyle={{
-                          fontSize: "1rem",
-                          padding: "0rem 1rem",
-                          minWidth: "0rem",
-                        }}
-                        onClick={() => setModalIsOpen(true)}
-                      />
-                    </span>
-                  </div>
-                );
-              })}
-              {/* {crucibles.map(crucible=>
+              </Modal> */}
+      {crucibles.map((crucible) => {
+        return (
+          <div className="crucible-item">
+            <span className="crucible-attribute">
+              <span className="crucible-label">Balance:</span>{" "}
+              {crucible["balance"]}
+            </span>
+            <span className="crucible-attribute" style={{ flexGrow: 1 }}>
+              <span className="crucible-label">ID:</span> {crucible["id"]}
+            </span>
+            <span className="">
+              <Button
+                colorScheme="primary"
+                onClick={() => setModalIsOpen(true)}
+              >
+                Withdraw
+              </Button>
+            </span>
+          </div>
+        );
+      })}
+      {/* {crucibles.map(crucible=>
                 <div
                 key={crucible['id']}
                 >
@@ -162,20 +146,21 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               <hr></hr>
                 </div>)
               } */}
-              {isConnected ? (
-                <></>
-              ) : (
-                <ActionButton
-                  text="Connect wallet"
-                  className="operate__button"
-                  type="secondary"
-                  onClick={connectWallet}
-                />
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      {isConnected ? (
+        <></>
+      ) : (
+        <Button
+          size="lg"
+          isFullWidth
+          color="white"
+          background="green.300"
+          _focus={{ boxShadow: "none" }}
+          _hover={{ background: "green.400" }}
+          onClick={() => connectWallet()}
+        >
+          Connect Wallet
+        </Button>
+      )}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import OperatePane from "./OperatePane";
 import Web3Context from "../../../../../Web3Context";
 

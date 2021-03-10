@@ -1,25 +1,19 @@
+import { Box, Heading, Text } from "@chakra-ui/layout";
 import React from "react";
 import Widget from "../Widget";
 
-interface BodyProps {}
-
-const Body: React.FC<BodyProps> = () => {
+const Body: React.FC = () => {
   return (
-    <div className="wrapper-content">
-      <div className="container">
-        <div className="content">
-          <div className="heading">
-            <div className="heading__title">
-              <h1>Alchemist</h1>
-            </div>
-            <div className="heading__text">
-              The only plan is there is no plan ⚗️
-            </div>
-          </div>
-          <Widget />
-        </div>
-      </div>
-    </div>
+    <Box textAlign="center" mt={[8, 16, 32]}>
+      <Heading size="lg" mb={2}>Alchemist</Heading>
+      <Text fontSize="lg" color="gray.500" mb={16}>
+        The only plan is there is no plan{" "}
+        <span role="img" aria-label="alchemist logo">
+          ⚗️
+        </span>
+      </Text>
+      <Widget />
+    </Box>
   );
 };
 
