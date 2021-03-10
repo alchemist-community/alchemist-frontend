@@ -49,7 +49,7 @@ export default function UserAddress() {
             )}
           </HStack>
         </Box>
-      ) : null}
+      ) : <></>}
     </CSSTransition>
   );
 }
