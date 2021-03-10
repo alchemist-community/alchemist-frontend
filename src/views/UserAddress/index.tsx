@@ -1,17 +1,12 @@
 import React, { useContext } from "react";
 import Web3Context from "../../Web3Context";
-import {
-  Text,
-  Button,
-  Box,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Text, Button, Box, useColorModeValue } from "@chakra-ui/react";
+import { CancelButton } from "../../components";
 
 export default function UserAddress() {
-  const { wallet, address, onboard } = useContext(Web3Context);
+  const { wallet, address, onboard, readyToTransact } = useContext(Web3Context);
 
-  const handleClick = () =>
-    !wallet.provider ? onboard.walletSelect() : onboard.walletReset();
+  const handleClick = () => (!wallet.provider ? readyToTransact() : null);
 
   const buttonBgColor = useColorModeValue("white", "gray.700");
 
@@ -28,11 +23,13 @@ export default function UserAddress() {
           {address ? "Mainnet:" : "Connect Wallet"}
         </Text>
         {address && (
-          <Text fontSize="sm" mr={4}>
-            {address.substring(0, 6) +
-              "..." +
-              address.substring(address.length - 4)}
-          </Text>
+          <>
+            <Text fontSize="sm" mr={4}>
+              {address.substring(0, 6) +
+                "..." +
+                address.substring(address.length - 4)}
+            </Text>
+          </>
         )}
         <Box
           background={address ? "green.400" : "gray.400"}
@@ -40,6 +37,14 @@ export default function UserAddress() {
           width={3}
           height={3}
         />
+        {wallet.provider && (
+          <CancelButton
+            margin={{ marginLeft: "8px" }}
+            width="14px"
+            height="14px"
+            handleClick={() => onboard.walletReset()}
+          />
+        )}
       </Button>
     </>
   );

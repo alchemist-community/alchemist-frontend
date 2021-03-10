@@ -29,7 +29,7 @@ interface OperatePaneProps {
 const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const { handleInputChange = () => null, isConnected } = props;
 
-  const { onboard, signer, provider, monitorTx } = useContext(Web3Context);
+  const { readyToTransact, signer, provider, monitorTx } = useContext(Web3Context);
 
   const [amount2Withdraw, setAmount2Withdraw] = useState("");
   const [sendAddress, setSendAddress] = useState("");
@@ -99,7 +99,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     setModalIsOpen(false);
   };
 
-  const cruciblesCardBg = useColorModeValue('white', 'gray.600');
+  const cruciblesCardBg = useColorModeValue("white", "gray.600");
 
   const sendModal = (
     <Modal isOpen onClose={() => setModalIsOpen(false)}>
@@ -201,7 +201,11 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             flexDirection={"column"}
           >
             <Box mb={4}>
-              <Text fontSize="lg" textAlign={["center", "center", "left"]}>
+              <Text
+                as="div"
+                fontSize="lg"
+                textAlign={["center", "center", "left"]}
+              >
                 <Flex justifyContent="space-between">
                   <HStack>
                     <Box mr={2}>
@@ -288,7 +292,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           background="green.300"
           _focus={{ boxShadow: "none" }}
           _hover={{ background: "green.400" }}
-          onClick={() => onboard.walletSelect()}
+          onClick={() => readyToTransact()}
         >
           Connect Wallet
         </Button>
