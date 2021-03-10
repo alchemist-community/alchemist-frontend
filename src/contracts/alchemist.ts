@@ -86,15 +86,19 @@ export async function mintAndLock(
   );
 
   console.log("Mint, Deposit, Stake");
-
-  const tx = await transmuter.mintCruciblePermitAndStake(
-    aludel.address,
-    crucibleFactory.address,
-    walletAddress,
-    salt,
-    permit,
-    permission
-  );
-  console.log("  in", tx.hash);
-  return tx.hash;
+  try {
+    const tx = await transmuter.mintCruciblePermitAndStake(
+      aludel.address,
+      crucibleFactory.address,
+      walletAddress,
+      salt,
+      permit,
+      permission
+    );
+    console.log("  in", tx.hash);
+    return tx.hash;
+  } catch (e) {
+    alert(e)
+    throw e
+  }
 }
