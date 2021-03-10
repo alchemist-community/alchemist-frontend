@@ -3,6 +3,7 @@ import { toMaxDecimalsRound } from "../../../utils";
 import Web3Context from "../../../../../Web3Context";
 import { getOwnedCrucibles } from "../../../../../contracts/getOwnedCrucibles";
 import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
+import { sendNFT } from "../../../../../contracts/sendNFT";
 import { withdraw } from "../../../../../contracts/withdraw";
 import { Button, ButtonGroup } from "@chakra-ui/button";
 import { Box, Flex, Text } from "@chakra-ui/layout";
@@ -29,8 +30,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const { onboard, signer, provider, monitorTx } = useContext(Web3Context);
 
   const [amount2Withdraw, setAmount2Withdraw] = useState("");
+  const [sendAddress, setSendAddress] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalOperation, setModalOperation] = useState<"withdraw" | "unstake">(
+  const [modalOperation, setModalOperation] = useState<"withdraw" | "unstake" | 'send'>(
     "unstake"
   );
   const [selectedCrucible, setSelectedCrucible] = useState("");
@@ -186,6 +188,19 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 }}
               >
                 Withdraw
+              </Button>
+              <Button
+                color="white"
+                background="green.300"
+                _focus={{ boxShadow: "none" }}
+                _hover={{ background: "green.400" }}
+                onClick={() => {
+                  setModalOperation("send");
+                  setSelectedCrucible(crucible["id"]);
+                  setModalIsOpen(true);
+                }}
+              >
+                Send
               </Button>
             </ButtonGroup>
           </Flex>
