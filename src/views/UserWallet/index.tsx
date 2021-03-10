@@ -12,8 +12,10 @@ export default function UserAddress() {
 
   useEffect(() => {
     (async () => {
-      const balances = await getTokenBalances(signer);
-      setTokenBalance(balances);
+      if(signer){
+        const balances = await getTokenBalances(signer);
+        setTokenBalance(balances);
+      }
     })();
   }, [signer]);
 
