@@ -43,7 +43,7 @@ export default function Footer() {
                   <a
                     data-id="docs"
                     rel="noopener noreferrer"
-                    href="https://discord.alchemist.wtf"
+                    href="http://discord.alchemist.wtf/"
                     target="_blank"
                     className="menu__link"
                   >
