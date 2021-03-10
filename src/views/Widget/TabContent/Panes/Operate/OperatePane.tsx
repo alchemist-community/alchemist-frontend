@@ -37,6 +37,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     [] as {
       id: string;
       balance: string;
+      lockedBalance:string
     }[]
   );
   useEffect(() => {
@@ -114,7 +115,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   <div className="crucible-item">
                     <span className="crucible-attribute">
                       <span className="crucible-label">Balance:</span>{" "}
-                      {crucible["balance"]}
+                      {`${crucible["balance"]} (${crucible['lockedBalance']} locked)`}
                     </span>
                     <span
                       className="crucible-attribute"
