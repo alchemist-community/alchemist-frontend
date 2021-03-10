@@ -2,9 +2,13 @@ import React, { useContext, useState, useEffect } from "react";
 import Web3Context from "../../Web3Context";
 import { getTokenBalances } from "../../contracts/getTokenBalances";
 import { toMaxDecimalsRound } from "../Widget/utils";
+import { Spinner, useColorModeValue } from "@chakra-ui/react";
+import { CSSTransition } from "react-transition-group";
+import { Badge, Box, HStack, Text } from "@chakra-ui/layout";
 
 export default function UserAddress() {
-  const { signer, address } = useContext(Web3Context);
+  const [inProp, setInProp] = useState(false);
+  const { signer, provider } = useContext(Web3Context);
   const [tokenBalance, setTokenBalance] = useState<{
     alchemist: string;
     lp: string;
@@ -17,38 +21,33 @@ export default function UserAddress() {
     })();
   }, [signer]);
 
+  useEffect(() => {
+    setInProp(true);
+  }, []);
+
+  const userWalletBgColor = useColorModeValue("white", "gray.600");
+  const userWalletTextColor = useColorModeValue("gray.500", "gray.400");
+
   return (
-    <>
-      <div
-        style={{
-          flexDirection: "column",
-          height: "auto",
-          width: "100%",
-          minWidth: "0px",
-          marginTop: "1rem",
-        }}
-        className={`header__connect connect connect--${
-          address ? "success" : "no"
-        }`}
-      >
-        <div style={{ display: "block", marginBottom: "0.3125rem" }}>
-          My wallet
-        </div>
-        {tokenBalance ? (
-          <>
-            <div style={{ display: "block", width: "100%" }}>
-              <span style={{ fontWeight: "bold" }}>Alchemist: </span>
-              <span>{toMaxDecimalsRound(tokenBalance.alchemist, 0.01)} ⚗️</span>
-            </div>
-            <div style={{ display: "block", width: "100%" }}>
-              <span style={{ fontWeight: "bold" }}>LP: </span>
-              <span>{toMaxDecimalsRound(tokenBalance.lp, 0.01)} ⚗️/ETH</span>
-            </div>
-          </>
-        ) : (
-          <span>Loading...</span>
-        )}
-      </div>
-    </>
+    <CSSTransition in={inProp} timeout={1000} classNames="slideDown">
+      {provider ? (
+        <Box py={2} px={2} borderRadius="lg" bg={userWalletBgColor} shadow="xl">
+          <HStack>
+            <Text color={userWalletTextColor}>My wallet:</Text>
+            {!tokenBalance && <Spinner />}
+            {tokenBalance && (
+              <Badge px={2} py={1} borderRadius="md" boxShadow="sm">
+                Alchemist: {toMaxDecimalsRound(tokenBalance.alchemist, 0.01)} ⚗️
+              </Badge>
+            )}
+            {tokenBalance && (
+              <Badge px={2} py={1} borderRadius="md" boxShadow="sm">
+                LP: {toMaxDecimalsRound(tokenBalance.lp, 0.01)} ⚗️
+              </Badge>
+            )}
+          </HStack>
+        </Box>
+      ) : null}
+    </CSSTransition>
   );
 }

@@ -19,7 +19,7 @@ const Body: React.FC = () => {
           ⚗️
         </span>
       </Text>
-      <CSSTransition in={inProp} timeout={1000} classNames="fade">
+      <CSSTransition in={inProp} timeout={1000} classNames="slideUp">
          <Widget />
        </CSSTransition>
     </Box>
