@@ -23,15 +23,17 @@ export async function getOwnedCrucibles(signer: any, provider: any) {
   const crucibles = crucibleEvents.map(async (data) => {
     const id = (data.args!.tokenId as ethers.BigNumber).toHexString();
     const crucible = new ethers.Contract(id, Crucible.abi, signer);
+    const owner = crucibleFactory.ownerOf(id);
     const balance = token.balanceOf(crucible.address).then(formatUnits);
     const lockedBalance = crucible
-      .getBalanceLocked("0xCD6bcca48069f8588780dFA274960F15685aEe0e")
-      .then(formatUnits); // LP token
+      .getBalanceLocked("0xCD6bcca48069f8588780dFA274960F15685aEe0e") // LP token
+      .then(formatUnits);
     return {
       id,
       balance: await balance,
       lockedBalance: await lockedBalance,
+      owner: await owner
     };
   });
-  return await Promise.all(crucibles);
+  return (await Promise.all(crucibles)).filter(crucible=>crucible.owner===walletAddress);
 }
