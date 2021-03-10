@@ -178,8 +178,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   mr={3}
                   onClick={
                     modalOperation === "withdraw"
-                      ? () => withdrawTokens
-                      : () => unstake
+                      ? withdrawTokens
+                      : unstake
                   }
                 >
                   {modalOperation === "withdraw" ? "Withdraw" : "Unstake"}
