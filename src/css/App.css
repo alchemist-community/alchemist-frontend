@@ -341,7 +341,8 @@ corresponds to the arrow we want to display */
 
 /* common rules between .tooltipster-arrow-background and .tooltipster-arrow-border */
 
-.tooltipster-sidetip .tooltipster-arrow-background, .tooltipster-sidetip .tooltipster-arrow-border {
+.tooltipster-sidetip .tooltipster-arrow-background,
+.tooltipster-sidetip .tooltipster-arrow-border {
   height: 0;
   position: absolute;
   width: 0;
@@ -494,7 +495,7 @@ corresponds to the arrow we want to display */
   height: 20px;
 }
 
-.modal-spinner>div {
+.modal-spinner > div {
   border-radius: 100px;
   background-color: #fff;
   height: 20px;
@@ -521,7 +522,9 @@ corresponds to the arrow we want to display */
 }
 
 @-webkit-keyframes sk-stretchdelay {
-  0%, 40%, 100% {
+  0%,
+  40%,
+  100% {
     -webkit-transform: scaleY(0.5);
   }
   20% {
@@ -530,7 +533,9 @@ corresponds to the arrow we want to display */
 }
 
 @keyframes sk-stretchdelay {
-  0%, 40%, 100% {
+  0%,
+  40%,
+  100% {
     transform: scaleY(0.5);
     -webkit-transform: scaleY(0.5);
   }
@@ -648,7 +653,8 @@ abbr[title] {
  * Add the correct font weight in Chrome, Edge, and Safari.
  */
 
-b, strong {
+b,
+strong {
   font-weight: bolder;
 }
 
@@ -657,7 +663,9 @@ b, strong {
  * 2. Correct the odd `em` font sizing in all browsers.
  */
 
-code, kbd, samp {
+code,
+kbd,
+samp {
   font-family: monospace, monospace;
   /* 1 */
   font-size: 1em;
@@ -677,7 +685,8 @@ small {
  * all browsers.
  */
 
-sub, sup {
+sub,
+sup {
   font-size: 75%;
   line-height: 0;
   position: relative;
@@ -711,7 +720,11 @@ img {
  * 2. Remove the margin in Firefox and Safari.
  */
 
-button, input, optgroup, select, textarea {
+button,
+input,
+optgroup,
+select,
+textarea {
   font-family: inherit;
   /* 1 */
   font-size: 100%;
@@ -727,7 +740,8 @@ button, input, optgroup, select, textarea {
  * 1. Show the overflow in Edge.
  */
 
-button, input {
+button,
+input {
   /* 1 */
   overflow: visible;
 }
@@ -737,7 +751,8 @@ button, input {
  * 1. Remove the inheritance of text transform in Firefox.
  */
 
-button, select {
+button,
+select {
   /* 1 */
   text-transform: none;
 }
@@ -746,7 +761,10 @@ button, select {
  * Correct the inability to style clickable types in iOS and Safari.
  */
 
-button, [type="button"], [type="reset"], [type="submit"] {
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
   -webkit-appearance: button;
 }
 
@@ -754,7 +772,10 @@ button, [type="button"], [type="reset"], [type="submit"] {
  * Remove the inner border and padding in Firefox.
  */
 
-button::-moz-focus-inner, [type="button"]::-moz-focus-inner, [type="reset"]::-moz-focus-inner, [type="submit"]::-moz-focus-inner {
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
   border-style: none;
   padding: 0;
 }
@@ -763,7 +784,10 @@ button::-moz-focus-inner, [type="button"]::-moz-focus-inner, [type="reset"]::-mo
  * Restore the focus styles unset by the previous rule.
  */
 
-button:-moz-focusring, [type="button"]:-moz-focusring, [type="reset"]:-moz-focusring, [type="submit"]:-moz-focusring {
+button:-moz-focusring,
+[type="button"]:-moz-focusring,
+[type="reset"]:-moz-focusring,
+[type="submit"]:-moz-focusring {
   outline: 1px dotted ButtonText;
 }
 
@@ -819,7 +843,8 @@ textarea {
  * 2. Remove the padding in IE 10.
  */
 
-[type="checkbox"], [type="radio"] {
+[type="checkbox"],
+[type="radio"] {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   /* 1 */
@@ -831,7 +856,8 @@ textarea {
  * Correct the cursor style of increment and decrement buttons in Chrome.
  */
 
-[type="number"]::-webkit-inner-spin-button, [type="number"]::-webkit-outer-spin-button {
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
   height: auto;
 }
 
@@ -907,12 +933,15 @@ template {
 
 /* ------- ОБЩИЕ СТИЛИ ------- */
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -924,7 +953,7 @@ body {
   line-height: 1.53333333;
   letter-spacing: -0.430263px;
   color: #233539;
-  background: #F4F8F9;
+  background: #f4f8f9;
 }
 
 h1 {
@@ -953,13 +982,14 @@ button.menu__link {
 }
 
 a {
-  color: #4ADBB4;
+  color: #4adbb4;
   -webkit-transition: 0.25s color ease-in-out;
   -o-transition: 0.25s color ease-in-out;
   transition: 0.25s color ease-in-out;
 }
 
-a:hover, a:focus {
+a:hover,
+a:focus {
   outline: none;
 }
 
@@ -967,7 +997,8 @@ img {
   max-width: 100%;
 }
 
-.row, .row-center {
+.row,
+.row-center {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1054,7 +1085,7 @@ img {
 
 .wrapper-content {
   /* position: relative; */
-  z-index: 1;
+  /* z-index: 1; */
   -webkit-box-flex: 1;
   -ms-flex: 1 0 auto;
   flex: 1 0 auto;
@@ -1071,7 +1102,7 @@ img {
 }
 
 .wrapper-content:before {
-  content: '';
+  content: "";
   display: block;
   height: 100%;
 }
@@ -1110,9 +1141,9 @@ img {
 }
 
 .tooltipster-sidetip .tooltipster-box {
-  background: #FFFFFF;
-  -webkit-box-shadow: 0 2px 24px #D3D9DA;
-  box-shadow: 0 2px 24px #D3D9DA;
+  background: #ffffff;
+  -webkit-box-shadow: 0 2px 24px #d3d9da;
+  box-shadow: 0 2px 24px #d3d9da;
   border: none;
   border-radius: 8px;
 }
@@ -1130,7 +1161,7 @@ img {
 }
 
 .tooltipster-sidetip .tooltipster-content a:hover {
-  color: #4ADBB4;
+  color: #4adbb4;
 }
 
 .tooltipster-sidetip .tooltipster-arrow-background {
@@ -1219,7 +1250,7 @@ img {
 }
 
 .modal {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 20px;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -1270,14 +1301,14 @@ button:focus {
   border-radius: 8px;
   -webkit-box-shadow: none;
   box-shadow: none;
-  background: #4ADBB4;
+  background: #4adbb4;
   -webkit-transition: 0.25s background ease-in-out, 0.25s color ease-in-out;
   -o-transition: 0.25s background ease-in-out, 0.25s color ease-in-out;
   transition: 0.25s background ease-in-out, 0.25s color ease-in-out;
 }
 
 .btn:before {
-  content: '';
+  content: "";
   display: block;
   width: 0;
   height: 37px;
@@ -1289,7 +1320,7 @@ button:focus {
 
 .btn:hover {
   color: #fff;
-  background: #78E4C7;
+  background: #78e4c7;
 }
 
 .btn--full {
@@ -1305,19 +1336,21 @@ button:focus {
 }
 
 .btn--secondary:hover {
-  background: #435E65;
+  background: #435e65;
 }
 
-.btn--disabled, .btn:disabled {
+.btn--disabled,
+.btn:disabled {
   pointer-events: none;
   cursor: default;
-  color: #BDC2C3;
-  background: #F4F8F9;
+  color: #bdc2c3;
+  background: #f4f8f9;
 }
 
-.btn--disabled:hover, .btn:disabled:hover {
-  color: #BDC2C3;
-  background: #F4F8F9;
+.btn--disabled:hover,
+.btn:disabled:hover {
+  color: #bdc2c3;
+  background: #f4f8f9;
 }
 
 .btn--loading {
@@ -1372,14 +1405,14 @@ button:focus {
 .icon-gear {
   width: 18px;
   height: 18px;
-  stroke: #404C58;
+  stroke: #404c58;
   fill: none;
 }
 
 .icon-direction {
   width: 26px;
   height: 26px;
-  stroke: #4ADBB4;
+  stroke: #4adbb4;
   fill: none;
 }
 
@@ -1392,13 +1425,13 @@ button:focus {
 .icon-flash {
   width: 10px;
   height: 15px;
-  fill: #E8A830;
+  fill: #e8a830;
 }
 
 .icon-question {
   width: 6px;
   height: 9px;
-  fill: #49DBB4;
+  fill: #49dbb4;
 }
 
 .icon-code {
@@ -1410,21 +1443,21 @@ button:focus {
 .icon-clock {
   width: 47px;
   height: 47px;
-  stroke: #BDC2C3;
+  stroke: #bdc2c3;
   fill: none;
 }
 
 .icon-success {
   width: 47px;
   height: 47px;
-  stroke: #4ADBB4;
+  stroke: #4adbb4;
   fill: none;
 }
 
 .icon-bored {
   width: 47px;
   height: 47px;
-  stroke: #FF6D4A;
+  stroke: #ff6d4a;
   fill: none;
 }
 
@@ -1458,30 +1491,31 @@ input::-ms-clear {
   appearance: none;
   -webkit-box-shadow: none;
   box-shadow: none;
-  background: #F4F8F9;
+  background: #f4f8f9;
 }
 
 .form-control::-webkit-input-placeholder {
-  color: #BDC2C3;
+  color: #bdc2c3;
 }
 
 .form-control::-moz-placeholder {
-  color: #BDC2C3;
+  color: #bdc2c3;
 }
 
 .form-control:-ms-input-placeholder {
-  color: #BDC2C3;
+  color: #bdc2c3;
 }
 
 .form-control::-ms-input-placeholder {
-  color: #BDC2C3;
+  color: #bdc2c3;
 }
 
 .form-control::placeholder {
-  color: #BDC2C3;
+  color: #bdc2c3;
 }
 
-.form-control:focus, .form-control:required {
+.form-control:focus,
+.form-control:required {
   outline: none;
 }
 
@@ -1563,7 +1597,7 @@ input::-ms-clear {
   text-transform: uppercase;
   line-height: 1.154;
   letter-spacing: -0.373px;
-  color: #BDC2C3;
+  color: #bdc2c3;
   -webkit-transition: 0.25s color ease-in-out;
   -o-transition: 0.25s color ease-in-out;
   transition: 0.25s color ease-in-out;
@@ -1576,10 +1610,11 @@ input::-ms-clear {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background: #F4F8F9;
+  background: #f4f8f9;
   border-radius: 8px;
-  border: 1px solid #F4F8F9;
-  -webkit-transition: 0.25s background ease-in-out, 0.25s border-color ease-in-out;
+  border: 1px solid #f4f8f9;
+  -webkit-transition: 0.25s background ease-in-out,
+    0.25s border-color ease-in-out;
   -o-transition: 0.25s background ease-in-out, 0.25s border-color ease-in-out;
   transition: 0.25s background ease-in-out, 0.25s border-color ease-in-out;
 }
@@ -1589,11 +1624,11 @@ input::-ms-clear {
 }
 
 .form-block__box:hover .form-block__unit {
-  color: #4ADBB4;
+  color: #4adbb4;
 }
 
 .form-block__box:hover .form-block__icon {
-  background: #F4F8F9;
+  background: #f4f8f9;
 }
 
 .form-block__message {
@@ -1601,49 +1636,49 @@ input::-ms-clear {
   font-size: 13px;
   line-height: 1.15384615;
   letter-spacing: -0.373px;
-  color: #FF6D4A;
+  color: #ff6d4a;
 }
 
 .form-block.is_active .form-block__box {
   background: #ffffff;
-  border-color: #4ADBB4;
+  border-color: #4adbb4;
 }
 
 .form-block.is_active .form-block__unit {
-  color: #BDC2C3;
+  color: #bdc2c3;
 }
 
 .form-block.is_active .form-block__icon {
-  background: #F4F8F9;
+  background: #f4f8f9;
 }
 
 .form-block.is_error .form-block__box {
   background: #ffffff;
-  border-color: #FF6D4A;
+  border-color: #ff6d4a;
 }
 
 .form-block.is_error .form-block__input {
-  color: #FF6D4A;
+  color: #ff6d4a;
 }
 
 .form-block.is_error .form-block__input::-webkit-input-placeholder {
-  color: #FF6D4A;
+  color: #ff6d4a;
 }
 
 .form-block.is_error .form-block__input::-moz-placeholder {
-  color: #FF6D4A;
+  color: #ff6d4a;
 }
 
 .form-block.is_error .form-block__input:-ms-input-placeholder {
-  color: #FF6D4A;
+  color: #ff6d4a;
 }
 
 .form-block.is_error .form-block__input::-ms-input-placeholder {
-  color: #FF6D4A;
+  color: #ff6d4a;
 }
 
 .form-block.is_error .form-block__input::placeholder {
-  color: #FF6D4A;
+  color: #ff6d4a;
 }
 
 /* ------- ШАПКА ------- */
@@ -1666,7 +1701,15 @@ input::-ms-clear {
   width: 100%;
   height: auto;
 }
-
+.reset {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-left: 4px;
+}
 .connect {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1686,7 +1729,7 @@ input::-ms-clear {
   font-size: 13px;
   line-height: 1.15384615;
   letter-spacing: -0.372895px;
-  color: #BDC2C3;
+  color: #bdc2c3;
 }
 
 .connect__text {
@@ -1706,14 +1749,14 @@ input::-ms-clear {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #BDC2C3;
+  background: #bdc2c3;
 }
 
 .connect--no .connect__label {
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
   flex-grow: 1;
-  color: #404C58;
+  color: #404c58;
 }
 
 .connect--no {
@@ -1721,7 +1764,7 @@ input::-ms-clear {
 }
 
 .connect--success .connect__status span {
-  background: #4ADBB4;
+  background: #4adbb4;
 }
 
 .connect--success .connect__label {
@@ -1755,7 +1798,7 @@ input::-ms-clear {
 }
 
 .settings__button:hover {
-  background: #4ADBB4;
+  background: #4adbb4;
 }
 
 .settings__button:hover .icon {
@@ -1850,8 +1893,8 @@ input::-ms-clear {
 }
 
 .menu__link:hover {
-  color: #4ADBB4;
-  border-bottom-color: #4ADBB4;
+  color: #4adbb4;
+  border-bottom-color: #4adbb4;
 }
 
 .menu__item {
@@ -1881,7 +1924,7 @@ input::-ms-clear {
 }
 
 .footer:before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   bottom: 0;
@@ -1916,7 +1959,7 @@ input::-ms-clear {
   font-size: 15px;
   line-height: 1.2;
   letter-spacing: -0.430263px;
-  color: #BDC2C3;
+  color: #bdc2c3;
 }
 
 .footer__site span {
@@ -1949,7 +1992,7 @@ input::-ms-clear {
   font-size: 20px;
   line-height: 1.15;
   letter-spacing: -0.57px;
-  color: #BDC2C3;
+  color: #bdc2c3;
 }
 
 @media (max-width: 575px) {
@@ -1968,7 +2011,7 @@ input::-ms-clear {
   padding: 0 30px;
   overflow: hidden;
   margin: 0;
-  background: #F4F8F9;
+  background: #f4f8f9;
   border-radius: 20px 20px 0 0;
 }
 
@@ -1990,7 +2033,7 @@ input::-ms-clear {
   font-size: 20px;
   line-height: 1.15;
   letter-spacing: -0.573684px;
-  color: #BDC2C3;
+  color: #bdc2c3;
   border-bottom: 3px solid transparent;
   -webkit-transition: 0.25s color, 0.25s border-color;
   -o-transition: 0.25s color, 0.25s border-color;
@@ -2004,7 +2047,7 @@ input::-ms-clear {
 .tab-nav li.is_active {
   font-weight: 500;
   color: #233539;
-  border-bottom-color: #4ADBB4;
+  border-bottom-color: #4adbb4;
 }
 
 @media (max-width: 575px) {
@@ -2035,7 +2078,8 @@ input::-ms-clear {
 
 /* Подсказка Tooltip */
 
-.tooltip-help, .tooltip-general {
+.tooltip-help,
+.tooltip-general {
   position: relative;
   width: 16px;
   height: 16px;
@@ -2053,7 +2097,8 @@ input::-ms-clear {
   background: unset;
 }
 
-.tooltip-help .icon, .tooltip-general .icon {
+.tooltip-help .icon,
+.tooltip-general .icon {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -2063,7 +2108,7 @@ input::-ms-clear {
 }
 
 .tooltip-help:hover {
-  background: #4ADBB4;
+  background: #4adbb4;
 }
 
 .tooltip-help:hover .icon {
@@ -2076,8 +2121,8 @@ input::-ms-clear {
   padding: 7px 15px;
   text-align: center;
   margin-bottom: 20px;
-  background: #F4F8F9;
-  border: 1px solid #4ADBB4;
+  background: #f4f8f9;
+  border: 1px solid #4adbb4;
   border-radius: 8px;
 }
 
@@ -2098,7 +2143,7 @@ input::-ms-clear {
 }
 
 .notification__text a:hover {
-  color: #4ADBB4;
+  color: #4adbb4;
 }
 
 @media (max-width: 575px) {
@@ -2141,7 +2186,8 @@ input::-ms-clear {
   }
 }
 
-.exchange__column--from, .exchange__column--to {
+.exchange__column--from,
+.exchange__column--to {
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
   flex-grow: 1;
@@ -2224,7 +2270,7 @@ input::-ms-clear {
 
 .invoice__block-content {
   padding: 14px 13px 15px;
-  background: #F4F8F9;
+  background: #f4f8f9;
   border-radius: 8px;
 }
 
@@ -2256,12 +2302,12 @@ input::-ms-clear {
   }
 }
 
-.invoice__block-text>div {
+.invoice__block-text > div {
   font-size: 13px;
   letter-spacing: -0.373px;
 }
 
-.invoice__block-text>div+div {
+.invoice__block-text > div + div {
   margin-top: 6px;
 }
 
@@ -2280,11 +2326,11 @@ input::-ms-clear {
 }
 
 .invoice__block-content.is_error {
-  border: 1px solid #FF6D4A;
+  border: 1px solid #ff6d4a;
 }
 
 .invoice__block-error {
-  color: #FF6D4A;
+  color: #ff6d4a;
 }
 
 .invoice__note {
@@ -2292,7 +2338,7 @@ input::-ms-clear {
   font-size: 13px;
   line-height: 1.769;
   letter-spacing: -0.373px;
-  color: #9EA6A8;
+  color: #9ea6a8;
 }
 
 .note--bottom {
@@ -2300,7 +2346,7 @@ input::-ms-clear {
   font-size: 13px;
   line-height: 1.769;
   letter-spacing: -0.373px;
-  color: #9EA6A8;
+  color: #9ea6a8;
   text-align: center;
 }
 
@@ -2309,7 +2355,7 @@ input::-ms-clear {
 .box-operation {
   max-width: 534px;
   margin: 0 auto;
-  background: #FFFFFF;
+  background: #ffffff;
   -webkit-box-shadow: 0 2px 64px rgba(73, 219, 180, 0.471345);
   box-shadow: 0 2px 64px rgba(73, 219, 180, 0.471345);
   border-radius: 20px;
@@ -2381,7 +2427,7 @@ input::-ms-clear {
 }
 
 .modal__text a:hover {
-  color: #4ADBB4;
+  color: #4adbb4;
 }
 
 .modal__button {
@@ -2434,7 +2480,7 @@ input::-ms-clear {
   align-items: center;
 }
 
-.crucible-item+.crucible-item {
+.crucible-item + .crucible-item {
   margin-top: 1rem;
 }
 
@@ -2450,19 +2496,25 @@ input::-ms-clear {
   font-size: 1rem;
 }
 
-
 /* ------- МЕДИА ЗАПРОСЫ ------- */
 
-@media (max-width: 1199px) {}
+@media (max-width: 1199px) {
+}
 
-@media (max-width: 991px) {}
+@media (max-width: 991px) {
+}
 
-@media (max-width: 767px) {}
+@media (max-width: 767px) {
+}
 
-@media (max-width: 575px) {}
+@media (max-width: 575px) {
+}
 
-@media (max-width: 480px) {}
+@media (max-width: 480px) {
+}
 
-@media (max-width: 414px) {}
+@media (max-width: 414px) {
+}
 
-@media (max-width: 350px) {}
+@media (max-width: 350px) {
+}

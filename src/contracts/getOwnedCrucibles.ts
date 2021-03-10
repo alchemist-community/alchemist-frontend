@@ -3,12 +3,8 @@ import { formatUnits } from "ethers/lib/utils";
 import crucibleFactoryAbi from "./crucibleFactoryAbi";
 import Crucible from "./Crucible.json";
 
-export async function getOwnedCrucibles() {
+export async function getOwnedCrucibles(signer: any, provider: any) {
   const crucibleFactoryAddress = "0x54e0395CFB4f39beF66DBCd5bD93Cca4E9273D56";
-
-  const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-  const signer = provider.getSigner();
-
   const walletAddress = await signer.getAddress();
 
   const crucibleFactory = new ethers.Contract(
