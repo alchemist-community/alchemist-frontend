@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
-import { toMaxDecimalsRound } from "../../../utils";
 import Web3Context from "../../../../../Web3Context";
+import { toMaxDecimalsRound } from "../../../utils";
 import { mintAndLock } from "../../../../../contracts/alchemist";
-import { Input } from "@chakra-ui/input";
+import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Alert } from "@chakra-ui/alert";
 import { Button, IconButton } from "@chakra-ui/button";
 import { Link, Text } from "@chakra-ui/layout";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
+import { getTokenBalances } from "../../../../../contracts/getTokenBalances";
 import {
   Popover,
   PopoverArrow,
@@ -30,10 +31,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     Web3Context
   );
 
-  const [formValues, setFormValues] = useState({
-    lpBalance: "",
-    lockLength: "",
-  });
+  const [lpBalance, setLpBalance] = useState("");
 
   const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     //setXAmount is the amount displayed in the input, should be string
@@ -45,17 +43,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           ? ev.target.value
           : toMaxDecimalsRound(ev.target.value, +ev.target.step).toString();
 
-    setFormValues((old) => {
-      return {
-        ...old,
-        [name]: value,
-      };
-    });
+    setLpBalance(value);
   };
 
   useEffect(() => {
-    handleInputChange(formValues);
-  }, [formValues, handleInputChange]);
+    handleInputChange({
+      lpBalance,
+    });
+  }, [lpBalance, handleInputChange]);
 
   const alertBgColor = useColorModeValue("gray.50", "gray.600");
 
@@ -104,17 +99,31 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             </PopoverContent>
           </Popover>
         </FormLabel>
-        <Input
-          size="lg"
-          variant="filled"
-          _focus={{ borderColor: "green.300" }}
-          value={formValues["lpBalance"]}
-          onChange={onChange}
-          name="lpBalance"
-          label="LP Balance "
-          placeholder="0.0"
-          type="number"
-        />
+        <InputGroup size="md">
+          <Input
+            size="lg"
+            variant="filled"
+            _focus={{ borderColor: "green.300" }}
+            value={lpBalance}
+            onChange={onChange}
+            name="lpBalance"
+            placeholder="0.0"
+            type="number"
+          />
+          <InputRightElement width="4.5rem">
+            <Button
+              mr={2}
+              mt={2}
+              h="2rem"
+              variant="ghost"
+              onClick={() =>
+                getTokenBalances(signer).then(({ lp }) => setLpBalance(lp))
+              }
+            >
+              Max
+            </Button>
+          </InputRightElement>
+        </InputGroup>
       </FormControl>
 
       {/* Todo: Make this button reusable, repeated styles */}
@@ -128,11 +137,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           _hover={{ background: "green.400" }}
           onClick={async () => {
             await readyToTransact();
-            const hash: string = await mintAndLock(
-              signer,
-              provider,
-              formValues.lpBalance
-            );
+            const hash: string = await mintAndLock(signer, provider, lpBalance);
             monitorTx(hash);
           }}
         >

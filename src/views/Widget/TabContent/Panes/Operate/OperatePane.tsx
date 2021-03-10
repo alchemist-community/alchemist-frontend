@@ -51,7 +51,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     }[]
   );
   useEffect(() => {
-    getOwnedCrucibles(signer, provider).then(setCrucibles);
+    if (signer) {
+      getOwnedCrucibles(signer, provider).then(setCrucibles);
+    }
   }, [isConnected, provider, signer]);
 
   const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {

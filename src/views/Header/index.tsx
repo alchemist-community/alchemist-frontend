@@ -1,6 +1,8 @@
 import React from "react";
+import UserWallet from '../UserWallet'
 import UserAddress from "../UserAddress";
 import LOGO from "../../img/alembic.png";
+import Web3Context from '../../Web3Context'
 import { Image } from "@chakra-ui/image";
 import { IconButton } from "@chakra-ui/button";
 import { FiSun, FiMoon } from "react-icons/fi";
@@ -8,6 +10,7 @@ import { useColorMode, useColorModeValue } from "@chakra-ui/color-mode";
 import { Box, Flex, LinkBox, LinkOverlay } from "@chakra-ui/layout";
 
 const Header: React.FC = () => {
+  const { address } = React.useContext(Web3Context);
   const { colorMode, toggleColorMode } = useColorMode();
 
   const isDarkMode = colorMode === "dark";
@@ -31,6 +34,7 @@ const Header: React.FC = () => {
           _hover={{ background: buttonHoverBgColor }}
         />
         <UserAddress />
+        {address !== null ? <UserWallet /> : null}
       </Box>
     </Flex>
   );
