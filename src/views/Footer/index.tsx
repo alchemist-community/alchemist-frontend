@@ -4,12 +4,12 @@ import React from "react";
 const links = [
   {
     label: "Code",
-    href: "https://github.com/alchemistcoin/alchemist",
+    href: "https://github.com/alchemist-community/alchemist-frontend",
     isExternal: true,
   },
   {
     label: "Discord",
-    href: "https://discord.alchemist.wtf",
+    href: "http://discord.alchemist.wtf",
     isExternal: true,
   },
   {
