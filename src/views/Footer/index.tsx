@@ -34,9 +34,13 @@ const Footer: React.FC = () => {
         alignItems="center"
         as="footer"
       >
-        <Box textAlign={['center', 'center', 'initial']}>
-          <Text fontWeight="bold" fontSize="md">alchemist.farm</Text>
-          <Text fontSize="sm" color="gray.500">Searching for the philosopher's stone</Text>
+        <Box textAlign={["center", "center", "initial"]}>
+          <Text fontWeight="bold" fontSize="md">
+            alchemist.farm
+          </Text>
+          <Text fontSize="sm" color="gray.500">
+            Searching for the philosopher's stone
+          </Text>
         </Box>
         <Box>
           <HStack spacing={4}>
@@ -49,9 +53,9 @@ const Footer: React.FC = () => {
                 isExternal={isExternal}
                 rel="noopener noreferrer"
                 _hover={{
-                  color: 'green.300',
-                  borderBottomColor: 'green.300',
-                  borderBottomWidth: 1
+                  color: "green.300",
+                  borderBottomColor: "green.300",
+                  borderBottomWidth: 1,
                 }}
               >
                 {label}

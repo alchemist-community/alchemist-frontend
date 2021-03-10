@@ -8,11 +8,13 @@ const Body: React.FC = () => {
 
   useEffect(() => {
     setInProp(true);
-  }, [])
+  }, []);
 
   return (
     <Box textAlign="center" mt={[8, 16, 24]}>
-      <Heading size="lg" mb={2}>Alchemist</Heading>
+      <Heading size="lg" mb={2}>
+        Alchemist
+      </Heading>
       <Text fontSize="lg" color="gray.500" mb={16}>
         The only plan is there is no plan{" "}
         <span role="img" aria-label="alchemist logo">
@@ -20,8 +22,8 @@ const Body: React.FC = () => {
         </span>
       </Text>
       <CSSTransition in={inProp} timeout={1000} classNames="fade">
-         <Widget />
-       </CSSTransition>
+        <Widget />
+      </CSSTransition>
     </Box>
   );
 };
