@@ -25,7 +25,10 @@ interface OperatePaneProps {
 const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const { handleInputChange = () => null, isConnected } = props;
 
-  const { connectWallet } = useContext(Web3Context);
+  // Todo: type the extended web3context
+  const { onboard, signer, provider, readyToTransact, monitorTx } = useContext(
+    Web3Context
+  );
 
   const [formValues, setFormValues] = useState({
     lpBalance: "",
@@ -114,7 +117,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         />
       </FormControl>
 
-      {/* Todo: Make buttons reusable / define styles in global theme */}
+      {/* Todo: Make this button reusable, repeated styles */}
       {isConnected ? (
         <Button
           size="lg"
@@ -123,8 +126,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           background="green.300"
           _focus={{ boxShadow: "none" }}
           _hover={{ background: "green.400" }}
-          onClick={() => {
-            mintAndLock(formValues.lpBalance);
+          onClick={async () => {
+            await readyToTransact();
+            const hash: string = await mintAndLock(
+              signer,
+              provider,
+              formValues.lpBalance
+            );
+            monitorTx(hash);
           }}
         >
           Stake
@@ -137,7 +146,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           background="green.300"
           _focus={{ boxShadow: "none" }}
           _hover={{ background: "green.400" }}
-          onClick={() => connectWallet()}
+          onClick={() => onboard.walletSelect()}
         >
           Connect Wallet
         </Button>

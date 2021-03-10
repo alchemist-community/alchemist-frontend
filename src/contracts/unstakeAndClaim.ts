@@ -6,12 +6,11 @@ import aludelAbi from "./aludelAbi";
 import Crucible from "./Crucible.json";
 
 export async function unstakeAndClaim(
+  signer: any,
+  monitorTx: (hash: string) => Promise<any>,
   crucibleAddress: string,
   rawAmount: string
 ) {
-  const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-  const signer = provider.getSigner();
-
   const walletAddress = await signer.getAddress();
 
   const args = {
@@ -30,7 +29,6 @@ export async function unstakeAndClaim(
     signer
   );
   const crucible = new ethers.Contract(args.crucible, Crucible.abi, signer);
-
   // declare config
 
   const amount = parseUnits(args.amount, await stakingToken.decimals());
@@ -67,6 +65,7 @@ export async function unstakeAndClaim(
   );
 
   const unstakeTx = await signer.sendTransaction(populatedTx);
+  monitorTx(unstakeTx.hash);
   console.log("  in", unstakeTx.hash);
 
   console.log("Withdraw from crucible");
@@ -76,6 +75,8 @@ export async function unstakeAndClaim(
     recipient,
     amount
   );
+
+  monitorTx(withdrawTx.hash);
 
   console.log("  in", withdrawTx?.hash);
 }

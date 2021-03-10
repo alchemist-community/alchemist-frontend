@@ -6,7 +6,7 @@ import BN from "bn.js";
 
 const Operate: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string>();
-  const { web3, userAddress } = useContext(Web3Context);
+  const { wallet } = useContext(Web3Context);
 
   if (!!errorMsg) {
     return <span>{errorMsg}</span>;
@@ -14,7 +14,7 @@ const Operate: React.FC = () => {
     return (
       <OperatePane
         handleInputChange={(form) => {}}
-        isConnected={web3 !== null}
+        isConnected={!!wallet.provider}
       />
     );
   }

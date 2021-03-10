@@ -3,7 +3,7 @@ import Web3Context from "../../Web3Context";
 import { getTokenBalances } from "../../contracts/getTokenBalances";
 
 export default function UserAddress() {
-  const { web3 } = useContext(Web3Context);
+  const { web3, signer } = useContext(Web3Context);
   const [selectedAddress, setSelectedAddress] = useState<string>();
   const [tokenBalance, setTokenBalance] = useState<{
     alchemist: string;
@@ -12,10 +12,10 @@ export default function UserAddress() {
 
   useEffect(() => {
     (async () => {
-      const balances = await getTokenBalances();
+      const balances = await getTokenBalances(signer);
       setTokenBalance(balances);
     })();
-  }, []);
+  }, [signer]);
 
   useEffect(() => {
     setSelectedAddress(

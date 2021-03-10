@@ -2,10 +2,7 @@ import { ethers } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import IERC20 from "./IERC20.json";
 
-export async function getTokenBalances() {
-  const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-  const signer = provider.getSigner();
-
+export async function getTokenBalances(signer: any) {
   const walletAddress = await signer.getAddress();
 
   const lp = new ethers.Contract(
