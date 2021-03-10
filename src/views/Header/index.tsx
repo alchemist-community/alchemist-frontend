@@ -8,9 +8,10 @@ import { IconButton } from "@chakra-ui/button";
 import { FiSun, FiMoon } from "react-icons/fi";
 import { useColorMode, useColorModeValue } from "@chakra-ui/color-mode";
 import { Box, Flex, LinkBox, LinkOverlay } from "@chakra-ui/layout";
+import { Wallet } from "@ethersproject/wallet";
 
 const Header: React.FC = () => {
-  const { address } = React.useContext(Web3Context);
+  const { wallet, address } = React.useContext(Web3Context);
   const { colorMode, toggleColorMode } = useColorMode();
 
   const isDarkMode = colorMode === "dark";
@@ -38,7 +39,7 @@ const Header: React.FC = () => {
           _hover={{ background: buttonHoverBgColor }}
         />
         <UserAddress />
-        {address !== null ? <UserWallet /> : null}
+        {wallet.provider? <UserWallet /> : null}
       </Box>
     </Flex>
   );
