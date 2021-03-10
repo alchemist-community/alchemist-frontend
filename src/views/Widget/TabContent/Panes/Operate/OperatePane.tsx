@@ -80,8 +80,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     await unstakeAndClaim(selectedCrucible, amount2Withdraw);
     setModalIsOpen(false);
   };
-  const withdraw = async () => {
-    await unstakeAndClaim(selectedCrucible, amount2Withdraw);
+  const withdrawTokens = async () => {
+    await withdraw(selectedCrucible, amount2Withdraw);
     setModalIsOpen(false);
   };
 
@@ -98,7 +98,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   modalOperation === "withdraw" ? "Withdraw" : "Unstake"
                 }
                 onButtonClick={
-                  modalOperation === "withdraw" ? unstake : withdraw
+                  modalOperation === "withdraw" ? withdrawTokens : unstake
                 }
                 onCloseClick={() => setModalIsOpen(false)}
               >
