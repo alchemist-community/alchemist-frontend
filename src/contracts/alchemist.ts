@@ -98,7 +98,7 @@ export async function mintAndLock(
     console.log("  in", tx.hash);
     return tx.hash;
   } catch (e) {
-    alert(e)
-    throw e
+    alert(e);
+    throw e;
   }
 }

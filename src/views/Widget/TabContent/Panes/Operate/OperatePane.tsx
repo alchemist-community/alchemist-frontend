@@ -99,7 +99,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     setModalIsOpen(false);
   };
 
-  const cruciblesCardBg = useColorModeValue('white', 'gray.600');
+  const cruciblesCardBg = useColorModeValue("white", "gray.600");
 
   const sendModal = (
     <Modal isOpen onClose={() => setModalIsOpen(false)}>
@@ -201,7 +201,11 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             flexDirection={"column"}
           >
             <Box mb={4}>
-              <Text as='div' fontSize="lg" textAlign={["center", "center", "left"]}>
+              <Text
+                as="div"
+                fontSize="lg"
+                textAlign={["center", "center", "left"]}
+              >
                 <Flex justifyContent="space-between">
                   <HStack>
                     <Box mr={2}>

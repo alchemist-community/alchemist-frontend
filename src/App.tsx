@@ -1,7 +1,7 @@
 import React from "react";
 import Layout from "./layouts";
 import { Web3Provider } from "./Web3Context";
-import { ChakraProvider } from "@chakra-ui/react"
+import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./config/theme";
 
 function App() {
@@ -17,4 +17,3 @@ function App() {
 }
 
 export default App;
-
