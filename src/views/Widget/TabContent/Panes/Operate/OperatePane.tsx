@@ -6,7 +6,8 @@ import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
 import { sendNFT } from "../../../../../contracts/sendNFT";
 import { withdraw } from "../../../../../contracts/withdraw";
 import { Button, ButtonGroup } from "@chakra-ui/button";
-import { Box, Flex, Text } from "@chakra-ui/layout";
+import { Badge, Box, Flex, HStack, Text } from "@chakra-ui/layout";
+import { FaLock } from "react-icons/fa";
 import {
   Modal,
   ModalOverlay,
@@ -32,9 +33,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const [amount2Withdraw, setAmount2Withdraw] = useState("");
   const [sendAddress, setSendAddress] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalOperation, setModalOperation] = useState<"withdraw" | "unstake" | 'send'>(
-    "unstake"
-  );
+  const [modalOperation, setModalOperation] = useState<
+    "withdraw" | "unstake" | "send"
+  >("unstake");
   const [selectedCrucible, setSelectedCrucible] = useState("");
 
   const [formValues, setFormValues] = useState({
@@ -97,114 +98,158 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     setModalIsOpen(false);
   };
 
-  const sendModal = <Modal isOpen onClose={() => setModalIsOpen(false)}>
-  <ModalOverlay />
-  <ModalContent>
-    <ModalHeader>
-      Send
-    </ModalHeader>
-    <ModalCloseButton />
-    <ModalBody>
-      <FormControl mb={4}>
-        <FormLabel>Address</FormLabel>
-        <Input
-          size="lg"
-          variant="filled"
-          _focus={{ borderColor: "green.300" }}
-          value={sendAddress}
-          onChange={(ev)=>setSendAddress(ev.target.value)}
-          name="address"
-          type="string"
-        />
-      </FormControl>
-    </ModalBody>
+  const testCrucibles = [
+    {
+      id: "1234",
+      balance: "5000",
+      lockedBalance: "400",
+    },
+    {
+      id: "1234",
+      balance: "5000",
+      lockedBalance: "400",
+    },
+    {
+      id: "1234",
+      balance: "5000",
+      lockedBalance: "400",
+    },
+    {
+      id: "1234",
+      balance: "5000",
+      lockedBalance: "400",
+    },
+  ];
 
-    <ModalFooter>
-      <Button
-        bg="green.300"
-        color="white"
-        mr={3}
-        onClick={async ()=>{
-          await sendNFT(signer, selectedCrucible, sendAddress);
-          setModalIsOpen(false);
-        }}
-      >
-        Send
-      </Button>
-    </ModalFooter>
-  </ModalContent>
-</Modal>
+  const sendModal = (
+    <Modal isOpen onClose={() => setModalIsOpen(false)}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Send</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <FormControl mb={4}>
+            <FormLabel>Address</FormLabel>
+            <Input
+              size="lg"
+              variant="filled"
+              _focus={{ borderColor: "green.300" }}
+              value={sendAddress}
+              onChange={(ev) => setSendAddress(ev.target.value)}
+              name="address"
+              type="string"
+            />
+          </FormControl>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button
+            bg="green.300"
+            color="white"
+            mr={3}
+            onClick={async () => {
+              await sendNFT(signer, selectedCrucible, sendAddress);
+              setModalIsOpen(false);
+            }}
+          >
+            Send
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
 
   // Todo: Add empty state
   return (
     <>
-      {modalIsOpen && (
-        modalOperation==='send'?
-        sendModal:
-        <Modal isOpen onClose={() => setModalIsOpen(false)}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>
-              {modalOperation === "withdraw" ? "Withdraw" : "Unstake"}
-            </ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <FormControl mb={4}>
-                <FormLabel>Amount</FormLabel>
-                <Input
-                  size="lg"
-                  variant="filled"
-                  _focus={{ borderColor: "green.300" }}
-                  value={amount2Withdraw}
-                  onChange={formatAmount2Withdraw}
-                  name="balance"
-                  placeholder="0.0"
-                  type="number"
-                />
-              </FormControl>
-            </ModalBody>
-
-            <ModalFooter>
-              <Button
-                bg="green.300"
-                color="white"
-                mr={3}
-                onClick={
-                  modalOperation === "withdraw"
-                    ? () => withdrawTokens
-                    : () => unstake
-                }
-              >
+      {modalIsOpen &&
+        (modalOperation === "send" ? (
+          sendModal
+        ) : (
+          <Modal isOpen onClose={() => setModalIsOpen(false)}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>
                 {modalOperation === "withdraw" ? "Withdraw" : "Unstake"}
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      )}
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <FormControl mb={4}>
+                  <FormLabel>Amount</FormLabel>
+                  <Input
+                    size="lg"
+                    variant="filled"
+                    _focus={{ borderColor: "green.300" }}
+                    value={amount2Withdraw}
+                    onChange={formatAmount2Withdraw}
+                    name="balance"
+                    placeholder="0.0"
+                    type="number"
+                  />
+                </FormControl>
+              </ModalBody>
 
-      {crucibles.map((crucible) => {
+              <ModalFooter>
+                <Button
+                  bg="green.300"
+                  color="white"
+                  mr={3}
+                  onClick={
+                    modalOperation === "withdraw"
+                      ? () => withdrawTokens
+                      : () => unstake
+                  }
+                >
+                  {modalOperation === "withdraw" ? "Withdraw" : "Unstake"}
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        ))}
+
+      {testCrucibles.map((crucible) => {
         return (
-          <Flex
-            py={2}
+          <Box
+            p={4}
+            mb={6}
+            bg="gray.600"
+            boxShadow="md"
             borderRadius="lg"
             alignItems="center"
             justifyContent="space-between"
-            flexDirection={["column", "column", "row"]}
+            flexDirection={"column"}
           >
-            <Box flexGrow={1} minWidth="300px" mb={[4, 4, 0]}>
-              <Text textAlign={["center", "center", "left"]}>
-                <Box>
-                  <strong>Balance:</strong>{" "}
-                  {`${crucible["balance"]} (${crucible["lockedBalance"]} locked)`}
-                </Box>
-                <Box>
-                  <strong>ID:</strong> {crucible["id"]}
-                </Box>
+            <Box mb={4}>
+              <Text fontSize="lg" textAlign={["center", "center", "left"]}>
+                <Flex justifyContent="space-between">
+                  <HStack>
+                    <Box mr={2}>
+                      <strong>Balance:</strong> {`${crucible["balance"]}`}
+                    </Box>
+                    <Badge py={1} px={2} borderRadius="xl" fonSize="2em">
+                      <HStack>
+                        <Box>{crucible["lockedBalance"]}</Box>
+                        <FaLock />
+                      </HStack>
+                    </Badge>
+                  </HStack>
+                  <Box fontSize="sm" color="gray.400">
+                    ID: {crucible["id"]}
+                  </Box>
+                </Flex>
               </Text>
             </Box>
-            <ButtonGroup size="sm" isAttached variant="outline"  mb={[4, 4, 0]}>
+            <ButtonGroup
+              isAttached
+              variant="outline"
+              mb={[4, 4, 0]}
+              width="100%"
+            >
               <Button
+                isFullWidth
                 color="white"
+                borderWidth={1}
+                borderColor="gray.600"
                 background="green.300"
                 _focus={{ boxShadow: "none" }}
                 _hover={{ background: "green.400" }}
@@ -217,7 +262,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 Unstake
               </Button>
               <Button
+                isFullWidth
                 color="white"
+                borderWidth={1}
+                borderColor="gray.600"
                 background="green.300"
                 _focus={{ boxShadow: "none" }}
                 _hover={{ background: "green.400" }}
@@ -230,7 +278,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 Withdraw
               </Button>
               <Button
+                isFullWidth
                 color="white"
+                borderWidth={1}
+                borderColor="gray.600"
                 background="green.300"
                 _focus={{ boxShadow: "none" }}
                 _hover={{ background: "green.400" }}
@@ -243,7 +294,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 Send
               </Button>
             </ButtonGroup>
-          </Flex>
+          </Box>
         );
       })}
       {isConnected ? (

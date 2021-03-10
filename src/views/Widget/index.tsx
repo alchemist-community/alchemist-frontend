@@ -17,7 +17,7 @@ const Widget: React.FC<WidgetProps> = () => {
         borderRadius="2xl"
         bg={cardBgColor}
         borderWidth={1}
-        maxW={540}
+        width={["100%", 540, 540]}
       >
         <Tabs isFitted>
           <TabList
@@ -51,7 +51,7 @@ const Widget: React.FC<WidgetProps> = () => {
             </Tab>
           </TabList>
 
-          <TabPanels p={4}>
+          <TabPanels p={4} overflow="scroll" maxH="480px">
             <TabPanel>
               <SwapPane />
             </TabPanel>
