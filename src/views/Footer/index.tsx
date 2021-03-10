@@ -9,17 +9,17 @@ const links = [
   },
   {
     label: "Discord",
-    href: '"https://discord.alchemist.wtf"',
+    href: "https://discord.alchemist.wtf",
     isExternal: true,
   },
   {
     label: "FAQ",
-    href: '"https://hackmd.io/@thegostep/BJ40PSVQd"',
+    href: "https://hackmd.io/@thegostep/BJ40PSVQd",
     isExternal: true,
   },
   {
     label: "Governance",
-    href: '"https://cast.alchemist.wtf"',
+    href: "https://cast.alchemist.wtf",
     isExternal: true,
   },
 ];
