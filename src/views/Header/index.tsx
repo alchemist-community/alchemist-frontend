@@ -18,30 +18,38 @@ const Header: React.FC = () => {
   const buttonHoverBgColor = useColorModeValue("gray.100", "gray.700");
 
   return (
-    <Flex justifyContent="space-between" alignItems="center" py={4}>
-      <LinkBox>
-        <LinkOverlay href="/">
-          <Image
-            src={LOGO}
-            width={["50px", "50px", "70px"]}
-            alt="alchemist logo"
+    <>
+      <Flex justifyContent="space-between" alignItems="center" py={4}>
+        {/* Hardcoded for now to center user wallet component */}
+        <LinkBox width="283px">
+          <LinkOverlay href="/">
+            <Image
+              src={LOGO}
+              width={["50px", "50px", "70px"]}
+              alt="alchemist logo"
+            />
+          </LinkOverlay>
+        </LinkBox>
+        <Box display={["none", "none", "none", "block"]}>
+          {address && <UserWallet />}
+        </Box>
+        <Box>
+          <IconButton
+            mr={2}
+            borderRadius="lg"
+            variant="ghost"
+            onClick={toggleColorMode}
+            icon={isDarkMode ? <FiMoon /> : <FiSun />}
+            aria-label={isDarkMode ? "Toggle light mode" : "Toggle dark mode"}
+            _hover={{ background: buttonHoverBgColor }}
           />
-        </LinkOverlay>
-      </LinkBox>
-      <Box>
-        <IconButton
-          mr={2}
-          borderRadius="lg"
-          variant="ghost"
-          onClick={toggleColorMode}
-          icon={isDarkMode ? <FiMoon /> : <FiSun />}
-          aria-label={isDarkMode ? "Toggle light mode" : "Toggle dark mode"}
-          _hover={{ background: buttonHoverBgColor }}
-        />
-        <UserAddress />
+          <UserAddress />
+        </Box>
+      </Flex>
+      <Box display={["block", "block", "block", "none"]}>
         {wallet.provider ? <UserWallet /> : null}
       </Box>
-    </Flex>
+    </>
   );
 };
 

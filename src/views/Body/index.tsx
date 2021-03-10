@@ -21,9 +21,9 @@ const Body: React.FC = () => {
           ⚗️
         </span>
       </Text>
-      <CSSTransition in={inProp} timeout={1000} classNames="fade">
-        <Widget />
-      </CSSTransition>
+      <CSSTransition in={inProp} timeout={1000} classNames="slideUp">
+         <Widget />
+       </CSSTransition>
     </Box>
   );
 };

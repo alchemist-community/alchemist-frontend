@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import Web3Context from "../../Web3Context";
 import { Text, Button, Box, useColorModeValue } from "@chakra-ui/react";
 import { CancelButton } from "../../components";
