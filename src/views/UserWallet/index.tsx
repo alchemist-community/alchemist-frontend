@@ -3,8 +3,7 @@ import Web3Context from "../../Web3Context";
 import { getTokenBalances } from "../../contracts/getTokenBalances";
 
 export default function UserAddress() {
-  const { web3, signer } = useContext(Web3Context);
-  const [selectedAddress, setSelectedAddress] = useState<string>();
+  const { signer, address } = useContext(Web3Context);
   const [tokenBalance, setTokenBalance] = useState<{
     alchemist: string;
     lp: string;
@@ -17,12 +16,6 @@ export default function UserAddress() {
     })();
   }, [signer]);
 
-  useEffect(() => {
-    setSelectedAddress(
-      web3 === null ? undefined : (web3.currentProvider as any).selectedAddress
-    );
-  }, [web3]);
-
   return (
     <>
       <div
@@ -34,7 +27,7 @@ export default function UserAddress() {
           marginTop: "1rem",
         }}
         className={`header__connect connect connect--${
-          selectedAddress ? "success" : "no"
+          address ? "success" : "no"
         }`}
       >
         <div style={{ display: "block", marginBottom: "0.3125rem" }}>
