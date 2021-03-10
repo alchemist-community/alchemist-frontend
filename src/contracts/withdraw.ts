@@ -23,7 +23,7 @@ export async function withdraw(crucibleAddress: string, rawAmount: string) {
 
   // declare config
 
-  const amount = parseUnits(args.amount, await token.decimals());
+  const amount = parseUnits(args.amount, 18);
   const recipient = args.recipient;
 
   // validate balances
