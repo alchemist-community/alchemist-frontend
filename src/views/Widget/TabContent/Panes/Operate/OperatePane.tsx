@@ -2,7 +2,21 @@ import React, { useState, useEffect, useContext } from "react";
 import { toMaxDecimalsRound } from "../../../utils";
 import Web3Context from "../../../../../Web3Context";
 import { getOwnedCrucibles } from "../../../../../contracts/getOwnedCrucibles";
-import { Button } from "@chakra-ui/button";
+import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
+import { withdraw } from "../../../../../contracts/withdraw";
+import { Button, ButtonGroup } from "@chakra-ui/button";
+import { Box, Flex, Text } from "@chakra-ui/layout";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from "@chakra-ui/modal";
+import { Input } from "@chakra-ui/input";
+import { FormControl, FormLabel } from "@chakra-ui/form-control";
 
 interface OperatePaneProps {
   handleInputChange?: (form: { [key: string]: string | number }) => void;
@@ -16,6 +30,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
   const [amount2Withdraw, setAmount2Withdraw] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalOperation, setModalOperation] = useState<"withdraw" | "unstake">(
+    "unstake"
+  );
+  const [selectedCrucible, setSelectedCrucible] = useState("");
 
   const [formValues, setFormValues] = useState({
     lnBalance: "",
@@ -29,6 +47,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     [] as {
       id: string;
       balance: string;
+      lockedBalance: string;
     }[]
   );
   useEffect(() => {
@@ -65,87 +84,111 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   };
 
   //todo
-  const withdraw = () => {
+  const unstake = async () => {
+    await unstakeAndClaim(selectedCrucible, amount2Withdraw);
+    setModalIsOpen(false);
+  };
+  const withdrawTokens = async () => {
+    await withdraw(selectedCrucible, amount2Withdraw);
     setModalIsOpen(false);
   };
 
-  // todo - restyle, check Mint/OperatePane
+  // Todo: Add empty state
   return (
-    <div>
-      {/* <Modal
-                title={"Withdraw"}
-                isOpen={modalIsOpen}
-                buttonText={"Withdraw"}
-                onButtonClick={withdraw}
+    <>
+      {modalIsOpen && (
+        <Modal isOpen onClose={() => setModalIsOpen(false)}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>
+              {modalOperation === "withdraw" ? "Withdraw" : "Unstake"}
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <FormControl mb={4}>
+                <FormLabel>Amount</FormLabel>
+                <Input
+                  size="lg"
+                  variant="filled"
+                  _focus={{ borderColor: "green.300" }}
+                  value={amount2Withdraw}
+                  onChange={formatAmount2Withdraw}
+                  name="balance"
+                  placeholder="0.0"
+                  type="number"
+                />
+              </FormControl>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                bg="green.300"
+                color="white"
+                mr={3}
+                onClick={
+                  modalOperation === "withdraw"
+                    ? () => withdrawTokens
+                    : () => unstake
+                }
               >
-                <div style={{ marginBottom: "2rem" }}>
-                  Input the amount to withdraw
-                </div>
-                <div className="form-group">
-                  <Input
-                    value={amount2Withdraw}
-                    name="balance"
-                    type="number"
-                    label="Amount "
-                    onChange={formatAmount2Withdraw}
-                  />
-                </div>
-              </Modal> */}
+                {modalOperation === "withdraw" ? "Withdraw" : "Unstake"}
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
+
       {crucibles.map((crucible) => {
         return (
-          <div className="crucible-item">
-            <span className="crucible-attribute">
-              <span className="crucible-label">Balance:</span>{" "}
-              {crucible["balance"]}
-            </span>
-            <span className="crucible-attribute" style={{ flexGrow: 1 }}>
-              <span className="crucible-label">ID:</span> {crucible["id"]}
-            </span>
-            <span className="">
+          <Flex
+            py={2}
+            borderRadius="lg"
+            alignItems="center"
+            justifyContent="space-between"
+            flexDirection={["column", "column", "row"]}
+          >
+            <Box flexGrow={1} minWidth="300px" mb={[4, 4, 0]}>
+              <Text textAlign={["center", "center", "left"]}>
+                <Box>
+                  <strong>Balance:</strong>{" "}
+                  {`${crucible["balance"]} (${crucible["lockedBalance"]} locked)`}
+                </Box>
+                <Box>
+                  <strong>ID:</strong> {crucible["id"]}
+                </Box>
+              </Text>
+            </Box>
+            <ButtonGroup size="sm" isAttached variant="outline"  mb={[4, 4, 0]}>
               <Button
-                colorScheme="primary"
-                onClick={() => setModalIsOpen(true)}
+                color="white"
+                background="green.300"
+                _focus={{ boxShadow: "none" }}
+                _hover={{ background: "green.400" }}
+                onClick={() => {
+                  setModalOperation("unstake");
+                  setSelectedCrucible(crucible["id"]);
+                  setModalIsOpen(true);
+                }}
+              >
+                Unstake
+              </Button>
+              <Button
+                color="white"
+                background="green.300"
+                _focus={{ boxShadow: "none" }}
+                _hover={{ background: "green.400" }}
+                onClick={() => {
+                  setModalOperation("withdraw");
+                  setSelectedCrucible(crucible["id"]);
+                  setModalIsOpen(true);
+                }}
               >
                 Withdraw
               </Button>
-            </span>
-          </div>
+            </ButtonGroup>
+          </Flex>
         );
       })}
-      {/* {crucibles.map(crucible=>
-                <div
-                key={crucible['id']}
-                >
-                <div className="form-group">
-                <Input
-                  disabled= {true}
-                  value={crucible['id']}
-                  name="id"
-                  label="ID "
-                  hint={
-                    <>
-                      ID of the NFT
-                    </>
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <Input
-                  disabled= {true}
-                  value={crucible['balance']}
-                  name="balance"
-                  type= "number"
-                  label="Amount "
-                  hint={
-                    <>
-                      Amount of LP tokens on it
-                    </>
-                  }
-                />
-              </div>
-              <hr></hr>
-                </div>)
-              } */}
       {isConnected ? (
         <></>
       ) : (
@@ -161,7 +204,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           Connect Wallet
         </Button>
       )}
-    </div>
+    </>
   );
 };
 
