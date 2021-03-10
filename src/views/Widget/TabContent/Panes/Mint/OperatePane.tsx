@@ -62,7 +62,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         mb={8}
         status="info"
         borderWidth={1}
-        borderRadius="8"
+        borderRadius="lg"
         borderColor="green.300"
         background={alertBgColor}
       >
@@ -142,6 +142,18 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           Connect Wallet
         </Button>
       )}
+      <Text color="gray.500" mt={4} px={2}>
+        Ledger wallets on Metamask don't support the signature types required,
+        so they won't work. See{" "}
+        <Link
+          color="green.300"
+          href="https://github.com/MetaMask/metamask-extension/issues/10240"
+          isExternal
+        >
+          the github issue
+        </Link>{" "}
+        for more info.
+      </Text>
     </>
   );
 };
