@@ -21,7 +21,7 @@ const Header: React.FC = () => {
     <>
       <Flex justifyContent="space-between" alignItems="center" py={4}>
         {/* Hardcoded for now to center user wallet component */}
-        <LinkBox width="260px">
+        <LinkBox width="283px">
           <LinkOverlay href="/">
             <Image
               src={LOGO}
