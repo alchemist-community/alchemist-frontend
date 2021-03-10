@@ -6,6 +6,7 @@ import Notification from "../../../common/Notification";
 import { toMaxDecimalsRound } from "../../../utils";
 import Web3Context from "../../../../../Web3Context";
 import { mintAndLock } from "../../../../../contracts/alchemist";
+import { getTokenBalances } from "../../../../../contracts/getTokenBalances";
 import { initOnboard } from "../../../../../walletServices";
 
 interface OperatePaneProps {
@@ -20,10 +21,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     Web3Context
   );
 
-  const [formValues, setFormValues] = useState({
-    lpBalance: "",
-    lockLength: "",
-  });
+  const [lpBalance, setLpBalance] = useState("");
 
   const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     //setXAmount is the amount displayed in the input, should be string
@@ -35,17 +33,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           ? ev.target.value
           : toMaxDecimalsRound(ev.target.value, +ev.target.step).toString();
 
-    setFormValues((old) => {
-      return {
-        ...old,
-        [name]: value,
-      };
-    });
+    setLpBalance(value);
   };
 
   useEffect(() => {
-    handleInputChange(formValues);
-  }, [formValues, handleInputChange]);
+    handleInputChange({
+      lpBalance
+    });
+  }, [lpBalance, handleInputChange]);
 
   return (
     <div className="tab-pane is_active">
@@ -65,12 +60,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               </Notification>
               <div className="form-group">
                 <Input
-                  value={formValues["lpBalance"]}
+                  value={lpBalance}
                   onChange={onChange}
                   name="lpBalance"
                   label="LP Balance "
                   placeholder="0.0"
                   type="number"
+                  actionText="MAX"
+                  onActionTextClick={()=>getTokenBalances(signer).then(({lp})=>setLpBalance(lp))}
                   hint={<>How many LP tokens you want to stake</>}
                 />
               </div>
@@ -83,7 +80,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     const hash: string = await mintAndLock(
                       signer,
                       provider,
-                      formValues.lpBalance
+                      lpBalance
                     );
                     monitorTx(hash);
                   }}
