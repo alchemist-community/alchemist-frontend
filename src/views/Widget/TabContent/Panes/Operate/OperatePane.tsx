@@ -101,29 +101,6 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
   const cruciblesCardBg = useColorModeValue('white', 'gray.600');
 
-  const testCrucibles = [
-    {
-      id: "1234",
-      balance: "5000",
-      lockedBalance: "400",
-    },
-    {
-      id: "1234",
-      balance: "5000",
-      lockedBalance: "400",
-    },
-    {
-      id: "1234",
-      balance: "5000",
-      lockedBalance: "400",
-    },
-    {
-      id: "1234",
-      balance: "5000",
-      lockedBalance: "400",
-    },
-  ];
-
   const sendModal = (
     <Modal isOpen onClose={() => setModalIsOpen(false)}>
       <ModalOverlay />
@@ -210,7 +187,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           </Modal>
         ))}
 
-      {testCrucibles.map((crucible) => {
+      {crucibles.map((crucible) => {
         return (
           <Box
             p={4}
