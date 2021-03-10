@@ -16,7 +16,11 @@ const CancelButton = ({
 }: CancelProps) => (
   <button
     onClick={handleClick}
-    style={{ border: "none", outline: "none", ...(Object.keys(margin).length && {...margin}) }}
+    style={{
+      border: "none",
+      outline: "none",
+      ...(Object.keys(margin).length && { ...margin }),
+    }}
     className="reset"
   >
     <svg

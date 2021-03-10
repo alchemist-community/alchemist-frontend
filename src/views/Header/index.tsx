@@ -39,7 +39,7 @@ const Header: React.FC = () => {
           _hover={{ background: buttonHoverBgColor }}
         />
         <UserAddress />
-        {wallet.provider? <UserWallet /> : null}
+        {wallet.provider ? <UserWallet /> : null}
       </Box>
     </Flex>
   );
