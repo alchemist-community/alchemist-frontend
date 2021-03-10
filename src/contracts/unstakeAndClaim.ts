@@ -29,7 +29,6 @@ export async function unstakeAndClaim(
     signer
   );
   const crucible = new ethers.Contract(args.crucible, Crucible.abi, signer);
-
   // declare config
 
   const amount = parseUnits(args.amount, await stakingToken.decimals());

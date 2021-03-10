@@ -21,7 +21,8 @@ const Web3Context = React.createContext<{
   readyToTransact: async () => false,
   provider: null,
   signer: null,
-  monitorTx: async () => null,});
+  monitorTx: async () => undefined,
+});
 
 const Web3Provider: React.FC = (props) => {
   const [web3, setWeb3] = useState<Web3ProviderType>(null);
@@ -33,7 +34,7 @@ const Web3Provider: React.FC = (props) => {
   const [wallet, setWallet] = useState<any>({});
   const [onboard, setOnboard] = useState<any>(null);
   const [notify, setNotify] = useState<any>(null);
-  
+
   useEffect(() => {
     const onboard = initOnboard({
       address: setAddress,
