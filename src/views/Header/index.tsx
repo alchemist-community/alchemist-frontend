@@ -1,8 +1,11 @@
 import React from "react";
 import UserAddress from "../UserAddress";
 import LOGO from "../../img/alembic.png";
+import UserWallet from "../UserWallet";
+import Web3Context from "../../Web3Context";
 
 const Header: React.FC = () => {
+  const { web3 } = React.useContext(Web3Context);
   return (
     <header className={"header header--short"}>
       <div className={"container"}>
@@ -12,8 +15,9 @@ const Header: React.FC = () => {
               <img className={"logo__img"} src={LOGO} width="70" alt="" />
             </a>
           </div>
-          <div className={"header__right row"}>
+          <div className={"header__right column"}>
             <UserAddress />
+            {web3 !== null ? <UserWallet /> : null}
           </div>
         </div>
       </div>
