@@ -97,10 +97,50 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     setModalIsOpen(false);
   };
 
+  const sendModal = <Modal isOpen onClose={() => setModalIsOpen(false)}>
+  <ModalOverlay />
+  <ModalContent>
+    <ModalHeader>
+      Send
+    </ModalHeader>
+    <ModalCloseButton />
+    <ModalBody>
+      <FormControl mb={4}>
+        <FormLabel>Address</FormLabel>
+        <Input
+          size="lg"
+          variant="filled"
+          _focus={{ borderColor: "green.300" }}
+          value={sendAddress}
+          onChange={(ev)=>setSendAddress(ev.target.value)}
+          name="address"
+          type="string"
+        />
+      </FormControl>
+    </ModalBody>
+
+    <ModalFooter>
+      <Button
+        bg="green.300"
+        color="white"
+        mr={3}
+        onClick={async ()=>{
+          await sendNFT(signer, selectedCrucible, sendAddress);
+          setModalIsOpen(false);
+        }}
+      >
+        Send
+      </Button>
+    </ModalFooter>
+  </ModalContent>
+</Modal>
+
   // Todo: Add empty state
   return (
     <>
       {modalIsOpen && (
+        modalOperation==='send'?
+        sendModal:
         <Modal isOpen onClose={() => setModalIsOpen(false)}>
           <ModalOverlay />
           <ModalContent>
