@@ -46,9 +46,6 @@ const Header: React.FC = () => {
           <UserAddress />
         </Box>
       </Flex>
-      <Box display={["block", "block", "block", "none"]}>
-        {wallet.provider ? <UserWallet /> : null}
-      </Box>
     </>
   );
 };
