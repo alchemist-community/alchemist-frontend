@@ -201,7 +201,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             flexDirection={"column"}
           >
             <Box mb={4}>
-              <Text fontSize="lg" textAlign={["center", "center", "left"]}>
+              <Text as='div' fontSize="lg" textAlign={["center", "center", "left"]}>
                 <Flex justifyContent="space-between">
                   <HStack>
                     <Box mr={2}>
