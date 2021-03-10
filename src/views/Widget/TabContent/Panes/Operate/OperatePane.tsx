@@ -18,7 +18,7 @@ interface OperatePaneProps {
 const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const { handleInputChange = () => null, isConnected } = props;
 
-  const { connectWallet } = useContext(Web3Context);
+  const { onboard, signer, provider, monitorTx } = useContext(Web3Context);
 
   const [amount2Withdraw, setAmount2Withdraw] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -43,8 +43,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     }[]
   );
   useEffect(() => {
-    getOwnedCrucibles().then(setCrucibles);
-  }, [isConnected]);
+    getOwnedCrucibles(signer, provider).then(setCrucibles);
+  }, [isConnected, provider, signer]);
 
   const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     //setXAmount is the amount displayed in the input, should be string
@@ -77,7 +77,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
   //todo
   const unstake = async () => {
-    await unstakeAndClaim(selectedCrucible, amount2Withdraw);
+    await unstakeAndClaim(signer, monitorTx, selectedCrucible, amount2Withdraw);
     setModalIsOpen(false);
   };
   const withdrawTokens = async () => {
@@ -177,7 +177,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   text="Connect wallet"
                   className="operate__button"
                   type="secondary"
-                  onClick={connectWallet}
+                  onClick={() => onboard.walletSelect()}
                 />
               )}
             </div>

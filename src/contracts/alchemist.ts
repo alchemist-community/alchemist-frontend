@@ -1,5 +1,5 @@
 import IUniswapV2ERC20 from "@uniswap/v2-core/build/IUniswapV2ERC20.json";
-import { ethers, Wallet, Signer } from "ethers";
+import { ethers } from "ethers";
 import { formatEther, parseUnits, randomBytes } from "ethers/lib/utils";
 import { signPermission, signPermitEIP2612 } from "./utils";
 import aludelAbi from "./aludelAbi";
@@ -7,19 +7,18 @@ import crucibleFactoryAbi from "./crucibleFactoryAbi";
 import transmuterAbi from "./transmuterAbi";
 import Crucible from "./Crucible.json";
 
-export async function mintAndLock(rawAmount: string) {
+export async function mintAndLock(
+  signer: any,
+  provider: any,
+  rawAmount: string
+): Promise<string> {
   const args = {
     aludel: "0xf0D415189949d913264A454F57f4279ad66cB24d",
     crucibleFactory: "0x54e0395CFB4f39beF66DBCd5bD93Cca4E9273D56",
     transmuter: "0xB772ce9f14FC7C7db0D4525aDb9349FBD7ce456a",
     amount: rawAmount,
   };
-
-  const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-  const signer = provider.getSigner();
-
   const walletAddress = await signer.getAddress();
-
   // fetch contracts
 
   const aludel = new ethers.Contract(args.aludel, aludelAbi, signer);
@@ -97,4 +96,5 @@ export async function mintAndLock(rawAmount: string) {
     permission
   );
   console.log("  in", tx.hash);
+  return tx.hash;
 }

@@ -6,6 +6,7 @@ import Notification from "../../../common/Notification";
 import { toMaxDecimalsRound } from "../../../utils";
 import Web3Context from "../../../../../Web3Context";
 import { mintAndLock } from "../../../../../contracts/alchemist";
+import { initOnboard } from "../../../../../walletServices";
 
 interface OperatePaneProps {
   handleInputChange?: (form: { [key: string]: string | number }) => void;
@@ -15,7 +16,9 @@ interface OperatePaneProps {
 const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const { handleInputChange = () => null, isConnected } = props;
 
-  const { connectWallet } = useContext(Web3Context);
+  const { onboard, signer, provider, readyToTransact, monitorTx } = useContext(
+    Web3Context
+  );
 
   const [formValues, setFormValues] = useState({
     lpBalance: "",
@@ -75,8 +78,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 <ActionButton
                   text="Stake"
                   className="operate__button"
-                  onClick={() => {
-                    mintAndLock(formValues.lpBalance);
+                  onClick={async () => {
+                    await readyToTransact();
+                    const hash: string = await mintAndLock(
+                      signer,
+                      provider,
+                      formValues.lpBalance
+                    );
+                    monitorTx(hash);
                   }}
                 />
               ) : (
@@ -84,7 +93,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   text="Connect wallet"
                   className="operate__button"
                   type="secondary"
-                  onClick={connectWallet}
+                  onClick={() => onboard.walletSelect()}
                 />
               )}
               <div className="note--bottom">
