@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/modal";
 import { Input } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
+import { useColorModeValue } from "@chakra-ui/color-mode";
 
 interface OperatePaneProps {
   handleInputChange?: (form: { [key: string]: string | number }) => void;
@@ -97,6 +98,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     await withdraw(selectedCrucible, amount2Withdraw);
     setModalIsOpen(false);
   };
+
+  const cruciblesCardBg = useColorModeValue('white', 'gray.600');
 
   const testCrucibles = [
     {
@@ -212,8 +215,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           <Box
             p={4}
             mb={6}
-            bg="gray.600"
+            bg={cruciblesCardBg}
             boxShadow="md"
+            borderWidth={1}
             borderRadius="lg"
             alignItems="center"
             justifyContent="space-between"
@@ -249,7 +253,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 isFullWidth
                 color="white"
                 borderWidth={1}
-                borderColor="gray.600"
+                borderColor={cruciblesCardBg}
                 background="green.300"
                 _focus={{ boxShadow: "none" }}
                 _hover={{ background: "green.400" }}
@@ -265,7 +269,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 isFullWidth
                 color="white"
                 borderWidth={1}
-                borderColor="gray.600"
+                borderColor={cruciblesCardBg}
                 background="green.300"
                 _focus={{ boxShadow: "none" }}
                 _hover={{ background: "green.400" }}
@@ -281,7 +285,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 isFullWidth
                 color="white"
                 borderWidth={1}
-                borderColor="gray.600"
+                borderColor={cruciblesCardBg}
                 background="green.300"
                 _focus={{ boxShadow: "none" }}
                 _hover={{ background: "green.400" }}
