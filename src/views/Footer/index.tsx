@@ -32,7 +32,7 @@ export default function Footer() {
                   <a
                     data-id="code"
                     rel="noopener noreferrer"
-                    href="https://github.com/alchemistcoin/alchemist"
+                    href="https://github.com/alchemist-community/alchemist-frontend"
                     target="_blank"
                     className="menu__link"
                   >
