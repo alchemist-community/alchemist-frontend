@@ -32,8 +32,18 @@ const Web3Provider: React.FC = (props) => {
   const [etherBalance, setEtherBalance] = useState<any>(null);
   const [signer, setSigner] = useState<any>();
   const [wallet, setWallet] = useState<any>({});
-  const [onboard, setOnboard] = useState<any>(null);
+  const [onboard, setOnboard] = useState<ReturnType<typeof initOnboard>>(
+    null as any
+  );
   const [notify, setNotify] = useState<any>(null);
+
+  const updateWallet = (wallet: any) => {
+    setWallet(wallet);
+    const ethersProvider = new ethers.providers.Web3Provider(wallet.provider);
+    setProvider(ethersProvider);
+    setSigner(ethersProvider.getSigner());
+    window.localStorage.setItem("selectedWallet", wallet.name);
+  };
 
   useEffect(() => {
     const onboard = initOnboard({
@@ -42,13 +52,7 @@ const Web3Provider: React.FC = (props) => {
       balance: setEtherBalance,
       wallet: (wallet: any) => {
         if (wallet?.provider?.selectedAddress) {
-          setWallet(wallet);
-          const ethersProvider = new ethers.providers.Web3Provider(
-            wallet.provider
-          );
-          setProvider(ethersProvider);
-          setSigner(ethersProvider.getSigner());
-          window.localStorage.setItem("selectedWallet", wallet.name);
+          updateWallet(wallet);
         } else {
           setProvider(null);
           setWallet({});
@@ -77,6 +81,9 @@ const Web3Provider: React.FC = (props) => {
     }
 
     const ready = await onboard.walletCheck();
+    if (ready && !provider) {
+      updateWallet(onboard.getState().wallet);
+    }
     return ready;
   }
   async function monitorTx(hash: string) {
