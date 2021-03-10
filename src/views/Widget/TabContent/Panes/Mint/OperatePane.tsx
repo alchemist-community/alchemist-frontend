@@ -27,7 +27,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const { handleInputChange = () => null, isConnected } = props;
 
   // Todo: type the extended web3context
-  const { onboard, signer, provider, readyToTransact, monitorTx } = useContext(
+  const { signer, provider, readyToTransact, monitorTx } = useContext(
     Web3Context
   );
 
@@ -151,7 +151,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           background="green.300"
           _focus={{ boxShadow: "none" }}
           _hover={{ background: "green.400" }}
-          onClick={() => onboard.walletSelect()}
+          onClick={() => readyToTransact()}
         >
           Connect Wallet
         </Button>

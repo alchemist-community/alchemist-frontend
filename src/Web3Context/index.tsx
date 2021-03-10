@@ -41,7 +41,7 @@ const Web3Provider: React.FC = (props) => {
       network: setNetwork,
       balance: setEtherBalance,
       wallet: (wallet: any) => {
-        if (wallet.provider) {
+        if (wallet?.provider?.selectedAddress) {
           setWallet(wallet);
           const ethersProvider = new ethers.providers.Web3Provider(
             wallet.provider

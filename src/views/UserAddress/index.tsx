@@ -4,9 +4,9 @@ import { Text, Button, Box, useColorModeValue } from "@chakra-ui/react";
 import { CancelButton } from "../../components";
 
 export default function UserAddress() {
-  const { wallet, address, onboard } = useContext(Web3Context);
+  const { wallet, address, onboard, readyToTransact } = useContext(Web3Context);
 
-  const handleClick = () => (!wallet.provider ? onboard.walletSelect() : null);
+  const handleClick = () => (!wallet.provider ? readyToTransact() : null);
 
   const buttonBgColor = useColorModeValue("white", "gray.700");
 

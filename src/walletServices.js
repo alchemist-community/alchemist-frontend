@@ -3,8 +3,6 @@ import Onboard from 'bnc-onboard'
 
 const networkId = 1
 const rpcUrl = "https://mainnet.infura.io/v3/965c5ec028c84ffcb22c799eddba83a4"
-const apiUrl = process.env.REACT_APP_API_URL
-const staging = process.env.REACT_APP_STAGING
 const dappId = 'd5b4fc8d-04d7-4a94-aaef-4bbeb83af2c9'
 
 export function initOnboard(subscriptions) {
@@ -64,8 +62,7 @@ export function initOnboard(subscriptions) {
       { checkName: 'derivationPath' },
       { checkName: 'connect' },
       { checkName: 'accounts' },
-      { checkName: 'network' },
-      { checkName: 'balance', minimumBalance: '100000' }
+      { checkName: 'network' }
     ]
   })
 }

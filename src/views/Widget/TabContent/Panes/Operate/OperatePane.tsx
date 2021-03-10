@@ -29,7 +29,7 @@ interface OperatePaneProps {
 const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const { handleInputChange = () => null, isConnected } = props;
 
-  const { onboard, signer, provider, monitorTx } = useContext(Web3Context);
+  const { readyToTransact, signer, provider, monitorTx } = useContext(Web3Context);
 
   const [amount2Withdraw, setAmount2Withdraw] = useState("");
   const [sendAddress, setSendAddress] = useState("");
@@ -292,7 +292,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           background="green.300"
           _focus={{ boxShadow: "none" }}
           _hover={{ background: "green.400" }}
-          onClick={() => onboard.walletSelect()}
+          onClick={() => readyToTransact()}
         >
           Connect Wallet
         </Button>
