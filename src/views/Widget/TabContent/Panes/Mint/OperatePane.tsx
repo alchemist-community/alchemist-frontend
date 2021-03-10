@@ -88,7 +88,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 />
               )}
               <div className="note--bottom">
-                Ledger wallets on Metamask don't support the signature types required, so they won't work. See <a href="https://github.com/MetaMask/metamask-extension/issues/10240">the github issue</a> for more info.
+                Ledger wallets on Metamask don't support the signature types
+                required, so they won't work. See{" "}
+                <a href="https://github.com/MetaMask/metamask-extension/issues/10240">
+                  the github issue
+                </a>{" "}
+                for more info.
               </div>
             </div>
           </div>

@@ -22,8 +22,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
   const [amount2Withdraw, setAmount2Withdraw] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalOperation, setModalOperation] = useState<'withdraw'|'unstake'>('unstake');
-  const [selectedCrucible, setSelectedCrucible] = useState('');
+  const [modalOperation, setModalOperation] = useState<"withdraw" | "unstake">(
+    "unstake"
+  );
+  const [selectedCrucible, setSelectedCrucible] = useState("");
 
   const [formValues, setFormValues] = useState({
     lnBalance: "",
@@ -37,7 +39,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     [] as {
       id: string;
       balance: string;
-      lockedBalance:string
+      lockedBalance: string;
     }[]
   );
   useEffect(() => {
@@ -90,15 +92,17 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           <div className="box-operation__operate operate">
             <div className="operate__form">
               <Modal
-                title={modalOperation==='withdraw'?"Withdraw": 'Unstake'}
+                title={modalOperation === "withdraw" ? "Withdraw" : "Unstake"}
                 isOpen={modalIsOpen}
-                buttonText={modalOperation==='withdraw'?"Withdraw": 'Unstake'}
-                onButtonClick={modalOperation==='withdraw'?unstake: withdraw}
+                buttonText={
+                  modalOperation === "withdraw" ? "Withdraw" : "Unstake"
+                }
+                onButtonClick={
+                  modalOperation === "withdraw" ? unstake : withdraw
+                }
                 onCloseClick={() => setModalIsOpen(false)}
               >
-                <div style={{ marginBottom: "2rem" }}>
-                  Input the amount
-                </div>
+                <div style={{ marginBottom: "2rem" }}>Input the amount</div>
                 <div className="form-group">
                   <Input
                     value={amount2Withdraw}
@@ -115,7 +119,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   <div className="crucible-item">
                     <span className="crucible-attribute">
                       <span className="crucible-label">Balance:</span>{" "}
-                      {`${crucible["balance"]} (${crucible['lockedBalance']} locked)`}
+                      {`${crucible["balance"]} (${crucible["lockedBalance"]} locked)`}
                     </span>
                     <span
                       className="crucible-attribute"
@@ -124,9 +128,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                       <span className="crucible-label">ID:</span>{" "}
                       {crucible["id"]}
                     </span>
-                    <span className="" style={{
-                      marginRight: '1em'
-                    }}>
+                    <span
+                      className=""
+                      style={{
+                        marginRight: "1em",
+                      }}
+                    >
                       <ActionButton
                         text="Unstake"
                         type="primary"
@@ -137,13 +144,13 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                           minWidth: "0rem",
                         }}
                         onClick={() => {
-                          setModalOperation('unstake')
-                          setSelectedCrucible(crucible['id'])
-                          setModalIsOpen(true)
+                          setModalOperation("unstake");
+                          setSelectedCrucible(crucible["id"]);
+                          setModalIsOpen(true);
                         }}
                       />
-                      </span>
-                      <span className="">
+                    </span>
+                    <span className="">
                       <ActionButton
                         text="Withdraw"
                         type="primary"
@@ -154,9 +161,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                           minWidth: "0rem",
                         }}
                         onClick={() => {
-                          setModalOperation('withdraw')
-                          setSelectedCrucible(crucible['id'])
-                          setModalIsOpen(true)
+                          setModalOperation("withdraw");
+                          setSelectedCrucible(crucible["id"]);
+                          setModalIsOpen(true);
                         }}
                       />
                     </span>

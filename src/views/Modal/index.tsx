@@ -50,7 +50,11 @@ const Modal: React.FC<ModalProps> = (props) => {
             </button>
           </div>
         </div>
-        <a onClick={props.onCloseClick} rel="modal:close" className="close-modal ">
+        <a
+          onClick={props.onCloseClick}
+          rel="modal:close"
+          className="close-modal "
+        >
           Close
         </a>
       </div>

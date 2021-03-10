@@ -8,20 +8,20 @@ export async function getTokenBalances() {
 
   const walletAddress = await signer.getAddress();
 
-  const lp = (new ethers.Contract(
-    '0xCD6bcca48069f8588780dFA274960F15685aEe0e',
+  const lp = new ethers.Contract(
+    "0xCD6bcca48069f8588780dFA274960F15685aEe0e",
     IERC20.abi,
     signer
-  )).balanceOf(walletAddress);
+  ).balanceOf(walletAddress);
 
-  const token = (new ethers.Contract(
-    '0x88ACDd2a6425c3FaAE4Bc9650Fd7E27e0Bebb7aB',
+  const token = new ethers.Contract(
+    "0x88ACDd2a6425c3FaAE4Bc9650Fd7E27e0Bebb7aB",
     IERC20.abi,
     signer
-  )).balanceOf(walletAddress);
+  ).balanceOf(walletAddress);
 
   return {
-      alchemist: formatUnits(await token),
-      lp: formatUnits(await lp)
-  }
+    alchemist: formatUnits(await token),
+    lp: formatUnits(await lp),
+  };
 }
