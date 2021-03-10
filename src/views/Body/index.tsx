@@ -1,8 +1,15 @@
 import { Box, Heading, Text } from "@chakra-ui/layout";
-import React from "react";
+import { CSSTransition } from "react-transition-group";
+import React, { useEffect, useState } from "react";
 import Widget from "../Widget";
 
 const Body: React.FC = () => {
+  const [inProp, setInProp] = useState(false);
+
+  useEffect(() => {
+    setInProp(true);
+  }, [])
+
   return (
     <Box textAlign="center" mt={[8, 16, 24]}>
       <Heading size="lg" mb={2}>Alchemist</Heading>
@@ -12,7 +19,9 @@ const Body: React.FC = () => {
           ⚗️
         </span>
       </Text>
-      <Widget />
+      <CSSTransition in={inProp} timeout={1000} classNames="fade">
+        <Widget />
+      </CSSTransition>
     </Box>
   );
 };

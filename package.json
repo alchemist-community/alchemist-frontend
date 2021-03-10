@@ -19,6 +19,7 @@
     "react-dom": "^16.13.1",
     "react-icons": "^4.2.0",
     "react-scripts": "3.4.3",
+    "react-transition-group": "^4.4.1",
     "web3": "^1.2.11"
   },
   "scripts": {
@@ -54,6 +55,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^10.4.9",
     "@testing-library/user-event": "^7.1.2",
+    "@types/react-transition-group": "^4.4.1",
     "jest-environment-jsdom-sixteen": "^1.0.3"
   }
 }

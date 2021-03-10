@@ -5,6 +5,8 @@ import App from "./App";
 import theme from "./config/theme";
 import * as serviceWorker from "./serviceWorker";
 
+import '../src/styles/transitions.css'
+
 ReactDOM.render(
   <React.StrictMode>
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
