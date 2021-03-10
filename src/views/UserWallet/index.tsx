@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import Web3Context from "../../Web3Context";
 import { getTokenBalances } from "../../contracts/getTokenBalances";
+import { toMaxDecimalsRound } from "../Widget/utils";
 
 export default function UserAddress() {
   const { signer, address } = useContext(Web3Context);
@@ -37,11 +38,11 @@ export default function UserAddress() {
           <>
             <div style={{ display: "block", width: "100%" }}>
               <span style={{ fontWeight: "bold" }}>Alchemist: </span>
-              <span>{tokenBalance.alchemist} ⚗️</span>
+              <span>{toMaxDecimalsRound(tokenBalance.alchemist, 0.01)} ⚗️</span>
             </div>
             <div style={{ display: "block", width: "100%" }}>
               <span style={{ fontWeight: "bold" }}>LP: </span>
-              <span>{tokenBalance.lp} ⚗️/ETH</span>
+              <span>{toMaxDecimalsRound(tokenBalance.lp, 0.01)} ⚗️/ETH</span>
             </div>
           </>
         ) : (
