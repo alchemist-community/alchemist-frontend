@@ -223,6 +223,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   </HStack>
                 </Flex>
                 {rewards && (
+                  <>
                   <HStack>
                     <Box mr={2}>
                       <strong>Stake Rewards:</strong>{" "}
@@ -233,6 +234,17 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                       {`${rewards[i].currVaultRewards}`}
                     </Box>
                   </HStack>
+                  <HStack>
+                  <Box mr={2}>
+                    <strong>Staking Rewards (Y):</strong>{" "}
+                    {`${rewards[i].futStakeRewards}`}
+                  </Box>
+                  <Box mr={2}>
+                    <strong>Future Vault Rewards (Y):</strong>{" "}
+                    {`${rewards[i].futVaultRewards}`}
+                  </Box>
+                </HStack>
+                </>
                 )}
               </Text>
             </Box>
