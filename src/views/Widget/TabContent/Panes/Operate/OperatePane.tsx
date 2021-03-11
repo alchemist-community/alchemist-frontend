@@ -232,6 +232,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               mb={[4, 4, 0]}
               width="100%"
             >
+              {/*
               <Button
                 isFullWidth
                 color="white"
@@ -248,6 +249,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               >
                 Unstake
               </Button>
+              */}
               <Button
                 isFullWidth
                 color="white"
