@@ -3,6 +3,15 @@ import Web3 from "web3";
 import { ethers } from "ethers";
 import { Web3Provider as Web3ProviderType } from "../ethereum";
 import { initNotify, initOnboard } from "../walletServices";
+import { getUserRewards } from "../contracts/aludel";
+import { getOwnedCrucibles } from "../contracts/getOwnedCrucibles";
+
+interface Rewards {
+  currStakeRewards: string;
+  currVaultRewards: string;
+  futStakeRewards: string;
+  futVaultRewards: string;
+}
 
 const Web3Context = React.createContext<{
   web3: Web3ProviderType;
@@ -13,6 +22,8 @@ const Web3Context = React.createContext<{
   provider: any;
   signer: any;
   monitorTx: (hash: string) => Promise<void>;
+  crucibles: any;
+  rewards: any;
 }>({
   web3: null,
   onboard: null,
@@ -22,6 +33,8 @@ const Web3Context = React.createContext<{
   provider: null,
   signer: null,
   monitorTx: async () => undefined,
+  crucibles: null,
+  rewards: null,
 });
 
 const Web3Provider: React.FC = (props) => {
@@ -32,18 +45,33 @@ const Web3Provider: React.FC = (props) => {
   const [etherBalance, setEtherBalance] = useState<any>(null);
   const [signer, setSigner] = useState<any>();
   const [wallet, setWallet] = useState<any>({});
+  const [crucibles, setCrucibles] = useState(
+    [] as {
+      id: string;
+      balance: string;
+      lockedBalance: string;
+    }[]
+  );
+  const [rewards, setRewards] = useState<Rewards[]>();
   const [onboard, setOnboard] = useState<ReturnType<typeof initOnboard>>(
     null as any
   );
   const [notify, setNotify] = useState<any>(null);
-
-  const updateWallet = (wallet: any) => {
+  const updateWallet = useCallback((wallet: any) => {
     setWallet(wallet);
     const ethersProvider = new ethers.providers.Web3Provider(wallet.provider);
     setProvider(ethersProvider);
     setSigner(ethersProvider.getSigner());
     window.localStorage.setItem("selectedWallet", wallet.name);
-  };
+    if (ethersProvider.getSigner()) {
+      getOwnedCrucibles(ethersProvider.getSigner(), ethersProvider)
+        .then((ownedCrucibles) => {
+          setCrucibles(ownedCrucibles);
+          return getUserRewards(ethersProvider.getSigner(), ownedCrucibles);
+        })
+        .then(setRewards);
+    }
+  }, []);
 
   useEffect(() => {
     const onboard = initOnboard({
@@ -62,7 +90,7 @@ const Web3Provider: React.FC = (props) => {
 
     setOnboard(onboard);
     setNotify(initNotify());
-  }, []);
+  }, [updateWallet]);
 
   useEffect(() => {
     const previouslySelectedWallet = window.localStorage.getItem(
@@ -117,6 +145,8 @@ const Web3Provider: React.FC = (props) => {
         signer,
         provider,
         monitorTx,
+        crucibles,
+        rewards,
       }}
     >
       {props.children}

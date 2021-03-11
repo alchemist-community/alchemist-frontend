@@ -14,7 +14,7 @@ const CancelButton = ({
   margin = {},
   handleClick,
 }: CancelProps) => (
-  <button
+  <div
     onClick={handleClick}
     style={{
       border: "none",
@@ -39,7 +39,7 @@ const CancelButton = ({
         fill={fill}
       />
     </svg>
-  </button>
+  </div>
 );
 
 export default CancelButton;

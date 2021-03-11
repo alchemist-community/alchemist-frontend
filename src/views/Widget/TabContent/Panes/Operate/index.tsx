@@ -4,7 +4,7 @@ import Web3Context from "../../../../../Web3Context";
 
 const Operate: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string>();
-  const { wallet, address } = useContext(Web3Context);
+  const { wallet, crucibles, rewards } = useContext(Web3Context);
 
   if (!!errorMsg) {
     return <span>{errorMsg}</span>;
@@ -13,6 +13,8 @@ const Operate: React.FC = () => {
       <OperatePane
         handleInputChange={(form) => {}}
         isConnected={!!wallet.provider}
+        crucibles={crucibles}
+        rewards={rewards}
       />
     );
   }

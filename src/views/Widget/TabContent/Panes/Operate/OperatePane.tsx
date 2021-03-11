@@ -7,6 +7,7 @@ import { sendNFT } from "../../../../../contracts/sendNFT";
 import { withdraw } from "../../../../../contracts/withdraw";
 import { Button, ButtonGroup } from "@chakra-ui/button";
 import { Badge, Box, Flex, HStack, Text } from "@chakra-ui/layout";
+import { formatUnits } from "ethers/lib/utils";
 import { FaLock } from "react-icons/fa";
 import {
   Modal,
@@ -24,10 +25,17 @@ import { useColorModeValue } from "@chakra-ui/color-mode";
 interface OperatePaneProps {
   handleInputChange?: (form: { [key: string]: string | number }) => void;
   isConnected: boolean;
+  crucibles: any;
+  rewards: any;
 }
 
 const OperatePane: React.FC<OperatePaneProps> = (props) => {
-  const { handleInputChange = () => null, isConnected } = props;
+  const {
+    handleInputChange = () => null,
+    isConnected,
+    crucibles,
+    rewards,
+  } = props;
 
   const { readyToTransact, signer, provider, monitorTx } = useContext(
     Web3Context
@@ -49,16 +57,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     nodeAddress: "",
   });
 
-  const [crucibles, setCrucibles] = useState(
-    [] as {
-      id: string;
-      balance: string;
-      lockedBalance: string;
-    }[]
-  );
   useEffect(() => {
     if (signer) {
-      getOwnedCrucibles(signer, provider).then(setCrucibles);
+      // getOwnedCrucibles(signer, provider).then(setCrucibles);
     }
   }, [isConnected, provider, signer]);
 
@@ -177,9 +178,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   color="white"
                   mr={3}
                   onClick={
-                    modalOperation === "withdraw"
-                      ? withdrawTokens
-                      : unstake
+                    modalOperation === "withdraw" ? withdrawTokens : unstake
                   }
                 >
                   {modalOperation === "withdraw" ? "Withdraw" : "Unstake"}
@@ -189,7 +188,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           </Modal>
         ))}
 
-      {crucibles.map((crucible) => {
+      {crucibles.map((crucible: any, i: number) => {
         return (
           <Box
             p={4}
@@ -201,6 +200,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             alignItems="center"
             justifyContent="space-between"
             flexDirection={"column"}
+            key={i}
           >
             <Box mb={4}>
               <Text
@@ -211,20 +211,33 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 <Flex justifyContent="space-between">
                   <HStack>
                     <Box mr={2}>
-                      <strong>Balance:</strong> {`${crucible["balance"]}`}
+                      <strong>Balance:</strong>{" "}
+                      {`${formatUnits(crucible["balance"])}`}
                     </Box>
                     <Badge py={1} px={2} borderRadius="xl" fonSize="2em">
                       <HStack>
-                        <Box>{crucible["lockedBalance"]}</Box>
+                        <Box>{formatUnits(crucible["lockedBalance"])}</Box>
                         <FaLock />
                       </HStack>
                     </Badge>
                   </HStack>
-                  <Box fontSize="sm" color="gray.400">
-                    ID: {crucible["id"]}
-                  </Box>
                 </Flex>
+                {rewards && (
+                  <HStack>
+                    <Box mr={2}>
+                      <strong>Stake Rewards:</strong>{" "}
+                      {`${rewards[i].currStakeRewards}`}
+                    </Box>
+                    <Box mr={2}>
+                      <strong>Vault Rewards:</strong>{" "}
+                      {`${rewards[i].currVaultRewards}`}
+                    </Box>
+                  </HStack>
+                )}
               </Text>
+            </Box>
+            <Box fontSize="sm" color="gray.400">
+              ID: {crucible["id"]}
             </Box>
             <ButtonGroup
               isAttached
