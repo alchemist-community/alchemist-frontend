@@ -6,6 +6,7 @@ import theme from "./config/theme";
 import * as serviceWorker from "./serviceWorker";
 
 import "../src/styles/transitions.css";
+import 'focus-visible/dist/focus-visible';
 
 ReactDOM.render(
   <React.StrictMode>
