@@ -17,13 +17,20 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/modal";
-import { Input } from "@chakra-ui/input";
+import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 
 interface OperatePaneProps {
   handleInputChange?: (form: { [key: string]: string | number }) => void;
   isConnected: boolean;
+}
+
+// Todo extract common interfaces/types to seperate file
+interface Crucible {
+  id: string;
+  balance: string;
+  lockedBalance: string;
 }
 
 const OperatePane: React.FC<OperatePaneProps> = (props) => {
@@ -49,13 +56,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     nodeAddress: "",
   });
 
-  const [crucibles, setCrucibles] = useState(
-    [] as {
-      id: string;
-      balance: string;
-      lockedBalance: string;
-    }[]
-  );
+  const [crucibles, setCrucibles] = useState<Crucible[]>([]);
   useEffect(() => {
     if (signer) {
       getOwnedCrucibles(signer, provider).then(setCrucibles);
@@ -100,7 +101,17 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     await withdraw(selectedCrucible, amount2Withdraw);
     setModalIsOpen(false);
   };
+  const handleMax = () => {
+    const selected = crucibles.find(crucible => crucible.id === selectedCrucible);
 
+    if (modalOperation === 'unstake') {
+      const maxAmount = selected?.lockedBalance ?? "0";
+      setAmount2Withdraw(maxAmount);
+      return;
+    } else {
+      // Implementation dependant on pull/23
+    }
+  }
   const cruciblesCardBg = useColorModeValue("white", "gray.600");
 
   const sendModal = (
@@ -158,16 +169,29 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               <ModalBody>
                 <FormControl mb={4}>
                   <FormLabel>Amount</FormLabel>
-                  <Input
-                    size="lg"
-                    variant="filled"
-                    _focus={{ borderColor: "green.300" }}
-                    value={amount2Withdraw}
-                    onChange={formatAmount2Withdraw}
-                    name="balance"
-                    placeholder="0.0"
-                    type="number"
-                  />
+                  <InputGroup size="md">
+                    <Input
+                      size="lg"
+                      variant="filled"
+                      _focus={{ borderColor: "green.300" }}
+                      value={amount2Withdraw}
+                      onChange={formatAmount2Withdraw}
+                      name="balance"
+                      placeholder="0.0"
+                      type="number"
+                    />
+                    <InputRightElement width="4.5rem">
+                      <Button
+                        mr={2}
+                        mt={2}
+                        h="2rem"
+                        variant="ghost"
+                        onClick={handleMax}
+                      >
+                        Max
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
                 </FormControl>
               </ModalBody>
 
@@ -177,9 +201,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   color="white"
                   mr={3}
                   onClick={
-                    modalOperation === "withdraw"
-                      ? withdrawTokens
-                      : unstake
+                    modalOperation === "withdraw" ? withdrawTokens : unstake
                   }
                 >
                   {modalOperation === "withdraw" ? "Withdraw" : "Unstake"}
