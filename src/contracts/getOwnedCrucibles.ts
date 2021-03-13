@@ -35,5 +35,7 @@ export async function getOwnedCrucibles(signer: any, provider: any) {
       owner: await owner
     };
   });
-  return (await Promise.all(crucibles)).filter(crucible=>crucible.owner===walletAddress);
+  return (await Promise.all(crucibles)).filter((crucible, index, resolvedCrucibles)=>
+  crucible.owner===walletAddress
+  && resolvedCrucibles.slice(0, index).find(c=>c.id===crucible.id) === undefined);
 }
