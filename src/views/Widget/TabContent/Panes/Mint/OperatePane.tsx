@@ -110,7 +110,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             placeholder="0.0"
             type="number"
           />
-          <InputRightElement width="4.5rem">
+          <InputRightElement width="4.5rem" zIndex={0}>
             <Button
               mr={2}
               mt={2}
