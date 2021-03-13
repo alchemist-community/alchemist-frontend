@@ -1,7 +1,8 @@
 import React from "react";
 import UserWallet from "../UserWallet";
 import UserAddress from "../UserAddress";
-import LOGO from "../../img/alembic.png";
+import LOGO_LIGHT from "../../img/logo_light.png";
+import LOGO_DARK from "../../img/logo_dark.png";
 import Web3Context from "../../Web3Context";
 import { Image } from "@chakra-ui/image";
 import { IconButton } from "@chakra-ui/button";
@@ -16,6 +17,7 @@ const Header: React.FC = () => {
 
   const isDarkMode = colorMode === "dark";
   const buttonHoverBgColor = useColorModeValue("gray.100", "gray.700");
+  const logo = useColorModeValue(LOGO_LIGHT, LOGO_DARK);
 
   return (
     <>
@@ -24,8 +26,8 @@ const Header: React.FC = () => {
         <LinkBox width={["auto", "auto", 283]}>
           <LinkOverlay href="/">
             <Image
-              src={LOGO}
-              width={["50px", "50px", "70px"]}
+              src={logo}
+              width={["50px", "50px", "60px"]}
               alt="alchemist logo"
             />
           </LinkOverlay>

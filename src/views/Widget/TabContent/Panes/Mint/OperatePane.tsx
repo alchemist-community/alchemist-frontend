@@ -61,7 +61,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         status="info"
         borderWidth={1}
         borderRadius="lg"
-        borderColor="green.300"
+        borderColor="brand.400"
         background={alertBgColor}
       >
         <Text>
@@ -89,7 +89,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 aria-label="info"
                 variant="ghost"
                 icon={<FiInfo />}
-                _hover={{ background: "transparent", color: "green.300" }}
+                _hover={{ background: "transparent", color: "brand.400" }}
                 _focus={{ border: "none" }}
               />
             </PopoverTrigger>
@@ -103,14 +103,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           <Input
             size="lg"
             variant="filled"
-            _focus={{ borderColor: "green.300" }}
+            _focus={{ borderColor: "brand.400" }}
             value={lpBalance}
             onChange={onChange}
             name="lpBalance"
             placeholder="0.0"
             type="number"
           />
-          <InputRightElement width="4.5rem">
+          <InputRightElement width="4.5rem" zIndex={0}>
             <Button
               mr={2}
               mt={2}
@@ -132,9 +132,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           size="lg"
           isFullWidth
           color="white"
-          background="green.300"
+          background="brand.400"
           _focus={{ boxShadow: "none" }}
-          _hover={{ background: "green.400" }}
+          _hover={{ background: "brand.400" }}
           onClick={async () => {
             await readyToTransact();
             const hash: string = await mintAndLock(signer, provider, lpBalance);
@@ -148,9 +148,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           size="lg"
           isFullWidth
           color="white"
-          background="green.300"
+          background="brand.400"
           _focus={{ boxShadow: "none" }}
-          _hover={{ background: "green.400" }}
+          _hover={{ background: "brand.400" }}
           onClick={() => readyToTransact()}
         >
           Connect Wallet
@@ -160,7 +160,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         Ledger wallets on Metamask don't support the signature types required,
         so they won't work. See{" "}
         <Link
-          color="green.300"
+          color="brand.400"
           href="https://github.com/MetaMask/metamask-extension/issues/10240"
           isExternal
         >

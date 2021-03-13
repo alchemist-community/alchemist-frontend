@@ -6,7 +6,7 @@ import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
 import { sendNFT } from "../../../../../contracts/sendNFT";
 import { withdraw } from "../../../../../contracts/withdraw";
 import { Button, ButtonGroup } from "@chakra-ui/button";
-import { Badge, Box, Flex, HStack, Text } from "@chakra-ui/layout";
+import { Badge, Box, Flex, HStack, Text, Link } from "@chakra-ui/layout";
 import { FaLock } from "react-icons/fa";
 import {
   Modal,
@@ -93,7 +93,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
   //todo
   const unstake = async () => {
+    const cruciblesOnCurrentNetwork = await getOwnedCrucibles(signer, provider);
+    // It would be nice to suggest the taichi network to the user but metamask doesn't allow suggestions for networks whose chainId it already contains
+    if (cruciblesOnCurrentNetwork.length !== 0) { // On taichi eth_getLogs doesn't work and returns empty logs, we use this to hack together a taichi detection mechanism
+      alert("You have not changed your network yet");
+      return;
+    }
     await unstakeAndClaim(signer, monitorTx, selectedCrucible, amount);
+    alert("Unstaked! Remember to change your network back to Mainnet to see your crucibles.")
     setModalIsOpen(false);
   };
   const increaseStake = async () => {
@@ -120,7 +127,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             <Input
               size="lg"
               variant="filled"
-              _focus={{ borderColor: "green.300" }}
+              _focus={{ borderColor: "brand.400" }}
               value={sendAddress}
               onChange={(ev) => setSendAddress(ev.target.value)}
               name="address"
@@ -131,7 +138,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
         <ModalFooter>
           <Button
-            bg="green.300"
+            bg="brand.400"
             color="white"
             mr={3}
             onClick={async () => {
@@ -165,13 +172,19 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
+                {modalOperation === "unstake" ? <>Before unstaking you'll need to add a new network provider following {" "}
+                <Link
+                    color="green.300"
+                    href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
+                    isExternal
+                  >this guide</Link></> : ""}
                 <FormControl mb={4}>
                   <FormLabel>Amount</FormLabel>
                   {/* TODO: Add max button */}
                   <Input
                     size="lg"
                     variant="filled"
-                    _focus={{ borderColor: "green.300" }}
+                    _focus={{ borderColor: "brand.400" }}
                     value={amount}
                     onChange={formatAmount}
                     name="balance"
@@ -183,7 +196,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
               <ModalFooter>
                 <Button
-                  bg="green.300"
+                  bg="brand.400"
                   color="white"
                   mr={3}
                   onClick={
@@ -208,6 +221,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
       {crucibles.map((crucible) => {
         return (
           <Box
+            key={crucible.id}
             p={4}
             mb={6}
             bg={cruciblesCardBg}
@@ -253,9 +267,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 color="white"
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
-                background="green.300"
+                background="brand.400"
                 _focus={{ boxShadow: "none" }}
-                _hover={{ background: "green.400" }}
+                _hover={{ background: "brand.400" }}
                 onClick={() => {
                   setModalOperation("increaseStake");
                   setSelectedCrucible(crucible["id"]);
@@ -264,16 +278,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               >
                 Increase stake
               </Button>
-
-              {/*
               <Button
                 isFullWidth
                 color="white"
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
-                background="green.300"
+                background="brand.400"
                 _focus={{ boxShadow: "none" }}
-                _hover={{ background: "green.400" }}
+                _hover={{ background: "brand.400" }}
                 onClick={() => {
                   setModalOperation("unstake");
                   setSelectedCrucible(crucible["id"]);
@@ -282,15 +294,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               >
                 Unstake
               </Button>
-              */}
               <Button
                 isFullWidth
                 color="white"
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
-                background="green.300"
+                background="brand.400"
                 _focus={{ boxShadow: "none" }}
-                _hover={{ background: "green.400" }}
+                _hover={{ background: "brand.400" }}
                 onClick={() => {
                   setModalOperation("withdraw");
                   setSelectedCrucible(crucible["id"]);
@@ -304,9 +315,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 color="white"
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
-                background="green.300"
+                background="brand.400"
                 _focus={{ boxShadow: "none" }}
-                _hover={{ background: "green.400" }}
+                _hover={{ background: "brand.400" }}
                 onClick={() => {
                   setModalOperation("send");
                   setSelectedCrucible(crucible["id"]);
@@ -326,9 +337,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           size="lg"
           isFullWidth
           color="white"
-          background="green.300"
+          background="brand.400"
           _focus={{ boxShadow: "none" }}
-          _hover={{ background: "green.400" }}
+          _hover={{ background: "brand.400" }}
           onClick={() => readyToTransact()}
         >
           Connect Wallet

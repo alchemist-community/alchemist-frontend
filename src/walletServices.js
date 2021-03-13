@@ -33,10 +33,8 @@ export function initOnboard(subscriptions) {
         { walletName: "opera" },
         { walletName: "torus" },
         { walletName: "status" },
-        { walletName: "walletLink", appName: APP_NAME },
+        { walletName: "walletLink", appName: APP_NAME, rpcUrl },
         { walletName: "frame" },
-
-        { walletName: 'opera' },
         { walletName: 'operaTouch' },
         { walletName: 'imToken', rpcUrl },
         { walletName: 'meetone' },
