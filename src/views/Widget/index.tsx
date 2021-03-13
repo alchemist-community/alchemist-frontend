@@ -32,7 +32,7 @@ const Widget: React.FC<WidgetProps> = () => {
               fontWeight={500}
               _selected={{
                 color: "inherit",
-                borderColor: "green.300",
+                borderColor: "brand.400",
                 borderBottomWidth: 3,
               }}
             >
@@ -43,7 +43,7 @@ const Widget: React.FC<WidgetProps> = () => {
               fontWeight={500}
               _selected={{
                 color: "inherit",
-                borderColor: "green.300",
+                borderColor: "brand.400",
                 borderBottomWidth: 3,
               }}
             >

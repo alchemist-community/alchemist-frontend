@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Web3Context from "../../Web3Context";
-import { Text, Button, Box, useColorModeValue } from "@chakra-ui/react";
-import { CancelButton } from "../../components";
+import { Text, Button, Box, useColorModeValue, IconButton } from "@chakra-ui/react";
+import { IoMdClose } from 'react-icons/io'
 
 export default function UserAddress() {
   const { wallet, address, onboard, readyToTransact } = useContext(Web3Context);
@@ -32,17 +32,20 @@ export default function UserAddress() {
           </>
         )}
         <Box
-          background={address ? "green.400" : "gray.400"}
+          background={address ? "green.500" : "gray.400"}
           borderRadius="100%"
-          width={3}
-          height={3}
+          width={2.5}
+          height={2.5}
         />
         {wallet.provider && (
-          <CancelButton
-            margin={{ marginLeft: "8px" }}
-            width="14px"
-            height="14px"
-            handleClick={() => onboard.walletReset()}
+          <IconButton
+            ml={2}
+            mr={-2}
+            size="sm"
+            variant="ghost"
+            icon={<IoMdClose />}
+            onClick={() => onboard.walletReset()}
+            aria-label="reset wallet"
           />
         )}
       </Button>
