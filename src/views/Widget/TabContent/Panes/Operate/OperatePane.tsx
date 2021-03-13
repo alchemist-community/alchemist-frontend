@@ -6,7 +6,7 @@ import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
 import { sendNFT } from "../../../../../contracts/sendNFT";
 import { withdraw } from "../../../../../contracts/withdraw";
 import { Button, ButtonGroup } from "@chakra-ui/button";
-import { Badge, Box, Flex, HStack, Text } from "@chakra-ui/layout";
+import { Badge, Box, Flex, HStack, Text, Link } from "@chakra-ui/layout";
 import { FaLock } from "react-icons/fa";
 import {
   Modal,
@@ -93,7 +93,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
   //todo
   const unstake = async () => {
+    const cruciblesOnCurrentNetwork = await getOwnedCrucibles(signer, provider);
+    // It would be nice to suggest the taichi network to the user but metamask doesn't allow suggestions for networks whose chainId it already contains
+    if (cruciblesOnCurrentNetwork.length !== 0) { // On taichi eth_getLogs doesn't work and returns empty logs, we use this to hack together a taichi detection mechanism
+      alert("You have not changed your network yet");
+      return;
+    }
     await unstakeAndClaim(signer, monitorTx, selectedCrucible, amount2Withdraw);
+    alert("Unstaked! Remember to change your network back to Mainnet to see your crucibles.")
     setModalIsOpen(false);
   };
   const withdrawTokens = async () => {
@@ -156,7 +163,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                {modalOperation === "unstake"? "WARNING: THERE'S A BUG CURRENTLY BEING FIXED THAT CAN LEAD TO LOSS OF REWARDS IF YOU UNSTAKE NOW, ONLY UNSTAKE IF YOU ARE OKAY WITH LOOSING ALL REWARDS": ""}
+                {modalOperation === "unstake" ? <>Before unstaking you'll need to add a new network provider following {" "}
+                <Link
+                    color="green.300"
+                    href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
+                    isExternal
+                  >this guide</Link></> : ""}
                 <FormControl mb={4}>
                   <FormLabel>Amount</FormLabel>
                   <Input
@@ -193,6 +205,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
       {crucibles.map((crucible) => {
         return (
           <Box
+            key={crucible.id}
             p={4}
             mb={6}
             bg={cruciblesCardBg}
