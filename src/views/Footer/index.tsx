@@ -53,8 +53,8 @@ const Footer: React.FC = () => {
                 isExternal={isExternal}
                 rel="noopener noreferrer"
                 _hover={{
-                  color: "green.300",
-                  borderBottomColor: "green.300",
+                  color: "brand.400",
+                  borderBottomColor: "brand.400",
                   borderBottomWidth: 1,
                 }}
               >

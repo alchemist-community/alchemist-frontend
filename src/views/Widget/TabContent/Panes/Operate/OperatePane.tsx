@@ -115,7 +115,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             <Input
               size="lg"
               variant="filled"
-              _focus={{ borderColor: "green.300" }}
+              _focus={{ borderColor: "brand.400" }}
               value={sendAddress}
               onChange={(ev) => setSendAddress(ev.target.value)}
               name="address"
@@ -126,7 +126,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
         <ModalFooter>
           <Button
-            bg="green.300"
+            bg="brand.400"
             color="white"
             mr={3}
             onClick={async () => {
@@ -161,7 +161,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   <Input
                     size="lg"
                     variant="filled"
-                    _focus={{ borderColor: "green.300" }}
+                    _focus={{ borderColor: "brand.400" }}
                     value={amount2Withdraw}
                     onChange={formatAmount2Withdraw}
                     name="balance"
@@ -173,7 +173,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
               <ModalFooter>
                 <Button
-                  bg="green.300"
+                  bg="brand.400"
                   color="white"
                   mr={3}
                   onClick={
@@ -238,9 +238,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 color="white"
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
-                background="green.300"
+                background="brand.400"
                 _focus={{ boxShadow: "none" }}
-                _hover={{ background: "green.400" }}
+                _hover={{ background: "brand.400" }}
                 onClick={() => {
                   setModalOperation("unstake");
                   setSelectedCrucible(crucible["id"]);
@@ -255,9 +255,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 color="white"
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
-                background="green.300"
+                background="brand.400"
                 _focus={{ boxShadow: "none" }}
-                _hover={{ background: "green.400" }}
+                _hover={{ background: "brand.400" }}
                 onClick={() => {
                   setModalOperation("withdraw");
                   setSelectedCrucible(crucible["id"]);
@@ -271,9 +271,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 color="white"
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
-                background="green.300"
+                background="brand.400"
                 _focus={{ boxShadow: "none" }}
-                _hover={{ background: "green.400" }}
+                _hover={{ background: "brand.400" }}
                 onClick={() => {
                   setModalOperation("send");
                   setSelectedCrucible(crucible["id"]);
@@ -293,9 +293,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           size="lg"
           isFullWidth
           color="white"
-          background="green.300"
+          background="brand.400"
           _focus={{ boxShadow: "none" }}
-          _hover={{ background: "green.400" }}
+          _hover={{ background: "brand.400" }}
           onClick={() => readyToTransact()}
         >
           Connect Wallet
