@@ -156,6 +156,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
+                {modalOperation === "unstake"? "WARNING: THERE'S A BUG CURRENTLY BEING FIXED THAT CAN LEAD TO LOSS OF REWARDS IF YOU UNSTAKE NOW, ONLY UNSTAKE IF YOU ARE OKAY WITH LOOSING ALL REWARDS": ""}
                 <FormControl mb={4}>
                   <FormLabel>Amount</FormLabel>
                   <Input
@@ -232,7 +233,6 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               mb={[4, 4, 0]}
               width="100%"
             >
-              {/*
               <Button
                 isFullWidth
                 color="white"
@@ -249,7 +249,6 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               >
                 Unstake
               </Button>
-              */}
               <Button
                 isFullWidth
                 color="white"
