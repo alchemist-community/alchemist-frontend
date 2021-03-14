@@ -244,6 +244,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
                 background='brand.400'
+                fontSize={{ base: 'sm', sm: 'md' }}
                 _focus={{ boxShadow: 'none' }}
                 _hover={{ background: 'brand.400' }}
                 onClick={() => {
@@ -260,6 +261,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
                 background='brand.400'
+                fontSize={{ base: 'sm', sm: 'md' }}
                 _focus={{ boxShadow: 'none' }}
                 _hover={{ background: 'brand.400' }}
                 onClick={() => {
@@ -276,6 +278,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
                 background='brand.400'
+                fontSize={{ base: 'sm', sm: 'md' }}
                 _focus={{ boxShadow: 'none' }}
                 _hover={{ background: 'brand.400' }}
                 onClick={() => {
