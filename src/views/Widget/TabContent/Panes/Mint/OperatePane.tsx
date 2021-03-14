@@ -71,6 +71,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           </span>
           /ETH pair on Uniswap through{" "}
           <Link
+            color="brand.400"
             isExternal
             href="https://app.uniswap.org/#/add/0x88acdd2a6425c3faae4bc9650fd7e27e0bebb7ab/ETH"
           >
