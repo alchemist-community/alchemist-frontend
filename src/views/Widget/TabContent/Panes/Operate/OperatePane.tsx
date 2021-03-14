@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { toMaxDecimalsRound } from "../../../utils";
+import { toMaxDecimalsRound, decimalCount } from "../../../utils";
 import Web3Context from "../../../../../Web3Context";
 import { getOwnedCrucibles } from "../../../../../contracts/getOwnedCrucibles";
 import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
@@ -19,9 +19,8 @@ import {
 } from "@chakra-ui/modal";
 import { Input } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
-import { useColorModeValue } from "@chakra-ui/color-mode";
 import { mintAndLock } from "../../../../../contracts/alchemist";
-import { Tooltip } from "@chakra-ui/tooltip";
+import CrucibleCard from "./CrucibleCard";
 
 interface OperatePaneProps {
   handleInputChange?: (form: { [key: string]: string | number }) => void;
@@ -109,8 +108,6 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     setModalIsOpen(false);
   };
 
-  const cruciblesCardBg = useColorModeValue("white", "gray.600");
-
   const sendModal = (
     <Modal isOpen onClose={() => setModalIsOpen(false)}>
       <ModalOverlay />
@@ -159,7 +156,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           <Modal isOpen onClose={() => setModalIsOpen(false)}>
             <ModalOverlay />
             <ModalContent>
-            <ModalHeader>
+              <ModalHeader>
                 {modalOperation === "withdraw"
                   ? "Withdraw"
                   : modalOperation === "unstake"
@@ -224,117 +221,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
       {crucibles.map((crucible) => {
         return (
-          <Box
-            key={crucible.id}
-            p={4}
-            mb={6}
-            bg={cruciblesCardBg}
-            boxShadow="md"
-            borderWidth={1}
-            borderRadius="lg"
-            alignItems="center"
-            justifyContent="space-between"
-            flexDirection={"column"}
-          >
-            <Box mb={4}>
-              <Text as="div" fontSize="lg" textAlign={["center", "center", "left"]}>
-                <Flex justifyContent="space-between" flexDirection="column">
-                  <Flex justifyContent="space-between">
-                    <Box>
-                      <strong>Balance:</strong> {`${crucible["balance"]}`}
-                    </Box>
-                    <Badge py={1} px={2} borderRadius="xl" fontSize=".7em">
-                      <HStack>
-                        <Box>{crucible["lockedBalance"]}</Box>
-                        <Tooltip hasArrow label="Staked amount" bg="gray.400" color="white" placement="bottom-end" offset={[0, 16]}>
-                          <div>
-                            <FaLock />
-                          </div>
-                        </Tooltip>
-                      </HStack>
-                    </Badge>
-                  </Flex>
-                  <Flex fontSize="sm" color="gray.400" textAlign="left" verticalAlign="top" marginTop="8px">
-                    <label style={{ alignSelf: "flex-start" }}>ID: </label>
-                    <span style={{ wordWrap: "break-word", width: "100%", paddingLeft: "4px", paddingRight: "16px" }}>
-                      {crucible["id"]}
-                    </span>
-                  </Flex>
-                </Flex>
-              </Text>
-            </Box>
-            <ButtonGroup isAttached variant="outline" mb={[4, 4, 0]} width="100%">
-              {/*
-              <Button
-                isFullWidth
-                color="white"
-                borderWidth={1}
-                borderColor={cruciblesCardBg}
-                background="brand.400"
-                fontSize={{ base: "sm", sm: "md" }}
-                _focus={{ boxShadow: "none" }}
-                _hover={{ background: "brand.400" }}
-                onClick={() => {
-                  setModalOperation("increaseStake");
-                  setSelectedCrucible(crucible["id"]);
-                  setModalIsOpen(true);
-                }}
-              >
-                Increase stake
-              </Button>
-              */}
-              <Button
-                isFullWidth
-                color="white"
-                borderWidth={1}
-                borderColor={cruciblesCardBg}
-                background="brand.400"
-                _focus={{ boxShadow: "none" }}
-                _hover={{ background: "brand.400" }}
-                onClick={() => {
-                  setModalOperation("unstake");
-                  setSelectedCrucible(crucible["id"]);
-                  setModalIsOpen(true);
-                }}
-              >
-                Unstake
-              </Button>
-              <Button
-                isFullWidth
-                color="white"
-                borderWidth={1}
-                borderColor={cruciblesCardBg}
-                background="brand.400"
-                fontSize={{ base: "sm", sm: "md" }}
-                _focus={{ boxShadow: "none" }}
-                _hover={{ background: "brand.400" }}
-                onClick={() => {
-                  setModalOperation("withdraw");
-                  setSelectedCrucible(crucible["id"]);
-                  setModalIsOpen(true);
-                }}
-              >
-                Withdraw
-              </Button>
-              <Button
-                isFullWidth
-                color="white"
-                borderWidth={1}
-                borderColor={cruciblesCardBg}
-                background="brand.400"
-                fontSize={{ base: "sm", sm: "md" }}
-                _focus={{ boxShadow: "none" }}
-                _hover={{ background: "brand.400" }}
-                onClick={() => {
-                  setModalOperation("send");
-                  setSelectedCrucible(crucible["id"]);
-                  setModalIsOpen(true);
-                }}
-              >
-                Send
-              </Button>
-            </ButtonGroup>
-          </Box>
+          <CrucibleCard
+            crucible={crucible}
+            setModalOperation={setModalOperation}
+            setModalIsOpen={setModalIsOpen}
+            setSelectedCrucible={setSelectedCrucible}
+          />
         );
       })}
       {isConnected ? (
