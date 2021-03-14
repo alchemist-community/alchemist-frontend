@@ -15,7 +15,7 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton,
+  ModalCloseButton
 } from "@chakra-ui/modal";
 import { Input } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
@@ -30,16 +30,12 @@ interface OperatePaneProps {
 const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const { handleInputChange = () => null, isConnected } = props;
 
-  const { readyToTransact, signer, provider, monitorTx } = useContext(
-    Web3Context
-  );
+  const { readyToTransact, signer, provider, monitorTx } = useContext(Web3Context);
 
   const [amount, setAmount] = useState("");
   const [sendAddress, setSendAddress] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalOperation, setModalOperation] = useState<
-    "withdraw" | "unstake" | "send" | "increaseStake"
-  >("unstake");
+  const [modalOperation, setModalOperation] = useState<"withdraw" | "unstake" | "send" | "increaseStake">("unstake");
   const [selectedCrucible, setSelectedCrucible] = useState("");
 
   const [formValues, setFormValues] = useState({
@@ -47,7 +43,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     tbtcBalance: "",
     linearFee: "",
     constantFee: "",
-    nodeAddress: "",
+    nodeAddress: ""
   });
 
   const [crucibles, setCrucibles] = useState(
@@ -69,14 +65,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     let value = ev.target.value;
     if (ev.target.type === "number")
       value =
-        ev.target.value === ""
-          ? ev.target.value
-          : toMaxDecimalsRound(ev.target.value, +ev.target.step).toString();
+        ev.target.value === "" ? ev.target.value : toMaxDecimalsRound(ev.target.value, +ev.target.step).toString();
 
     setFormValues((old) => {
       return {
         ...old,
-        [name]: value,
+        [name]: value
       };
     });
   };
@@ -95,12 +89,13 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const unstake = async () => {
     const cruciblesOnCurrentNetwork = await getOwnedCrucibles(signer, provider);
     // It would be nice to suggest the taichi network to the user but metamask doesn't allow suggestions for networks whose chainId it already contains
-    if (cruciblesOnCurrentNetwork.length !== 0) { // On taichi eth_getLogs doesn't work and returns empty logs, we use this to hack together a taichi detection mechanism
+    if (cruciblesOnCurrentNetwork.length !== 0) {
+      // On taichi eth_getLogs doesn't work and returns empty logs, we use this to hack together a taichi detection mechanism
       alert("You have not changed your network yet");
       return;
     }
     await unstakeAndClaim(signer, monitorTx, selectedCrucible, amount);
-    alert("Unstaked! Remember to change your network back to Mainnet to see your crucibles.")
+    alert("Unstaked! Remember to change your network back to Mainnet to see your crucibles.");
     setModalIsOpen(false);
   };
   const increaseStake = async () => {
@@ -163,21 +158,23 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           <Modal isOpen onClose={() => setModalIsOpen(false)}>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader>
-                {modalOperation === "withdraw"
-                  ? "Withdraw"
-                  : modalOperation === "unstake"
-                  ? "Unstake"
-                  : "Increase stake"}
-              </ModalHeader>
+              <ModalHeader>{modalOperation === "withdraw" ? "Withdraw" : "Unstake"}</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                {modalOperation === "unstake" ? <>Before unstaking you'll need to add a new network provider following {" "}
-                <Link
-                    color="green.300"
-                    href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
-                    isExternal
-                  >this guide</Link></> : ""}
+                {modalOperation === "unstake" ? (
+                  <>
+                    Before unstaking you'll need to add a new network provider following{" "}
+                    <Link
+                      color="green.300"
+                      href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
+                      isExternal
+                    >
+                      this guide
+                    </Link>
+                  </>
+                ) : (
+                  ""
+                )}
                 <FormControl mb={4}>
                   <FormLabel>Amount</FormLabel>
                   {/* TODO: Add max button */}
@@ -233,41 +230,36 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             flexDirection={"column"}
           >
             <Box mb={4}>
-              <Text
-                as="div"
-                fontSize="lg"
-                textAlign={["center", "center", "left"]}
-              >
-                <Flex justifyContent="space-between">
-                  <HStack>
-                    <Box mr={2}>
+              <Text as="div" fontSize="lg" textAlign={["center", "center", "left"]}>
+                <Flex justifyContent="space-between" flexDirection="column">
+                  <Flex justifyContent="space-between">
+                    <Box>
                       <strong>Balance:</strong> {`${crucible["balance"]}`}
                     </Box>
-                    <Badge py={1} px={2} borderRadius="xl" fonSize="2em">
+                    <Badge py={1} px={2} borderRadius="xl" fontSize=".7em">
                       <HStack>
                         <Box>{crucible["lockedBalance"]}</Box>
                         <FaLock />
                       </HStack>
                     </Badge>
-                  </HStack>
-                  <Box fontSize="sm" color="gray.400">
-                    ID: {crucible["id"]}
-                  </Box>
+                  </Flex>
+                  <Flex fontSize="sm" color="gray.400" textAlign="left" verticalAlign="top" marginTop="8px">
+                    <label style={{ alignSelf: "flex-start" }}>ID: </label>
+                    <span style={{ wordWrap: "break-word", width: "100%", paddingLeft: "4px", paddingRight: "16px" }}>
+                      {crucible["id"]}
+                    </span>
+                  </Flex>
                 </Flex>
               </Text>
             </Box>
-            <ButtonGroup
-              isAttached
-              variant="outline"
-              mb={[4, 4, 0]}
-              width="100%"
-            >
+            <ButtonGroup isAttached variant="outline" mb={[4, 4, 0]} width="100%">
               <Button
                 isFullWidth
                 color="white"
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
                 background="brand.400"
+                fontSize={{ base: "sm", sm: "md" }}
                 _focus={{ boxShadow: "none" }}
                 _hover={{ background: "brand.400" }}
                 onClick={() => {
@@ -300,6 +292,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
                 background="brand.400"
+                fontSize={{ base: "sm", sm: "md" }}
                 _focus={{ boxShadow: "none" }}
                 _hover={{ background: "brand.400" }}
                 onClick={() => {
@@ -316,6 +309,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
                 background="brand.400"
+                fontSize={{ base: "sm", sm: "md" }}
                 _focus={{ boxShadow: "none" }}
                 _hover={{ background: "brand.400" }}
                 onClick={() => {
