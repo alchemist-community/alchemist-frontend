@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { toMaxDecimalsRound } from '../../../utils';
-import Web3Context from '../../../../../Web3Context';
-import { getOwnedCrucibles } from '../../../../../contracts/getOwnedCrucibles';
-import { unstakeAndClaim } from '../../../../../contracts/unstakeAndClaim';
-import { sendNFT } from '../../../../../contracts/sendNFT';
-import { withdraw } from '../../../../../contracts/withdraw';
-import { Button, ButtonGroup } from '@chakra-ui/button';
-import { Badge, Box, Flex, HStack, Text, Link } from '@chakra-ui/layout';
-import { FaLock } from 'react-icons/fa';
+import React, { useState, useEffect, useContext } from "react";
+import { toMaxDecimalsRound } from "../../../utils";
+import Web3Context from "../../../../../Web3Context";
+import { getOwnedCrucibles } from "../../../../../contracts/getOwnedCrucibles";
+import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
+import { sendNFT } from "../../../../../contracts/sendNFT";
+import { withdraw } from "../../../../../contracts/withdraw";
+import { Button, ButtonGroup } from "@chakra-ui/button";
+import { Badge, Box, Flex, HStack, Text, Link } from "@chakra-ui/layout";
+import { FaLock } from "react-icons/fa";
 import {
   Modal,
   ModalOverlay,
@@ -16,11 +16,11 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton
-} from '@chakra-ui/modal';
-import { Input } from '@chakra-ui/input';
-import { FormControl, FormLabel } from '@chakra-ui/form-control';
-import { useColorModeValue } from '@chakra-ui/color-mode';
-import { Textarea } from '@chakra-ui/react';
+} from "@chakra-ui/modal";
+import { Input } from "@chakra-ui/input";
+import { FormControl, FormLabel } from "@chakra-ui/form-control";
+import { useColorModeValue } from "@chakra-ui/color-mode";
+import { Textarea } from "@chakra-ui/react";
 
 interface OperatePaneProps {
   handleInputChange?: (form: { [key: string]: string | number }) => void;
@@ -32,18 +32,18 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
   const { readyToTransact, signer, provider, monitorTx } = useContext(Web3Context);
 
-  const [amount2Withdraw, setAmount2Withdraw] = useState('');
-  const [sendAddress, setSendAddress] = useState('');
+  const [amount2Withdraw, setAmount2Withdraw] = useState("");
+  const [sendAddress, setSendAddress] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalOperation, setModalOperation] = useState<'withdraw' | 'unstake' | 'send'>('unstake');
-  const [selectedCrucible, setSelectedCrucible] = useState('');
+  const [modalOperation, setModalOperation] = useState<"withdraw" | "unstake" | "send">("unstake");
+  const [selectedCrucible, setSelectedCrucible] = useState("");
 
   const [formValues, setFormValues] = useState({
-    lnBalance: '',
-    tbtcBalance: '',
-    linearFee: '',
-    constantFee: '',
-    nodeAddress: ''
+    lnBalance: "",
+    tbtcBalance: "",
+    linearFee: "",
+    constantFee: "",
+    nodeAddress: ""
   });
 
   const [crucibles, setCrucibles] = useState(
@@ -63,9 +63,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     //setXAmount is the amount displayed in the input, should be string
     const name = ev.target.name;
     let value = ev.target.value;
-    if (ev.target.type === 'number')
+    if (ev.target.type === "number")
       value =
-        ev.target.value === '' ? ev.target.value : toMaxDecimalsRound(ev.target.value, +ev.target.step).toString();
+        ev.target.value === "" ? ev.target.value : toMaxDecimalsRound(ev.target.value, +ev.target.step).toString();
 
     setFormValues((old) => {
       return {
@@ -92,11 +92,11 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     // It would be nice to suggest the taichi network to the user but metamask doesn't allow suggestions for networks whose chainId it already contains
     if (cruciblesOnCurrentNetwork.length !== 0) {
       // On taichi eth_getLogs doesn't work and returns empty logs, we use this to hack together a taichi detection mechanism
-      alert('You have not changed your network yet');
+      alert("You have not changed your network yet");
       return;
     }
     await unstakeAndClaim(signer, monitorTx, selectedCrucible, amount2Withdraw);
-    alert('Unstaked! Remember to change your network back to Mainnet to see your crucibles.');
+    alert("Unstaked! Remember to change your network back to Mainnet to see your crucibles.");
     setModalIsOpen(false);
   };
   const withdrawTokens = async () => {
@@ -104,7 +104,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     setModalIsOpen(false);
   };
 
-  const cruciblesCardBg = useColorModeValue('white', 'gray.600');
+  const cruciblesCardBg = useColorModeValue("white", "gray.600");
 
   const sendModal = (
     <Modal isOpen onClose={() => setModalIsOpen(false)}>
@@ -118,7 +118,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             <Input
               size='lg'
               variant='filled'
-              _focus={{ borderColor: 'brand.400' }}
+              _focus={{ borderColor: "brand.400" }}
               value={sendAddress}
               onChange={(ev) => setSendAddress(ev.target.value)}
               name='address'
@@ -148,18 +148,18 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   return (
     <>
       {modalIsOpen &&
-        (modalOperation === 'send' ? (
+        (modalOperation === "send" ? (
           sendModal
         ) : (
           <Modal isOpen onClose={() => setModalIsOpen(false)}>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader>{modalOperation === 'withdraw' ? 'Withdraw' : 'Unstake'}</ModalHeader>
+              <ModalHeader>{modalOperation === "withdraw" ? "Withdraw" : "Unstake"}</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                {modalOperation === 'unstake' ? (
+                {modalOperation === "unstake" ? (
                   <>
-                    Before unstaking you'll need to add a new network provider following{' '}
+                    Before unstaking you'll need to add a new network provider following{" "}
                     <Link
                       color='green.300'
                       href='https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md'
@@ -169,14 +169,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     </Link>
                   </>
                 ) : (
-                  ''
+                  ""
                 )}
                 <FormControl mb={4}>
                   <FormLabel>Amount</FormLabel>
                   <Input
                     size='lg'
                     variant='filled'
-                    _focus={{ borderColor: 'brand.400' }}
+                    _focus={{ borderColor: "brand.400" }}
                     value={amount2Withdraw}
                     onChange={formatAmount2Withdraw}
                     name='balance'
@@ -191,9 +191,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   bg='brand.400'
                   color='white'
                   mr={3}
-                  onClick={modalOperation === 'withdraw' ? withdrawTokens : unstake}
+                  onClick={modalOperation === "withdraw" ? withdrawTokens : unstake}
                 >
-                  {modalOperation === 'withdraw' ? 'Withdraw' : 'Unstake'}
+                  {modalOperation === "withdraw" ? "Withdraw" : "Unstake"}
                 </Button>
               </ModalFooter>
             </ModalContent>
@@ -212,26 +212,26 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             borderRadius='lg'
             alignItems='center'
             justifyContent='space-between'
-            flexDirection={'column'}
+            flexDirection={"column"}
           >
             <Box mb={4}>
-              <Text as='div' fontSize='lg' textAlign={['center', 'center', 'left']}>
+              <Text as='div' fontSize='lg' textAlign={["center", "center", "left"]}>
                 <Flex justifyContent='space-between' flexDirection='column'>
                   <Flex justifyContent='space-between'>
                     <Box>
-                      <strong>Balance:</strong> {`${crucible['balance']}`}
+                      <strong>Balance:</strong> {`${crucible["balance"]}`}
                     </Box>
                     <Badge py={1} px={2} borderRadius='xl' fontSize='.7em'>
                       <HStack>
-                        <Box>{crucible['lockedBalance']}</Box>
+                        <Box>{crucible["lockedBalance"]}</Box>
                         <FaLock />
                       </HStack>
                     </Badge>
                   </Flex>
                   <Flex fontSize='sm' color='gray.400' textAlign='left' verticalAlign='top' marginTop='8px'>
-                    <label style={{ alignSelf: 'flex-start' }}>ID: </label>
-                    <span style={{ wordWrap: 'break-word', width: '100%', paddingLeft: '4px', paddingRight: '16px' }}>
-                      {crucible['id']}
+                    <label style={{ alignSelf: "flex-start" }}>ID: </label>
+                    <span style={{ wordWrap: "break-word", width: "100%", paddingLeft: "4px", paddingRight: "16px" }}>
+                      {crucible["id"]}
                     </span>
                   </Flex>
                 </Flex>
@@ -244,12 +244,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
                 background='brand.400'
-                fontSize={{ base: 'sm', sm: 'md' }}
-                _focus={{ boxShadow: 'none' }}
-                _hover={{ background: 'brand.400' }}
+                fontSize={{ base: "sm", sm: "md" }}
+                _focus={{ boxShadow: "none" }}
+                _hover={{ background: "brand.400" }}
                 onClick={() => {
-                  setModalOperation('unstake');
-                  setSelectedCrucible(crucible['id']);
+                  setModalOperation("unstake");
+                  setSelectedCrucible(crucible["id"]);
                   setModalIsOpen(true);
                 }}
               >
@@ -261,12 +261,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
                 background='brand.400'
-                fontSize={{ base: 'sm', sm: 'md' }}
-                _focus={{ boxShadow: 'none' }}
-                _hover={{ background: 'brand.400' }}
+                fontSize={{ base: "sm", sm: "md" }}
+                _focus={{ boxShadow: "none" }}
+                _hover={{ background: "brand.400" }}
                 onClick={() => {
-                  setModalOperation('withdraw');
-                  setSelectedCrucible(crucible['id']);
+                  setModalOperation("withdraw");
+                  setSelectedCrucible(crucible["id"]);
                   setModalIsOpen(true);
                 }}
               >
@@ -278,12 +278,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
                 background='brand.400'
-                fontSize={{ base: 'sm', sm: 'md' }}
-                _focus={{ boxShadow: 'none' }}
-                _hover={{ background: 'brand.400' }}
+                fontSize={{ base: "sm", sm: "md" }}
+                _focus={{ boxShadow: "none" }}
+                _hover={{ background: "brand.400" }}
                 onClick={() => {
-                  setModalOperation('send');
-                  setSelectedCrucible(crucible['id']);
+                  setModalOperation("send");
+                  setSelectedCrucible(crucible["id"]);
                   setModalIsOpen(true);
                 }}
               >
@@ -301,8 +301,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           isFullWidth
           color='white'
           background='brand.400'
-          _focus={{ boxShadow: 'none' }}
-          _hover={{ background: 'brand.400' }}
+          _focus={{ boxShadow: "none" }}
+          _hover={{ background: "brand.400" }}
           onClick={() => readyToTransact()}
         >
           Connect Wallet
