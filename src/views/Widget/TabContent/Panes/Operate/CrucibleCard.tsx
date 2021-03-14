@@ -98,7 +98,11 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                         crucible?.lockedBalance
                       )}
                     </Box>
-                    <FaLock />
+                    <Tooltip hasArrow label="Staked amount" bg="gray.400" color="white" placement="bottom-end" offset={[0, 16]}>
+                          <div>
+                            <FaLock />
+                          </div>
+                    </Tooltip>
                   </HStack>
                 </Badge>
               </Tooltip>
