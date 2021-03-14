@@ -20,7 +20,7 @@ import {
 import { Input } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { useColorModeValue } from "@chakra-ui/color-mode";
-import { Textarea } from "@chakra-ui/react";
+import { mintAndLock } from "../../../../../contracts/alchemist";
 
 interface OperatePaneProps {
   handleInputChange?: (form: { [key: string]: string | number }) => void;
@@ -32,10 +32,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
   const { readyToTransact, signer, provider, monitorTx } = useContext(Web3Context);
 
-  const [amount2Withdraw, setAmount2Withdraw] = useState("");
+  const [amount, setAmount] = useState("");
   const [sendAddress, setSendAddress] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalOperation, setModalOperation] = useState<"withdraw" | "unstake" | "send">("unstake");
+  const [modalOperation, setModalOperation] = useState<"withdraw" | "unstake" | "send" | "increaseStake">("unstake");
   const [selectedCrucible, setSelectedCrucible] = useState("");
 
   const [formValues, setFormValues] = useState({
@@ -80,10 +80,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   }, [formValues, handleInputChange]);
 
   //todo
-  const formatAmount2Withdraw = (ev: React.ChangeEvent<HTMLInputElement>) => {
+  const formatAmount = (ev: React.ChangeEvent<HTMLInputElement>) => {
     let amount = ev.target.value;
-
-    setAmount2Withdraw(amount);
+    setAmount(amount);
   };
 
   //todo
@@ -95,12 +94,17 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
       alert("You have not changed your network yet");
       return;
     }
-    await unstakeAndClaim(signer, monitorTx, selectedCrucible, amount2Withdraw);
+    await unstakeAndClaim(signer, monitorTx, selectedCrucible, amount);
     alert("Unstaked! Remember to change your network back to Mainnet to see your crucibles.");
     setModalIsOpen(false);
   };
+  const increaseStake = async () => {
+    await readyToTransact();
+    const hash: string = await mintAndLock(signer, provider, amount);
+    monitorTx(hash);
+  };
   const withdrawTokens = async () => {
-    await withdraw(selectedCrucible, amount2Withdraw);
+    await withdraw(selectedCrucible, amount);
     setModalIsOpen(false);
   };
 
@@ -173,12 +177,13 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 )}
                 <FormControl mb={4}>
                   <FormLabel>Amount</FormLabel>
+                  {/* TODO: Add max button */}
                   <Input
                     size="lg"
                     variant="filled"
                     _focus={{ borderColor: "brand.400" }}
-                    value={amount2Withdraw}
-                    onChange={formatAmount2Withdraw}
+                    value={amount}
+                    onChange={formatAmount}
                     name="balance"
                     placeholder="0.0"
                     type="number"
@@ -191,9 +196,19 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   bg="brand.400"
                   color="white"
                   mr={3}
-                  onClick={modalOperation === "withdraw" ? withdrawTokens : unstake}
+                  onClick={
+                    modalOperation === "withdraw"
+                      ? withdrawTokens
+                      : modalOperation === "unstake"
+                      ? unstake
+                      : increaseStake
+                  }
                 >
-                  {modalOperation === "withdraw" ? "Withdraw" : "Unstake"}
+                  {modalOperation === "withdraw"
+                    ? "Withdraw"
+                    : modalOperation === "unstake"
+                    ? "Unstake"
+                    : "Increase stake"}
                 </Button>
               </ModalFooter>
             </ModalContent>
@@ -245,6 +260,22 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 borderColor={cruciblesCardBg}
                 background="brand.400"
                 fontSize={{ base: "sm", sm: "md" }}
+                _focus={{ boxShadow: "none" }}
+                _hover={{ background: "brand.400" }}
+                onClick={() => {
+                  setModalOperation("increaseStake");
+                  setSelectedCrucible(crucible["id"]);
+                  setModalIsOpen(true);
+                }}
+              >
+                Increase stake
+              </Button>
+              <Button
+                isFullWidth
+                color="white"
+                borderWidth={1}
+                borderColor={cruciblesCardBg}
+                background="brand.400"
                 _focus={{ boxShadow: "none" }}
                 _hover={{ background: "brand.400" }}
                 onClick={() => {
