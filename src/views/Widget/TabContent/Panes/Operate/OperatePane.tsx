@@ -21,6 +21,7 @@ import { Input } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { mintAndLock } from "../../../../../contracts/alchemist";
+import { Tooltip } from "@chakra-ui/tooltip";
 
 interface OperatePaneProps {
   handleInputChange?: (form: { [key: string]: string | number }) => void;
@@ -245,7 +246,11 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     <Badge py={1} px={2} borderRadius="xl" fontSize=".7em">
                       <HStack>
                         <Box>{crucible["lockedBalance"]}</Box>
-                        <FaLock />
+                        <Tooltip hasArrow label="Staked amount" bg="gray.400" color="white" placement="bottom-end" offset={[0, 16]}>
+                          <div>
+                            <FaLock />
+                          </div>
+                        </Tooltip>
                       </HStack>
                     </Badge>
                   </Flex>
