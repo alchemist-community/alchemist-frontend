@@ -158,7 +158,13 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           <Modal isOpen onClose={() => setModalIsOpen(false)}>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader>{modalOperation === "withdraw" ? "Withdraw" : "Unstake"}</ModalHeader>
+            <ModalHeader>
+                {modalOperation === "withdraw"
+                  ? "Withdraw"
+                  : modalOperation === "unstake"
+                  ? "Unstake"
+                  : "Increase stake"}
+              </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
                 {modalOperation === "unstake" ? (
