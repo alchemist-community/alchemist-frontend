@@ -21,19 +21,19 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <Flex justifyContent='space-between' alignItems='center' py={4}>
+      <Flex justifyContent="space-between" alignItems="center" py={4}>
         {/* Hardcoded 283 for now to center user wallet component */}
         <LinkBox width={["auto", "auto", 283]}>
-          <LinkOverlay href='/'>
-            <Image src={logo} width={["50px", "50px", "60px"]} alt='alchemist logo' />
+          <LinkOverlay href="/">
+            <Image src={logo} width={["50px", "50px", "60px"]} alt="alchemist logo" />
           </LinkOverlay>
         </LinkBox>
         <Box display={["none", "none", "none", "block"]}>{address && <UserWallet />}</Box>
         <Flex>
           <IconButton
             mr={2}
-            borderRadius='lg'
-            variant='ghost'
+            borderRadius="lg"
+            variant="ghost"
             onClick={toggleColorMode}
             icon={isDarkMode ? <FiMoon /> : <FiSun />}
             aria-label={isDarkMode ? "Toggle light mode" : "Toggle dark mode"}

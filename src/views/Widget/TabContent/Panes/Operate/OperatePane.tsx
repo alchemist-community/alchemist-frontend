@@ -116,21 +116,21 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           <FormControl mb={4}>
             <FormLabel>Address</FormLabel>
             <Input
-              size='lg'
-              variant='filled'
+              size="lg"
+              variant="filled"
               _focus={{ borderColor: "brand.400" }}
               value={sendAddress}
               onChange={(ev) => setSendAddress(ev.target.value)}
-              name='address'
-              type='string'
+              name="address"
+              type="string"
             />
           </FormControl>
         </ModalBody>
 
         <ModalFooter>
           <Button
-            bg='brand.400'
-            color='white'
+            bg="brand.400"
+            color="white"
             mr={3}
             onClick={async () => {
               await sendNFT(signer, selectedCrucible, sendAddress);
@@ -161,8 +161,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   <>
                     Before unstaking you'll need to add a new network provider following{" "}
                     <Link
-                      color='green.300'
-                      href='https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md'
+                      color="green.300"
+                      href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
                       isExternal
                     >
                       this guide
@@ -174,22 +174,22 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 <FormControl mb={4}>
                   <FormLabel>Amount</FormLabel>
                   <Input
-                    size='lg'
-                    variant='filled'
+                    size="lg"
+                    variant="filled"
                     _focus={{ borderColor: "brand.400" }}
                     value={amount2Withdraw}
                     onChange={formatAmount2Withdraw}
-                    name='balance'
-                    placeholder='0.0'
-                    type='number'
+                    name="balance"
+                    placeholder="0.0"
+                    type="number"
                   />
                 </FormControl>
               </ModalBody>
 
               <ModalFooter>
                 <Button
-                  bg='brand.400'
-                  color='white'
+                  bg="brand.400"
+                  color="white"
                   mr={3}
                   onClick={modalOperation === "withdraw" ? withdrawTokens : unstake}
                 >
@@ -207,28 +207,28 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             p={4}
             mb={6}
             bg={cruciblesCardBg}
-            boxShadow='md'
+            boxShadow="md"
             borderWidth={1}
-            borderRadius='lg'
-            alignItems='center'
-            justifyContent='space-between'
+            borderRadius="lg"
+            alignItems="center"
+            justifyContent="space-between"
             flexDirection={"column"}
           >
             <Box mb={4}>
-              <Text as='div' fontSize='lg' textAlign={["center", "center", "left"]}>
-                <Flex justifyContent='space-between' flexDirection='column'>
-                  <Flex justifyContent='space-between'>
+              <Text as="div" fontSize="lg" textAlign={["center", "center", "left"]}>
+                <Flex justifyContent="space-between" flexDirection="column">
+                  <Flex justifyContent="space-between">
                     <Box>
                       <strong>Balance:</strong> {`${crucible["balance"]}`}
                     </Box>
-                    <Badge py={1} px={2} borderRadius='xl' fontSize='.7em'>
+                    <Badge py={1} px={2} borderRadius="xl" fontSize=".7em">
                       <HStack>
                         <Box>{crucible["lockedBalance"]}</Box>
                         <FaLock />
                       </HStack>
                     </Badge>
                   </Flex>
-                  <Flex fontSize='sm' color='gray.400' textAlign='left' verticalAlign='top' marginTop='8px'>
+                  <Flex fontSize="sm" color="gray.400" textAlign="left" verticalAlign="top" marginTop="8px">
                     <label style={{ alignSelf: "flex-start" }}>ID: </label>
                     <span style={{ wordWrap: "break-word", width: "100%", paddingLeft: "4px", paddingRight: "16px" }}>
                       {crucible["id"]}
@@ -237,13 +237,13 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 </Flex>
               </Text>
             </Box>
-            <ButtonGroup isAttached variant='outline' mb={[4, 4, 0]} width='100%'>
+            <ButtonGroup isAttached variant="outline" mb={[4, 4, 0]} width="100%">
               <Button
                 isFullWidth
-                color='white'
+                color="white"
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
-                background='brand.400'
+                background="brand.400"
                 fontSize={{ base: "sm", sm: "md" }}
                 _focus={{ boxShadow: "none" }}
                 _hover={{ background: "brand.400" }}
@@ -257,10 +257,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               </Button>
               <Button
                 isFullWidth
-                color='white'
+                color="white"
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
-                background='brand.400'
+                background="brand.400"
                 fontSize={{ base: "sm", sm: "md" }}
                 _focus={{ boxShadow: "none" }}
                 _hover={{ background: "brand.400" }}
@@ -274,10 +274,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               </Button>
               <Button
                 isFullWidth
-                color='white'
+                color="white"
                 borderWidth={1}
                 borderColor={cruciblesCardBg}
-                background='brand.400'
+                background="brand.400"
                 fontSize={{ base: "sm", sm: "md" }}
                 _focus={{ boxShadow: "none" }}
                 _hover={{ background: "brand.400" }}
@@ -297,10 +297,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         <></>
       ) : (
         <Button
-          size='lg'
+          size="lg"
           isFullWidth
-          color='white'
-          background='brand.400'
+          color="white"
+          background="brand.400"
           _focus={{ boxShadow: "none" }}
           _hover={{ background: "brand.400" }}
           onClick={() => readyToTransact()}
