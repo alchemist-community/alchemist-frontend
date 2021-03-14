@@ -53,7 +53,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
           <Flex justifyContent="space-between" flexDirection="column">
             <Flex justifyContent="space-between">
               <Tooltip
-                label="click me for full number"
+                label="View total balance"
                 placement="top"
                 hasArrow={true}
                 isDisabled={expandBalance || !isBalanceTrunc}
@@ -74,7 +74,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                 </Box>
               </Tooltip>
               <Tooltip
-                label="click me for full number"
+                label="View staked balance"
                 placement="top"
                 hasArrow={true}
                 isDisabled={expandLock || !isLockTrunc}
