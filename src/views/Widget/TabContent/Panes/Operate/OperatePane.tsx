@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import { toMaxDecimalsRound, decimalCount } from "../../../utils";
+import { toMaxDecimalsRound } from "../../../utils";
 import Web3Context from "../../../../../Web3Context";
 import { getOwnedCrucibles } from "../../../../../contracts/getOwnedCrucibles";
 import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
 import { sendNFT } from "../../../../../contracts/sendNFT";
 import { withdraw } from "../../../../../contracts/withdraw";
-import { Button, ButtonGroup } from "@chakra-ui/button";
-import { Badge, Box, Flex, HStack, Text, Link } from "@chakra-ui/layout";
-import { FaLock } from "react-icons/fa";
+import { Button } from "@chakra-ui/button";
+import { Link, Flex } from "@chakra-ui/layout";
 import {
   Modal,
   ModalOverlay,
@@ -19,6 +18,8 @@ import {
 } from "@chakra-ui/modal";
 import { Input } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
+import { RepeatIcon } from "@chakra-ui/icons";
+import { Spinner, Text } from "@chakra-ui/react";
 import { mintAndLock } from "../../../../../contracts/alchemist";
 import CrucibleCard from "./CrucibleCard";
 
@@ -37,6 +38,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalOperation, setModalOperation] = useState<"withdraw" | "unstake" | "send" | "increaseStake">("unstake");
   const [selectedCrucible, setSelectedCrucible] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formValues, setFormValues] = useState({
     lnBalance: "",
@@ -95,7 +97,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
       return;
     }
     await unstakeAndClaim(signer, monitorTx, selectedCrucible, amount);
-    alert("Unstaked! Remember to change your network back to Mainnet to see your crucibles.");
+    alert(
+      "Unstaked! Remember to change your network back to Mainnet and hit the refresh button to see your crucibles."
+    );
     setModalIsOpen(false);
   };
   const increaseStake = async () => {
@@ -106,6 +110,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const withdrawTokens = async () => {
     await withdraw(selectedCrucible, amount);
     setModalIsOpen(false);
+  };
+
+  const reloadCrucibles = () => {
+    setIsLoading(true);
+    getOwnedCrucibles(signer, provider).then((cruciblesOnCurrentNetwork) => {
+      setCrucibles(cruciblesOnCurrentNetwork);
+      setIsLoading(false);
+    });
   };
 
   const sendModal = (
@@ -218,17 +230,35 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             </ModalContent>
           </Modal>
         ))}
-
-      {crucibles.map((crucible) => {
-        return (
-          <CrucibleCard
-            crucible={crucible}
-            setModalOperation={setModalOperation}
-            setModalIsOpen={setModalIsOpen}
-            setSelectedCrucible={setSelectedCrucible}
-          />
-        );
-      })}
+      {isConnected && (
+        <Flex flexDirection="column">
+          <RepeatIcon onClick={reloadCrucibles} _hover={{ cursor: "pointer" }} alignSelf="flex-end" mb={4} />
+        </Flex>
+      )}
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <>
+          {isConnected &&
+            (crucibles.length ? (
+              crucibles.map((crucible) => {
+                return (
+                  <CrucibleCard
+                    crucible={crucible}
+                    setModalOperation={setModalOperation}
+                    setModalIsOpen={setModalIsOpen}
+                    setSelectedCrucible={setSelectedCrucible}
+                  />
+                );
+              })
+            ) : (
+              <Text textAlign="left">
+                Your crucibles may not be appearing if you are on a private network. Switch to the Mainnet and click the
+                refresh button.
+              </Text>
+            ))}
+        </>
+      )}
       {isConnected ? (
         <></>
       ) : (
