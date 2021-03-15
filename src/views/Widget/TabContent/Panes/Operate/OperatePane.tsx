@@ -178,7 +178,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   ? "Withdraw"
                   : modalOperation === "unstake"
                   ? "Unstake"
-                  : "Increase stake"}
+                  : "Increase Stake"}
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>

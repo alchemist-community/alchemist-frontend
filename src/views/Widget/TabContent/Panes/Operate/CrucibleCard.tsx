@@ -177,25 +177,23 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
         </Text>
       </Box>
       <ButtonGroup isAttached variant="outline" mb={[4, 4, 0]} width="100%">
-        
-              <Button
-                isFullWidth
-                color="white"
-                borderWidth={1}
-                borderColor={cruciblesCardBg}
-                background="brand.400"
-                fontSize={{ base: "sm", sm: "md" }}
-                _focus={{ boxShadow: "none" }}
-                _hover={{ background: "brand.400" }}
-                onClick={() => {
-                  setModalOperation("increaseStake");
-                  setSelectedCrucible(crucible["id"]);
-                  setModalIsOpen(true);
-                }}
-              >
-                Increase stake
-              </Button>
-             
+        <Button
+          isFullWidth
+          color="white"
+          borderWidth={1}
+          borderColor={cruciblesCardBg}
+          background="brand.400"
+          fontSize={{ base: "sm", sm: "md" }}
+          _focus={{ boxShadow: "none" }}
+          _hover={{ background: "brand.400" }}
+          onClick={() => {
+            setModalOperation("increaseStake");
+            setSelectedCrucible(crucible["id"]);
+            setModalIsOpen(true);
+          }}
+        >
+          Stake
+        </Button> 
         <Button
           isFullWidth
           color="white"
