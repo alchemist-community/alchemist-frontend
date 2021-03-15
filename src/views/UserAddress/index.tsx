@@ -1,13 +1,7 @@
 import React, { useContext } from "react";
 import Web3Context from "../../Web3Context";
-import {
-  Text,
-  Button,
-  Box,
-  useColorModeValue,
-  IconButton,
-} from "@chakra-ui/react";
-import { IoMdClose } from "react-icons/io";
+import { Text, Button, Box, useColorModeValue, IconButton } from "@chakra-ui/react";
+import { IoMdClose } from 'react-icons/io'
 
 export default function UserAddress() {
   const { wallet, address, onboard, readyToTransact } = useContext(Web3Context);

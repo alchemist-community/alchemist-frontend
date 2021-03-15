@@ -126,6 +126,5 @@ export async function calculateMistRewards(
     )) *
       weiRewards) /
     totalWeiRewards;
-  console.log(typeof mistRewards, typeof weiRewards)
   return { tokenRewards: mistRewards, etherRewards: weiRewards };
 }

@@ -25,16 +25,10 @@ const Header: React.FC = () => {
         {/* Hardcoded 283 for now to center user wallet component */}
         <LinkBox width={["auto", "auto", 283]}>
           <LinkOverlay href="/">
-            <Image
-              src={logo}
-              width={["50px", "50px", "60px"]}
-              alt="alchemist logo"
-            />
+            <Image src={logo} width={["50px", "50px", "60px"]} alt="alchemist logo" />
           </LinkOverlay>
         </LinkBox>
-        <Box display={["none", "none", "none", "block"]}>
-          {address && <UserWallet />}
-        </Box>
+        <Box display={["none", "none", "none", "block"]}>{address && <UserWallet />}</Box>
         <Flex>
           <IconButton
             mr={2}

@@ -2,7 +2,7 @@ import React from "react";
 import Layout from "./layouts";
 import { Web3Provider } from "./Web3Context";
 import { ChakraProvider } from "@chakra-ui/react";
-import { Global, css } from "@emotion/react";
+import { Global, css } from '@emotion/react'
 import theme from "./config/theme";
 
 const GlobalStyles = css`
@@ -11,9 +11,9 @@ const GlobalStyles = css`
     but it will still show up on keyboard focus.
   */
   .js-focus-visible :focus:not([data-focus-visible-added]) {
-    outline: none;
-    box-shadow: none;
-  }
+     outline: none;
+     box-shadow: none;
+   }
 `;
 
 function App() {

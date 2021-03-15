@@ -14,7 +14,7 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton,
+  ModalCloseButton
 } from "@chakra-ui/modal";
 import { Input } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
@@ -60,7 +60,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     tbtcBalance: "",
     linearFee: "",
     constantFee: "",
-    nodeAddress: "",
+    nodeAddress: ""
   });
 
   const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,14 +69,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     let value = ev.target.value;
     if (ev.target.type === "number")
       value =
-        ev.target.value === ""
-          ? ev.target.value
-          : toMaxDecimalsRound(ev.target.value, +ev.target.step).toString();
+        ev.target.value === "" ? ev.target.value : toMaxDecimalsRound(ev.target.value, +ev.target.step).toString();
 
     setFormValues((old) => {
       return {
         ...old,
-        [name]: value,
+        [name]: value
       };
     });
   };
@@ -106,7 +104,6 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     );
     setModalIsOpen(false);
   };
-
   const increaseStake = async () => {
     await readyToTransact();
     const hash: string = await mintAndLock(signer, provider, amount);
@@ -183,8 +180,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               <ModalBody>
                 {modalOperation === "unstake" ? (
                   <>
-                    Before unstaking you'll need to add a new network provider
-                    following{" "}
+                    Before unstaking you'll need to add a new network provider following{" "}
                     <Link
                       color="green.300"
                       href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"

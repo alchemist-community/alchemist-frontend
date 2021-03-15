@@ -46,8 +46,8 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
     setExpandBalance(false);
   };
 
-  const isBalanceTrunc = decimalCount(crucible?.cleanBalance) > 3;
-  const isLockTrunc = decimalCount(crucible?.cleanLockedBalance) > 3;
+  const isBalanceTrunc = decimalCount(crucible?.balance) > 3;
+  const isLockTrunc = decimalCount(crucible?.lockedBalance) > 3;
 
   return (
     <Box
