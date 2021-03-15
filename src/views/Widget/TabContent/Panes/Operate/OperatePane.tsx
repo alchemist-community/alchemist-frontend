@@ -103,9 +103,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     setModalIsOpen(false);
   };
   const increaseStake = async () => {
-    await readyToTransact();
-    const hash: string = await mintAndLock(signer, provider, amount);
-    monitorTx(hash);
+    // await readyToTransact();
+    // const hash: string = await increaseStake(signer, provider, amount);
+    // monitorTx(hash);
   };
   const withdrawTokens = async () => {
     await withdraw(selectedCrucible, amount);
