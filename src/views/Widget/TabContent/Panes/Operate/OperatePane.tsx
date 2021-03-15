@@ -239,29 +239,24 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         <Spinner />
       ) : (
         <>
-          {isConnected && (
-            <>
-              {crucibles.length ? (
-                <>
-                  {crucibles.map((crucible) => {
-                    return (
-                      <CrucibleCard
-                        crucible={crucible}
-                        setModalOperation={setModalOperation}
-                        setModalIsOpen={setModalIsOpen}
-                        setSelectedCrucible={setSelectedCrucible}
-                      />
-                    );
-                  })}
-                </>
-              ) : (
-                <Text textAlign="left">
-                  Your crucibles may not be appearing if you are on a private network. Switch to the Mainnet and click
-                  the refresh button.
-                </Text>
-              )}
-            </>
-          )}
+          {isConnected &&
+            (crucibles.length ? (
+              crucibles.map((crucible) => {
+                return (
+                  <CrucibleCard
+                    crucible={crucible}
+                    setModalOperation={setModalOperation}
+                    setModalIsOpen={setModalIsOpen}
+                    setSelectedCrucible={setSelectedCrucible}
+                  />
+                );
+              })
+            ) : (
+              <Text textAlign="left">
+                Your crucibles may not be appearing if you are on a private network. Switch to the Mainnet and click the
+                refresh button.
+              </Text>
+            ))}
         </>
       )}
       {isConnected ? (
