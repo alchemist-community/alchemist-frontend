@@ -9,6 +9,8 @@ import {
   calculateMistRewards,
 } from "../contracts/aludel";
 import { getOwnedCrucibles } from "../contracts/getOwnedCrucibles";
+import { getTokenBalances } from "../contracts/getTokenBalances";
+
 import { formatUnits } from "@ethersproject/units";
 
 interface Rewards {
@@ -29,6 +31,7 @@ const Web3Context = React.createContext<{
   crucibles: any;
   rewards: Rewards[];
   networkStats: any;
+  tokenBalances: any;
 }>({
   web3: null,
   onboard: null,
@@ -42,6 +45,7 @@ const Web3Context = React.createContext<{
   crucibles: null,
   rewards: [],
   networkStats: null,
+  tokenBalances: null,
 });
 
 const Web3Provider: React.FC = (props) => {
@@ -52,6 +56,7 @@ const Web3Provider: React.FC = (props) => {
   const [etherBalance, setEtherBalance] = useState<any>(null);
   const [signer, setSigner] = useState<any>();
   const [wallet, setWallet] = useState<any>({});
+  const [tokenBalances, setTokenBalances] = useState<any>({});
   const [networkStats, setNetworkStats] = useState<any>({});
   const [crucibles, setCrucibles] = useState(
     [] as {
@@ -75,6 +80,7 @@ const Web3Provider: React.FC = (props) => {
     setSigner(signer);
     window.localStorage.setItem("selectedWallet", wallet.name);
     getNetworkStats(signer).then(setNetworkStats);
+    getTokenBalances(signer).then(setTokenBalances);
     if (signer) {
       getOwnedCrucibles(signer, ethersProvider)
         .then((ownedCrucibles) => {
@@ -183,6 +189,7 @@ const Web3Provider: React.FC = (props) => {
         crucibles,
         rewards,
         networkStats,
+        tokenBalances,
       }}
     >
       {props.children}

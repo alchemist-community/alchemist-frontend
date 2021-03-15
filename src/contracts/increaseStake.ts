@@ -64,5 +64,4 @@ export async function increaseStake(
 
   const increaseStakeTx = await signer.sendTransaction(populatedTx);
   return increaseStakeTx;
-
 }

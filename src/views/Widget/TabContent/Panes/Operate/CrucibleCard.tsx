@@ -193,7 +193,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
           }}
         >
           Add funds
-        </Button> 
+        </Button>
         <Button
           isFullWidth
           color="white"

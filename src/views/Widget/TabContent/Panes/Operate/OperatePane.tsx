@@ -17,7 +17,7 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/modal";
-import { Input } from "@chakra-ui/input";
+import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { RepeatIcon } from "@chakra-ui/icons";
 import { Spinner, Text } from "@chakra-ui/react";
@@ -45,6 +45,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     provider,
     monitorTx,
     reloadCrucibles,
+    tokenBalances,
   } = useContext(Web3Context);
 
   const [amount, setAmount] = useState("");
@@ -63,7 +64,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     constantFee: "",
     nodeAddress: "",
   });
-
+  console.log("Token balances", tokenBalances);
   const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     //setXAmount is the amount displayed in the input, should be string
     const name = ev.target.name;
@@ -134,6 +135,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         <ModalBody>
           <FormControl mb={4}>
             <FormLabel>Address</FormLabel>
+
             <Input
               size="lg"
               variant="filled"
@@ -200,16 +202,29 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 <FormControl mb={4}>
                   <FormLabel>Amount</FormLabel>
                   {/* TODO: Add max button */}
-                  <Input
-                    size="lg"
-                    variant="filled"
-                    _focus={{ borderColor: "brand.400" }}
-                    value={amount}
-                    onChange={formatAmount}
-                    name="balance"
-                    placeholder="0.0"
-                    type="number"
-                  />
+                  <InputGroup size="md">
+                    <Input
+                      size="lg"
+                      variant="filled"
+                      _focus={{ borderColor: "brand.400" }}
+                      value={amount}
+                      onChange={formatAmount}
+                      name="balance"
+                      placeholder="0.0"
+                      type="number"
+                    />
+                    <InputRightElement width="4.5rem" zIndex={0}>
+                      <Button
+                        mr={2}
+                        mt={2}
+                        h="2rem"
+                        variant="ghost"
+                        onClick={() => setAmount(tokenBalances.lpBalance)}
+                      >
+                        Max
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
                 </FormControl>
               </ModalBody>
 

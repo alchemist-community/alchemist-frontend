@@ -8,7 +8,6 @@ import { Button, IconButton } from "@chakra-ui/button";
 import { Link, Text } from "@chakra-ui/layout";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
-import { getTokenBalances } from "../../../../../contracts/getTokenBalances";
 import {
   Popover,
   PopoverArrow,
@@ -27,9 +26,13 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const { handleInputChange = () => null, isConnected } = props;
 
   // Todo: type the extended web3context
-  const { signer, provider, readyToTransact, monitorTx } = useContext(
-    Web3Context
-  );
+  const {
+    signer,
+    provider,
+    readyToTransact,
+    monitorTx,
+    tokenBalances,
+  } = useContext(Web3Context);
 
   const [lpBalance, setLpBalance] = useState("");
 
@@ -117,9 +120,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               mt={2}
               h="2rem"
               variant="ghost"
-              onClick={() =>
-                getTokenBalances(signer).then(({ lp }) => setLpBalance(lp))
-              }
+              onClick={() => setLpBalance(tokenBalances.lpBalance)}
             >
               Max
             </Button>
