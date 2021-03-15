@@ -192,7 +192,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Stake
+          Add funds
         </Button> 
         <Button
           isFullWidth
