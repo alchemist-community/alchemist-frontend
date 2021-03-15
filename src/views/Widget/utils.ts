@@ -44,3 +44,12 @@ export function addDecimalsToUint(amount: string, tokenDecimals: number) {
 export function sha256(buffer: Buffer) {
   return createHash("sha256").update(buffer).digest("hex");
 }
+
+export function decimalCount(numStr: string) {
+  // String Contains Decimal
+  if (numStr.includes(".")) {
+    return numStr.split(".")[1].length;
+  }
+  // String Does Not Contain Decimal
+  return 0;
+}

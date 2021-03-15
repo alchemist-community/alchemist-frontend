@@ -13,8 +13,8 @@ const Operate: React.FC = () => {
       <OperatePane
         handleInputChange={(form) => {}}
         isConnected={!!wallet.provider}
-        crucibles={crucibles}
         rewards={rewards}
+        crucibles={crucibles}
       />
     );
   }

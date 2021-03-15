@@ -8,17 +8,17 @@ const config: ThemeConfig = {
 const customTheme = extendTheme({
   config,
   colors: {
-    green: {
-      50: "#defef5",
-      100: "#b8f3e5",
-      200: "#91ebd3",
-      300: "#67e1c1",
-      400: "#40d9b0",
-      500: "#26bf96",
-      600: "#199575",
-      700: "#0b6a53",
-      800: "#004131",
-      900: "#001710",
+    brand: {
+      50: "#EDFDFD",
+      100: "#C4F1F9",
+      200: "#9DECF9",
+      300: "#76E4F7",
+      400: "#0BC5EA",
+      500: "#00B5D8",
+      600: "#00A3C4",
+      700: "#0987A0",
+      800: "#086F83",
+      900: "#065666",
     },
   },
   fonts: {
@@ -35,7 +35,7 @@ const customTheme = extendTheme({
       baseStyle: {
         _hover: {
           textDecoration: "none",
-          color: "green.300",
+          color: "brand.400",
         },
       },
     },
@@ -47,7 +47,7 @@ const customTheme = extendTheme({
     Input: {
       baseStyle: {
         _focus: {
-          borderColor: "green.300",
+          borderColor: "brand.400",
           borderWidth: "2px",
         },
       },

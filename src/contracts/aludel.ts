@@ -34,7 +34,7 @@ export async function getNetworkStats(signer: any) {
   ] = await aludel.getAludelData();
   let [duration, start, shares] = rewardScaling;
   let [floor, ceiling, time] = rewardSchedules[0];
-  console.log({
+  console.log("network stats", {
     duration: formatUnits(duration),
     start: start.toNumber(),
     shares: formatUnits(shares),
@@ -123,8 +123,15 @@ export async function calculateMistRewards(
     "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", // bonus token address
     IERC20.abi,
     signer
-  )
-  let totalWeiRewards = await weth.balanceOf("0x04108d6E9a51BeC5170F8Fd953a156cF754bA541") // Reward Pool
-  let mistRewards = await bonusMistToken.balanceOf("0x04108d6E9a51BeC5170F8Fd953a156cF754bA541") * weiRewards / totalWeiRewards
-  return {tokenRewards: mistRewards, etherRewards: weiRewards};
+  );
+  let totalWeiRewards = await weth.balanceOf(
+    "0x04108d6E9a51BeC5170F8Fd953a156cF754bA541"
+  ); // Reward Pool
+  let mistRewards =
+    ((await bonusMistToken.balanceOf(
+      "0x04108d6E9a51BeC5170F8Fd953a156cF754bA541"
+    )) *
+      weiRewards) /
+    totalWeiRewards;
+  return { tokenRewards: mistRewards, etherRewards: weiRewards };
 }

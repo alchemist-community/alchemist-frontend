@@ -5,10 +5,8 @@ import { getOwnedCrucibles } from "../../../../../contracts/getOwnedCrucibles";
 import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
 import { sendNFT } from "../../../../../contracts/sendNFT";
 import { withdraw } from "../../../../../contracts/withdraw";
-import { Button, ButtonGroup } from "@chakra-ui/button";
-import { Badge, Box, Flex, HStack, Text } from "@chakra-ui/layout";
-import { formatUnits } from "ethers/lib/utils";
-import { FaLock } from "react-icons/fa";
+import { Button } from "@chakra-ui/button";
+import { Link, Flex } from "@chakra-ui/layout";
 import {
   Modal,
   ModalOverlay,
@@ -20,7 +18,10 @@ import {
 } from "@chakra-ui/modal";
 import { Input } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
-import { useColorModeValue } from "@chakra-ui/color-mode";
+import { RepeatIcon } from "@chakra-ui/icons";
+import { Spinner, Text } from "@chakra-ui/react";
+import { mintAndLock } from "../../../../../contracts/alchemist";
+import CrucibleCard from "./CrucibleCard";
 
 interface OperatePaneProps {
   handleInputChange?: (form: { [key: string]: string | number }) => void;
@@ -37,17 +38,22 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     rewards,
   } = props;
 
-  const { readyToTransact, signer, provider, monitorTx } = useContext(
-    Web3Context
-  );
+  const {
+    readyToTransact,
+    signer,
+    provider,
+    monitorTx,
+    reloadCrucibles,
+  } = useContext(Web3Context);
 
-  const [amount2Withdraw, setAmount2Withdraw] = useState("");
+  const [amount, setAmount] = useState("");
   const [sendAddress, setSendAddress] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalOperation, setModalOperation] = useState<
-    "withdraw" | "unstake" | "send"
+    "withdraw" | "unstake" | "send" | "increaseStake"
   >("unstake");
   const [selectedCrucible, setSelectedCrucible] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formValues, setFormValues] = useState({
     lnBalance: "",
@@ -86,23 +92,43 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   }, [formValues, handleInputChange]);
 
   //todo
-  const formatAmount2Withdraw = (ev: React.ChangeEvent<HTMLInputElement>) => {
+  const formatAmount = (ev: React.ChangeEvent<HTMLInputElement>) => {
     let amount = ev.target.value;
-
-    setAmount2Withdraw(amount);
+    setAmount(amount);
   };
 
   //todo
   const unstake = async () => {
-    await unstakeAndClaim(signer, monitorTx, selectedCrucible, amount2Withdraw);
-    setModalIsOpen(false);
-  };
-  const withdrawTokens = async () => {
-    await withdraw(selectedCrucible, amount2Withdraw);
+    const cruciblesOnCurrentNetwork = await getOwnedCrucibles(signer, provider);
+    // It would be nice to suggest the taichi network to the user but metamask doesn't allow suggestions for networks whose chainId it already contains
+    if (cruciblesOnCurrentNetwork.length !== 0) {
+      // On taichi eth_getLogs doesn't work and returns empty logs, we use this to hack together a taichi detection mechanism
+      alert("You have not changed your network yet");
+      return;
+    }
+    await unstakeAndClaim(signer, monitorTx, selectedCrucible, amount);
+    alert(
+      "Unstaked! Remember to change your network back to Mainnet and hit the refresh button to see your crucibles."
+    );
     setModalIsOpen(false);
   };
 
-  const cruciblesCardBg = useColorModeValue("white", "gray.600");
+  const increaseStake = async () => {
+    await readyToTransact();
+    const hash: string = await mintAndLock(signer, provider, amount);
+    monitorTx(hash);
+  };
+  const withdrawTokens = async () => {
+    await withdraw(selectedCrucible, amount);
+    setModalIsOpen(false);
+  };
+
+  const refreshCrucibles = () => {
+    setIsLoading(true);
+    reloadCrucibles().then(() => {
+      setIsLoading(false);
+    });
+  };
 
   const sendModal = (
     <Modal isOpen onClose={() => setModalIsOpen(false)}>
@@ -116,7 +142,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             <Input
               size="lg"
               variant="filled"
-              _focus={{ borderColor: "green.300" }}
+              _focus={{ borderColor: "brand.400" }}
               value={sendAddress}
               onChange={(ev) => setSendAddress(ev.target.value)}
               name="address"
@@ -127,7 +153,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
         <ModalFooter>
           <Button
-            bg="green.300"
+            bg="brand.400"
             color="white"
             mr={3}
             onClick={async () => {
@@ -153,18 +179,38 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             <ModalOverlay />
             <ModalContent>
               <ModalHeader>
-                {modalOperation === "withdraw" ? "Withdraw" : "Unstake"}
+                {modalOperation === "withdraw"
+                  ? "Withdraw"
+                  : modalOperation === "unstake"
+                  ? "Unstake"
+                  : "Increase stake"}
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
+                {modalOperation === "unstake" ? (
+                  <>
+                    Before unstaking you'll need to add a new network provider
+                    following{" "}
+                    <Link
+                      color="green.300"
+                      href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
+                      isExternal
+                    >
+                      this guide
+                    </Link>
+                  </>
+                ) : (
+                  ""
+                )}
                 <FormControl mb={4}>
                   <FormLabel>Amount</FormLabel>
+                  {/* TODO: Add max button */}
                   <Input
                     size="lg"
                     variant="filled"
-                    _focus={{ borderColor: "green.300" }}
-                    value={amount2Withdraw}
-                    onChange={formatAmount2Withdraw}
+                    _focus={{ borderColor: "brand.400" }}
+                    value={amount}
+                    onChange={formatAmount}
                     name="balance"
                     placeholder="0.0"
                     type="number"
@@ -174,141 +220,63 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
               <ModalFooter>
                 <Button
-                  bg="green.300"
+                  bg="brand.400"
                   color="white"
                   mr={3}
                   onClick={
-                    modalOperation === "withdraw" ? withdrawTokens : unstake
+                    modalOperation === "withdraw"
+                      ? withdrawTokens
+                      : modalOperation === "unstake"
+                      ? unstake
+                      : increaseStake
                   }
                 >
-                  {modalOperation === "withdraw" ? "Withdraw" : "Unstake"}
+                  {modalOperation === "withdraw"
+                    ? "Withdraw"
+                    : modalOperation === "unstake"
+                    ? "Unstake"
+                    : "Increase stake"}
                 </Button>
               </ModalFooter>
             </ModalContent>
           </Modal>
         ))}
-
-      {crucibles.map((crucible: any, i: number) => {
-        return (
-          <Box
-            p={4}
-            mb={6}
-            bg={cruciblesCardBg}
-            boxShadow="md"
-            borderWidth={1}
-            borderRadius="lg"
-            alignItems="center"
-            justifyContent="space-between"
-            flexDirection={"column"}
-            key={i}
-          >
-            <Box mb={4}>
-              <Text
-                as="div"
-                fontSize="lg"
-                textAlign={["center", "center", "left"]}
-              >
-                <Flex justifyContent="space-between">
-                  <HStack>
-                    <Box mr={2}>
-                      <strong>Balance:</strong>{" "}
-                      {`${formatUnits(crucible["balance"])}`}
-                    </Box>
-                    <Badge py={1} px={2} borderRadius="xl" fonSize="2em">
-                      <HStack>
-                        <Box>{formatUnits(crucible["lockedBalance"])}</Box>
-                        <FaLock />
-                      </HStack>
-                    </Badge>
-                  </HStack>
-                </Flex>
-                {rewards && (
-                  <>
-                    <HStack mt={4}>
-                      <Box mr={2}>
-                        <strong>MIST Rewards:</strong>{" "}
-                        {`${rewards[i].tokenRewards}`}
-                      </Box>
-                      <Box mr={2}>
-                        <strong>Ether Rewards:</strong>{" "}
-                        {`${rewards[i].etherRewards}`}
-                      </Box>
-                    </HStack>
-                    {/* <HStack>
-                      <Box mr={2}>
-                        <strong>Staking Rewards (Y):</strong>{" "}
-                        {`${rewards[i].futStakeRewards}`}
-                      </Box>
-                      <Box mr={2}>
-                        <strong>Future Vault Rewards (Y):</strong>{" "}
-                        {`${rewards[i].futVaultRewards}`}
-                      </Box>
-                    </HStack> */}
-                  </>
-                )}
+      {isConnected && (
+        <Flex flexDirection="column">
+          <RepeatIcon
+            onClick={refreshCrucibles}
+            _hover={{ cursor: "pointer" }}
+            alignSelf="flex-end"
+            mb={4}
+          />
+        </Flex>
+      )}
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <>
+          {isConnected &&
+            rewards &&
+            (crucibles.length ? (
+              crucibles.map((crucible: any, i: number) => {
+                return (
+                  <CrucibleCard
+                    crucible={crucible}
+                    rewards={rewards[i]}
+                    setModalOperation={setModalOperation}
+                    setModalIsOpen={setModalIsOpen}
+                    setSelectedCrucible={setSelectedCrucible}
+                  />
+                );
+              })
+            ) : (
+              <Text textAlign="left">
+                Your crucibles may not be appearing if you are on a private
+                network. Switch to the Mainnet and click the refresh button.
               </Text>
-            </Box>
-            <Box fontSize="sm" color="gray.400">
-              ID: {crucible["id"]}
-            </Box>
-            <ButtonGroup
-              isAttached
-              variant="outline"
-              mb={[4, 4, 0]}
-              width="100%"
-            >
-              <Button
-                isFullWidth
-                color="white"
-                borderWidth={1}
-                borderColor={cruciblesCardBg}
-                background="green.300"
-                _focus={{ boxShadow: "none" }}
-                _hover={{ background: "green.400" }}
-                onClick={() => {
-                  setModalOperation("unstake");
-                  setSelectedCrucible(crucible["id"]);
-                  setModalIsOpen(true);
-                }}
-              >
-                Unstake
-              </Button>
-              <Button
-                isFullWidth
-                color="white"
-                borderWidth={1}
-                borderColor={cruciblesCardBg}
-                background="green.300"
-                _focus={{ boxShadow: "none" }}
-                _hover={{ background: "green.400" }}
-                onClick={() => {
-                  setModalOperation("withdraw");
-                  setSelectedCrucible(crucible["id"]);
-                  setModalIsOpen(true);
-                }}
-              >
-                Withdraw
-              </Button>
-              <Button
-                isFullWidth
-                color="white"
-                borderWidth={1}
-                borderColor={cruciblesCardBg}
-                background="green.300"
-                _focus={{ boxShadow: "none" }}
-                _hover={{ background: "green.400" }}
-                onClick={() => {
-                  setModalOperation("send");
-                  setSelectedCrucible(crucible["id"]);
-                  setModalIsOpen(true);
-                }}
-              >
-                Send
-              </Button>
-            </ButtonGroup>
-          </Box>
-        );
-      })}
+            ))}
+        </>
+      )}
       {isConnected ? (
         <></>
       ) : (
@@ -316,9 +284,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           size="lg"
           isFullWidth
           color="white"
-          background="green.300"
+          background="brand.400"
           _focus={{ boxShadow: "none" }}
-          _hover={{ background: "green.400" }}
+          _hover={{ background: "brand.400" }}
           onClick={() => readyToTransact()}
         >
           Connect Wallet

@@ -9,6 +9,7 @@ import {
   calculateMistRewards,
 } from "../contracts/aludel";
 import { getOwnedCrucibles } from "../contracts/getOwnedCrucibles";
+import { formatUnits } from "@ethersproject/units";
 
 interface Rewards {
   currStakeRewards: string;
@@ -26,6 +27,7 @@ const Web3Context = React.createContext<{
   provider: any;
   signer: any;
   monitorTx: (hash: string) => Promise<void>;
+  reloadCrucibles: () => Promise<any>;
   crucibles: any;
   rewards: any;
   networkStats: any;
@@ -38,6 +40,7 @@ const Web3Context = React.createContext<{
   provider: null,
   signer: null,
   monitorTx: async () => undefined,
+  reloadCrucibles: async () => undefined,
   crucibles: null,
   rewards: null,
   networkStats: null,
@@ -57,6 +60,8 @@ const Web3Provider: React.FC = (props) => {
       id: string;
       balance: string;
       lockedBalance: string;
+      cleanBalance?: string;
+      cleanLockedBalance?: string;
     }[]
   );
   const [rewards, setRewards] = useState<any>();
@@ -64,40 +69,41 @@ const Web3Provider: React.FC = (props) => {
     null as any
   );
   const [notify, setNotify] = useState<any>(null);
-  const updateWallet = useCallback(
-    (wallet: any) => {
-      setWallet(wallet);
-      const ethersProvider = new ethers.providers.Web3Provider(wallet.provider);
-      let signer = ethersProvider.getSigner()
-      setProvider(ethersProvider);
-      setSigner(signer);
-      window.localStorage.setItem("selectedWallet", wallet.name);
-      getNetworkStats(signer).then(setNetworkStats);
-      if (signer) {
-        getOwnedCrucibles(signer, ethersProvider)
-          .then((ownedCrucibles) => {
-            setCrucibles(ownedCrucibles);
-            return getUserRewards(signer, ownedCrucibles);
-          })
-          .then((rewards) => {
-            if (rewards?.length) {
-              Promise.all(
-                rewards.map((reward: any) => {
-                  return new Promise((resolve, reject) => {
-                    resolve(
-                      calculateMistRewards(
-                        signer,
-                        reward.currStakeRewards
-                      ));
-                  });
-                })
-              ).then(setRewards);
-            }
-          });
-      }
-    },
-    []
-  );
+  const updateWallet = useCallback((wallet: any) => {
+    console.log("updating wallet");
+    setWallet(wallet);
+    const ethersProvider = new ethers.providers.Web3Provider(wallet.provider);
+    let signer = ethersProvider.getSigner();
+    setProvider(ethersProvider);
+    setSigner(signer);
+    window.localStorage.setItem("selectedWallet", wallet.name);
+    getNetworkStats(signer).then(setNetworkStats);
+    if (signer) {
+      getOwnedCrucibles(signer, ethersProvider)
+        .then((ownedCrucibles) => {
+          ownedCrucibles = ownedCrucibles.map((crucible) => ({
+            ...crucible,
+            cleanBalance: formatUnits(crucible.balance),
+            cleanLockedBalance: formatUnits(crucible.balance),
+          }));
+          setCrucibles(ownedCrucibles);
+          return getUserRewards(signer, ownedCrucibles);
+        })
+        .then((rewards) => {
+          if (rewards?.length) {
+            Promise.all(
+              rewards.map((reward: any) => {
+                return new Promise((resolve, reject) => {
+                  resolve(
+                    calculateMistRewards(signer, reward.currStakeRewards)
+                  );
+                });
+              })
+            ).then(setRewards);
+          }
+        });
+    }
+  }, []);
 
   useEffect(() => {
     const onboard = initOnboard({
@@ -140,6 +146,11 @@ const Web3Provider: React.FC = (props) => {
     }
     return ready;
   }
+
+  function reloadCrucibles() {
+    return new Promise((resolve) => resolve(updateWallet(wallet)));
+  }
+
   async function monitorTx(hash: string) {
     const { emitter } = notify.hash(hash);
     interface Transaction {
@@ -171,6 +182,7 @@ const Web3Provider: React.FC = (props) => {
         signer,
         provider,
         monitorTx,
+        reloadCrucibles,
         crucibles,
         rewards,
         networkStats,

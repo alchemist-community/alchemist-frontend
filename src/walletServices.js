@@ -3,7 +3,7 @@ import Onboard from 'bnc-onboard'
 
 const networkId = 1
 const rpcUrl = "https://mainnet.infura.io/v3/965c5ec028c84ffcb22c799eddba83a4"
-const dappId = 'd5b4fc8d-04d7-4a94-aaef-4bbeb83af2c9'
+const dappId = 'ad454b00-3218-4403-95e9-22c3c7d3adc0'
 const APP_NAME="Alchemist"
 
 export function initOnboard(subscriptions) {
@@ -33,10 +33,8 @@ export function initOnboard(subscriptions) {
         { walletName: "opera" },
         { walletName: "torus" },
         { walletName: "status" },
-        { walletName: "walletLink", appName: APP_NAME },
+        { walletName: "walletLink", appName: APP_NAME, rpcUrl },
         { walletName: "frame" },
-
-        { walletName: 'opera' },
         { walletName: 'operaTouch' },
         { walletName: 'imToken', rpcUrl },
         { walletName: 'meetone' },
