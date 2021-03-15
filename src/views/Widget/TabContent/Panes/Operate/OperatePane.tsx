@@ -14,7 +14,7 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton
+  ModalCloseButton,
 } from "@chakra-ui/modal";
 import { Input } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
@@ -26,17 +26,32 @@ import CrucibleCard from "./CrucibleCard";
 interface OperatePaneProps {
   handleInputChange?: (form: { [key: string]: string | number }) => void;
   isConnected: boolean;
+  crucibles: any;
+  rewards: any;
 }
 
 const OperatePane: React.FC<OperatePaneProps> = (props) => {
-  const { handleInputChange = () => null, isConnected } = props;
+  const {
+    handleInputChange = () => null,
+    isConnected,
+    crucibles,
+    rewards,
+  } = props;
 
-  const { readyToTransact, signer, provider, monitorTx } = useContext(Web3Context);
+  const {
+    readyToTransact,
+    signer,
+    provider,
+    monitorTx,
+    reloadCrucibles,
+  } = useContext(Web3Context);
 
   const [amount, setAmount] = useState("");
   const [sendAddress, setSendAddress] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalOperation, setModalOperation] = useState<"withdraw" | "unstake" | "send" | "increaseStake">("unstake");
+  const [modalOperation, setModalOperation] = useState<
+    "withdraw" | "unstake" | "send" | "increaseStake"
+  >("unstake");
   const [selectedCrucible, setSelectedCrucible] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -45,21 +60,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     tbtcBalance: "",
     linearFee: "",
     constantFee: "",
-    nodeAddress: ""
+    nodeAddress: "",
   });
-
-  const [crucibles, setCrucibles] = useState(
-    [] as {
-      id: string;
-      balance: string;
-      lockedBalance: string;
-    }[]
-  );
-  useEffect(() => {
-    if (signer) {
-      getOwnedCrucibles(signer, provider).then(setCrucibles);
-    }
-  }, [isConnected, provider, signer]);
 
   const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     //setXAmount is the amount displayed in the input, should be string
@@ -67,12 +69,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     let value = ev.target.value;
     if (ev.target.type === "number")
       value =
-        ev.target.value === "" ? ev.target.value : toMaxDecimalsRound(ev.target.value, +ev.target.step).toString();
+        ev.target.value === ""
+          ? ev.target.value
+          : toMaxDecimalsRound(ev.target.value, +ev.target.step).toString();
 
     setFormValues((old) => {
       return {
         ...old,
-        [name]: value
+        [name]: value,
       };
     });
   };
@@ -112,10 +116,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     setModalIsOpen(false);
   };
 
-  const reloadCrucibles = () => {
+  const refreshCrucibles = () => {
     setIsLoading(true);
-    getOwnedCrucibles(signer, provider).then((cruciblesOnCurrentNetwork) => {
-      setCrucibles(cruciblesOnCurrentNetwork);
+    reloadCrucibles().then(() => {
       setIsLoading(false);
     });
   };
@@ -179,7 +182,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               <ModalBody>
                 {modalOperation === "unstake" ? (
                   <>
-                    Before unstaking you'll need to add a new network provider following{" "}
+                    Before unstaking you'll need to add a new network provider
+                    following{" "}
                     <Link
                       color="green.300"
                       href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
@@ -232,7 +236,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         ))}
       {isConnected && (
         <Flex flexDirection="column">
-          <RepeatIcon onClick={reloadCrucibles} _hover={{ cursor: "pointer" }} alignSelf="flex-end" mb={4} />
+          <RepeatIcon
+            onClick={refreshCrucibles}
+            _hover={{ cursor: "pointer" }}
+            alignSelf="flex-end"
+            mb={4}
+          />
         </Flex>
       )}
       {isLoading ? (
@@ -240,11 +249,13 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
       ) : (
         <>
           {isConnected &&
+            rewards &&
             (crucibles.length ? (
-              crucibles.map((crucible) => {
+              crucibles.map((crucible: any, i: number) => {
                 return (
                   <CrucibleCard
                     crucible={crucible}
+                    rewards={rewards[i]}
                     setModalOperation={setModalOperation}
                     setModalIsOpen={setModalIsOpen}
                     setSelectedCrucible={setSelectedCrucible}
@@ -253,8 +264,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               })
             ) : (
               <Text textAlign="left">
-                Your crucibles may not be appearing if you are on a private network. Switch to the Mainnet and click the
-                refresh button.
+                Your crucibles may not be appearing if you are on a private
+                network. Switch to the Mainnet and click the refresh button.
               </Text>
             ))}
         </>

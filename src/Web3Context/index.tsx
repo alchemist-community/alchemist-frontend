@@ -3,6 +3,18 @@ import Web3 from "web3";
 import { ethers } from "ethers";
 import { Web3Provider as Web3ProviderType } from "../ethereum";
 import { initNotify, initOnboard } from "../walletServices";
+import {
+  getUserRewards,
+  getNetworkStats,
+  calculateMistRewards,
+} from "../contracts/aludel";
+import { getOwnedCrucibles } from "../contracts/getOwnedCrucibles";
+import { formatUnits } from "@ethersproject/units";
+
+interface Rewards {
+  etherRewards: any;
+  tokenRewards: any;
+}
 
 const Web3Context = React.createContext<{
   web3: Web3ProviderType;
@@ -13,6 +25,10 @@ const Web3Context = React.createContext<{
   provider: any;
   signer: any;
   monitorTx: (hash: string) => Promise<void>;
+  reloadCrucibles: () => Promise<any>;
+  crucibles: any;
+  rewards: Rewards[];
+  networkStats: any;
 }>({
   web3: null,
   onboard: null,
@@ -22,6 +38,10 @@ const Web3Context = React.createContext<{
   provider: null,
   signer: null,
   monitorTx: async () => undefined,
+  reloadCrucibles: async () => undefined,
+  crucibles: null,
+  rewards: [],
+  networkStats: null,
 });
 
 const Web3Provider: React.FC = (props) => {
@@ -32,18 +52,55 @@ const Web3Provider: React.FC = (props) => {
   const [etherBalance, setEtherBalance] = useState<any>(null);
   const [signer, setSigner] = useState<any>();
   const [wallet, setWallet] = useState<any>({});
+  const [networkStats, setNetworkStats] = useState<any>({});
+  const [crucibles, setCrucibles] = useState(
+    [] as {
+      id: string;
+      balance: string;
+      lockedBalance: string;
+      cleanBalance?: string;
+      cleanLockedBalance?: string;
+    }[]
+  );
+  const [rewards, setRewards] = useState<any>();
   const [onboard, setOnboard] = useState<ReturnType<typeof initOnboard>>(
     null as any
   );
   const [notify, setNotify] = useState<any>(null);
-
-  const updateWallet = (wallet: any) => {
+  const updateWallet = useCallback((wallet: any) => {
     setWallet(wallet);
     const ethersProvider = new ethers.providers.Web3Provider(wallet.provider);
+    let signer = ethersProvider.getSigner();
     setProvider(ethersProvider);
-    setSigner(ethersProvider.getSigner());
+    setSigner(signer);
     window.localStorage.setItem("selectedWallet", wallet.name);
-  };
+    getNetworkStats(signer).then(setNetworkStats);
+    if (signer) {
+      getOwnedCrucibles(signer, ethersProvider)
+        .then((ownedCrucibles) => {
+          ownedCrucibles = ownedCrucibles.map((crucible) => ({
+            ...crucible,
+            cleanBalance: formatUnits(crucible.balance),
+            cleanLockedBalance: formatUnits(crucible.balance),
+          }));
+          setCrucibles(ownedCrucibles);
+          return getUserRewards(signer, ownedCrucibles);
+        })
+        .then((rewards) => {
+          if (rewards?.length) {
+            Promise.all(
+              rewards.map((reward: any) => {
+                return new Promise((resolve, reject) => {
+                  resolve(
+                    calculateMistRewards(signer, reward.currStakeRewards)
+                  );
+                });
+              })
+            ).then(setRewards);
+          }
+        });
+    }
+  }, []);
 
   useEffect(() => {
     const onboard = initOnboard({
@@ -62,7 +119,7 @@ const Web3Provider: React.FC = (props) => {
 
     setOnboard(onboard);
     setNotify(initNotify());
-  }, []);
+  }, [updateWallet]);
 
   useEffect(() => {
     const previouslySelectedWallet = window.localStorage.getItem(
@@ -86,6 +143,11 @@ const Web3Provider: React.FC = (props) => {
     }
     return ready;
   }
+
+  function reloadCrucibles() {
+    return new Promise((resolve) => resolve(updateWallet(wallet)));
+  }
+
   async function monitorTx(hash: string) {
     const { emitter } = notify.hash(hash);
     interface Transaction {
@@ -117,6 +179,10 @@ const Web3Provider: React.FC = (props) => {
         signer,
         provider,
         monitorTx,
+        reloadCrucibles,
+        crucibles,
+        rewards,
+        networkStats,
       }}
     >
       {props.children}
