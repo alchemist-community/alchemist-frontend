@@ -1,6 +1,6 @@
 import IUniswapV2ERC20 from "@uniswap/v2-core/build/IUniswapV2ERC20.json";
 import { ethers } from "ethers";
-import { formatEther, parseUnits, randomBytes } from "ethers/lib/utils";
+import { parseUnits, randomBytes } from "ethers/lib/utils";
 import { signPermission, signPermitEIP2612 } from "./utils";
 import aludelAbi from "./aludelAbi";
 import crucibleFactoryAbi from "./crucibleFactoryAbi";

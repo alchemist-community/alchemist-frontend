@@ -12,10 +12,8 @@ import { getOwnedCrucibles } from "../contracts/getOwnedCrucibles";
 import { formatUnits } from "@ethersproject/units";
 
 interface Rewards {
-  currStakeRewards: string;
-  currVaultRewards: string;
-  futStakeRewards: string;
-  futVaultRewards: string;
+  etherRewards: any;
+  tokenRewards: any;
 }
 
 const Web3Context = React.createContext<{
@@ -29,7 +27,7 @@ const Web3Context = React.createContext<{
   monitorTx: (hash: string) => Promise<void>;
   reloadCrucibles: () => Promise<any>;
   crucibles: any;
-  rewards: any;
+  rewards: Rewards[];
   networkStats: any;
 }>({
   web3: null,
@@ -42,7 +40,7 @@ const Web3Context = React.createContext<{
   monitorTx: async () => undefined,
   reloadCrucibles: async () => undefined,
   crucibles: null,
-  rewards: null,
+  rewards: [],
   networkStats: null,
 });
 
@@ -70,7 +68,6 @@ const Web3Provider: React.FC = (props) => {
   );
   const [notify, setNotify] = useState<any>(null);
   const updateWallet = useCallback((wallet: any) => {
-    console.log("updating wallet");
     setWallet(wallet);
     const ethersProvider = new ethers.providers.Web3Provider(wallet.provider);
     let signer = ethersProvider.getSigner();

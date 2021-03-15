@@ -7,11 +7,16 @@ const args = {
   aludel: "0xf0D415189949d913264A454F57f4279ad66cB24d",
 };
 // fetch contracts
-interface Rewards {
+interface EtherRewards {
   currStakeRewards: string;
   currVaultRewards: string;
   futStakeRewards: string;
   futVaultRewards: string;
+}
+
+interface Rewards {
+  etherRewards: number;
+  tokenRewards: number;
 }
 
 interface Crucible {
@@ -34,18 +39,6 @@ export async function getNetworkStats(signer: any) {
   ] = await aludel.getAludelData();
   let [duration, start, shares] = rewardScaling;
   let [floor, ceiling, time] = rewardSchedules[0];
-  console.log("network stats", {
-    duration: formatUnits(duration),
-    start: start.toNumber(),
-    shares: formatUnits(shares),
-    floor: formatUnits(floor),
-    ceiling: formatUnits(ceiling),
-    time: formatUnits(time),
-    rewardSharesOutstanding: formatUnits(rewardSharesOutstanding),
-    totalStake: formatUnits(totalStake),
-    totalStakeUnits: formatUnits(totalStakeUnits),
-    lastUpdate: formatUnits(lastUpdate),
-  });
   return {
     duration: duration.toNumber(),
     start: start.toNumber(),
@@ -68,7 +61,7 @@ export async function getNetworkStats(signer: any) {
 export async function getUserRewards(
   signer: any,
   crucibles: Crucible[]
-): Promise<Rewards[]> {
+): Promise<EtherRewards[]> {
   let plusOneYear = Date.now() + 60 * 60 * 24 * 365;
   const aludel = new ethers.Contract(args.aludel, aludelAbi, signer);
   const crucibleRewards = [];
@@ -110,7 +103,7 @@ export async function calculateMistRewards(
   signer: any,
   weiRewards: number,
   timestamp?: number
-): Promise<any> {
+): Promise<Rewards> {
   if (!timestamp) timestamp = Date.now();
   // const aludel = new ethers.Contract(args.aludel, aludelAbi, signer);
   // Bonus token (mist) & Reward Pool Addreess
@@ -133,5 +126,6 @@ export async function calculateMistRewards(
     )) *
       weiRewards) /
     totalWeiRewards;
+  console.log(typeof mistRewards, typeof weiRewards)
   return { tokenRewards: mistRewards, etherRewards: weiRewards };
 }
