@@ -63,12 +63,6 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     nodeAddress: "",
   });
 
-  useEffect(() => {
-    if (signer) {
-      // getOwnedCrucibles(signer, provider).then(setCrucibles);
-    }
-  }, [isConnected, provider, signer]);
-
   const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     //setXAmount is the amount displayed in the input, should be string
     const name = ev.target.name;
