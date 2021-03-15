@@ -224,27 +224,27 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 </Flex>
                 {rewards && (
                   <>
-                  <HStack>
-                    <Box mr={2}>
-                      <strong>Stake Rewards:</strong>{" "}
-                      {`${rewards[i].currStakeRewards}`}
-                    </Box>
-                    <Box mr={2}>
-                      <strong>Vault Rewards:</strong>{" "}
-                      {`${rewards[i].currVaultRewards}`}
-                    </Box>
-                  </HStack>
-                  <HStack>
-                  <Box mr={2}>
-                    <strong>Staking Rewards (Y):</strong>{" "}
-                    {`${rewards[i].futStakeRewards}`}
-                  </Box>
-                  <Box mr={2}>
-                    <strong>Future Vault Rewards (Y):</strong>{" "}
-                    {`${rewards[i].futVaultRewards}`}
-                  </Box>
-                </HStack>
-                </>
+                    <HStack mt={4}>
+                      <Box mr={2}>
+                        <strong>MIST Rewards:</strong>{" "}
+                        {`${rewards[i].tokenRewards}`}
+                      </Box>
+                      <Box mr={2}>
+                        <strong>Ether Rewards:</strong>{" "}
+                        {`${rewards[i].etherRewards}`}
+                      </Box>
+                    </HStack>
+                    {/* <HStack>
+                      <Box mr={2}>
+                        <strong>Staking Rewards (Y):</strong>{" "}
+                        {`${rewards[i].futStakeRewards}`}
+                      </Box>
+                      <Box mr={2}>
+                        <strong>Future Vault Rewards (Y):</strong>{" "}
+                        {`${rewards[i].futVaultRewards}`}
+                      </Box>
+                    </HStack> */}
+                  </>
                 )}
               </Text>
             </Box>
