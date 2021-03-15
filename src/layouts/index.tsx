@@ -2,20 +2,21 @@ import { Box, Flex } from "@chakra-ui/layout";
 import Footer from "../views/Footer";
 import Header from "../views/Header";
 import Body from "../views/Body";
+import bg from '../img/bg.jpg'
 import React from "react";
-import { useColorModeValue } from "@chakra-ui/color-mode";
 
 interface LayoutProps {}
 
 const Layout: React.FC<LayoutProps> = () => {
-  const bgColor = useColorModeValue("gray.50", "gray.800");
 
   return (
     <Flex
+      px={[4, 4, 12]}
       minHeight="100vh"
       flexDirection="column"
-      backgroundColor={bgColor}
-      px={[4, 4, 12]}
+      backgroundSize="cover"
+      backgroundPosition="center"
+      background={`url(${bg})`}
     >
       <Header />
       <Box flexGrow={1}>

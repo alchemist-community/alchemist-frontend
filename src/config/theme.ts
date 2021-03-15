@@ -1,7 +1,7 @@
 import { extendTheme, ThemeConfig, theme } from "@chakra-ui/react";
 
 const config: ThemeConfig = {
-  initialColorMode: "light",
+  initialColorMode: "dark",
   useSystemColorMode: false,
 };
 
@@ -20,6 +20,18 @@ const customTheme = extendTheme({
       800: "#086F83",
       900: "#065666",
     },
+    gray: {
+      50: '#EFEFF6',
+      100: '#D4D2E5',
+      200: '#B8B5D4',
+      300: '#9C98C3',
+      400: '#807BB2',
+      500: '#645EA1',
+      600: '#504B81',
+      700: '#3C3960',
+      800: '#24223A',
+      900: '#141320'
+    },
   },
   fonts: {
     heading: "Poppins",
@@ -28,7 +40,7 @@ const customTheme = extendTheme({
   components: {
     Heading: {
       baseStyle: {
-        fontWeight: "500",
+        fontWeight: "700",
       },
     },
     Link: {
