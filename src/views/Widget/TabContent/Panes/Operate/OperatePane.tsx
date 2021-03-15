@@ -5,6 +5,7 @@ import { getOwnedCrucibles } from "../../../../../contracts/getOwnedCrucibles";
 import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
 import { sendNFT } from "../../../../../contracts/sendNFT";
 import { withdraw } from "../../../../../contracts/withdraw";
+import { increaseStake } from "../../../../../contracts/increaseStake";
 import { Button } from "@chakra-ui/button";
 import { Link, Flex } from "@chakra-ui/layout";
 import {
@@ -106,10 +107,11 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     );
     setModalIsOpen(false);
   };
-  const increaseStake = async () => {
-    // await readyToTransact();
-    // const hash: string = await increaseStake(signer, provider, amount);
-    // monitorTx(hash);
+
+  const increaseStakeAmount = async () => {
+    await readyToTransact();
+    const hash: string = await increaseStake(signer, selectedCrucible, amount);
+    monitorTx(hash);
   };
   const withdrawTokens = async () => {
     await withdraw(selectedCrucible, amount);
@@ -221,7 +223,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                       ? withdrawTokens
                       : modalOperation === "unstake"
                       ? unstake
-                      : increaseStake
+                      : increaseStakeAmount
                   }
                 >
                   {modalOperation === "withdraw"

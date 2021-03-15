@@ -7,7 +7,6 @@ import Crucible from "./Crucible.json";
 
 export async function increaseStake(
   signer: any,
-  monitorTx: (hash: string) => Promise<any>,
   crucibleAddress: string,
   rawAmount: string
 ) {
@@ -37,16 +36,16 @@ export async function increaseStake(
 
   // validate balances
   // If unlocked balance is < amount, throw error
-  // if ((await stakingToken.balanceOf(crucible.address)) < amount) {
-  //   throw new Error("stop being poor");
-  // }
+  if ((await stakingToken.balanceOf(crucible.address)) < amount) {
+    throw new Error("Stake amount exceeds available LP token balance");
+  }
 
   // craft permission
 
-  console.log("Sign Unlock permission");
+  console.log("Sign Unlock perm ission");
 
   const permission = await signPermission(
-    "Unlock",
+    "Lock",
     crucible,
     signer,
     aludel.address,
@@ -57,25 +56,13 @@ export async function increaseStake(
 
   console.log("Increase stake");
 
-  const populatedTx = await aludel.populateTransaction.increaseStake(
+  const populatedTx = await aludel.populateTransaction.stake(
     crucible.address,
-    recipient,
     amount,
     permission
   );
 
   const increaseStakeTx = await signer.sendTransaction(populatedTx);
-  monitorTx(increaseStakeTx.hash);
-  console.log("  in", increaseStakeTx.hash);
+  return increaseStakeTx;
 
-  // Withdraw not needed
-  // const withdrawTx = await crucible.transferERC20(
-  //   stakingToken.address,
-  //   recipient,
-  //   amount
-  // );
-
-  // monitorTx(withdrawTx.hash);
-
-  // console.log("  in", withdrawTx?.hash);
 }

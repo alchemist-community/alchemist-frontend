@@ -177,7 +177,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
         </Text>
       </Box>
       <ButtonGroup isAttached variant="outline" mb={[4, 4, 0]} width="100%">
-        {/*
+        
               <Button
                 isFullWidth
                 color="white"
@@ -195,7 +195,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
               >
                 Increase stake
               </Button>
-              */}
+             
         <Button
           isFullWidth
           color="white"
