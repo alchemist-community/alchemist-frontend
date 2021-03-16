@@ -66,10 +66,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   });
 
   // Check user LP balances and user's selected crucible for locked/unlocked balances
-  const foundCrucible = selectedCrucible && crucibles.find((crucible: any) => selectedCrucible === crucible.id )
-  const maxWithdrawAmount =  foundCrucible.cleanUnlockedBalance
-  const maxUnstakeAmount = foundCrucible.cleanLockedBalance
-  const maxStakeAmount = tokenBalances.lpBalance
+  const foundCrucible =
+    selectedCrucible &&
+    crucibles.find((crucible: any) => selectedCrucible === crucible.id);
+  const maxWithdrawAmount = foundCrucible.cleanUnlockedBalance;
+  const maxUnstakeAmount = foundCrucible.cleanLockedBalance;
+  const maxStakeAmount = tokenBalances.lpBalance;
 
   const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     //setXAmount is the amount displayed in the input, should be string
@@ -155,6 +157,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               onChange={(ev) => setSendAddress(ev.target.value)}
               name="address"
               type="string"
+              placeholder="0x4ab..."
             />
           </FormControl>
         </ModalBody>
@@ -190,27 +193,43 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 {modalOperation === "withdraw"
                   ? "Withdraw"
                   : modalOperation === "unstake"
-                  ? "Unstake"
+                  ? "Unstake and claim"
                   : "Increase Stake"}
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                {modalOperation === "unstake" ? (
+                {modalOperation === "withdraw" ? (
+                  <>
+                    Before withdrawing your LP tokens from your crucible, you
+                    must first unstake and claim your rewards.
+                  </>
+                ) : modalOperation === "unstake" ? (
                   <>
                     Before unstaking you'll need to add a new network provider
                     following{" "}
                     <Link
-                      color="green.300"
+                      color="brand.400"
                       href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
                       isExternal
                     >
-                      this guide
+                      this guide.
                     </Link>
                   </>
                 ) : (
-                  ""
+                  <>
+                    Increase your Crucible Stake by depositing Uniswap Liquidity
+                    Pool tokens. You can get LP tokens by depositing ETH and
+                    MIST to the trading pair{" "}
+                    <Link
+                      color="brand.400"
+                      isExternal
+                      href="https://app.uniswap.org/#/add/0x88acdd2a6425c3faae4bc9650fd7e27e0bebb7ab/ETH"
+                    >
+                      here.
+                    </Link>
+                  </>
                 )}
-                <FormControl mb={4}>
+                <FormControl mb={4} mt={4}>
                   <FormLabel>Amount</FormLabel>
                   {/* TODO: Add max button */}
                   <InputGroup size="md">
@@ -219,14 +238,16 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                       variant="filled"
                       _focus={{ borderColor: "brand.400" }}
                       value={amount}
-                      isInvalid={modalOperation === "increaseStake"
-                      ? amount > maxStakeAmount
-                      : modalOperation === "withdraw" ? amount > maxWithdrawAmount
-                      : amount > maxUnstakeAmount
+                      isInvalid={
+                        modalOperation === "increaseStake"
+                          ? amount > maxStakeAmount
+                          : modalOperation === "withdraw"
+                          ? amount > maxWithdrawAmount
+                          : amount > maxUnstakeAmount
                       }
                       onChange={formatAmount}
                       name="balance"
-                      placeholder="0.0"
+                      placeholder={"Uniswap LP Tokens"}
                       type="number"
                     />
                     {console.log("REQWARDS", rewards)}
@@ -238,9 +259,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                         variant="ghost"
                         onClick={() => {
                           modalOperation === "increaseStake"
-                          ? setAmount(maxStakeAmount) :
-                          modalOperation === "withdraw" ? setAmount(maxWithdrawAmount)
-                          : setAmount(maxUnstakeAmount)
+                            ? setAmount(maxStakeAmount)
+                            : modalOperation === "withdraw"
+                            ? setAmount(maxWithdrawAmount)
+                            : setAmount(maxUnstakeAmount);
                         }}
                       >
                         Max
@@ -266,7 +288,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   {modalOperation === "withdraw"
                     ? "Withdraw"
                     : modalOperation === "unstake"
-                    ? "Unstake"
+                    ? "Unstake and claim"
                     : "Increase stake"}
                 </Button>
               </ModalFooter>

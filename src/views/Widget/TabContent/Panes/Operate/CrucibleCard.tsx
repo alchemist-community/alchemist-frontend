@@ -76,11 +76,11 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   onClick={isBalanceTrunc ? expandBalanceNumber : undefined}
                   _hover={isBalanceTrunc ? { cursor: "pointer" } : undefined}
                 >
-                  <strong>Balance: </strong>
+                  <strong>Total Balance: </strong>
                   {!expandBalance ? (
                     <>
                       {`${parseFloat(
-                        Number(crucible?.cleanBalance).toFixed(3)
+                        Number(crucible?.cleanBalance).toFixed(4)
                       )}`}
                       {isBalanceTrunc && "..."}
                     </>
@@ -176,7 +176,8 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
           )}
         </Text>
       </Box>
-      <ButtonGroup isAttached variant="outline" mb={[4, 4, 0]} width="100%">
+      {/* <ButtonGroup isAttached variant="outline" mb={[4, 4, 0]} spacing="4" width="100%"> */}
+      <HStack mt={4}>
         <Button
           isFullWidth
           color="white"
@@ -192,7 +193,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Add funds
+          Increase Stake
         </Button>
         <Button
           isFullWidth
@@ -208,8 +209,10 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Unstake
+          Unstake & Claim Rewards
         </Button>
+      </HStack>
+      <HStack mt={4}>
         <Button
           isFullWidth
           color="white"
@@ -225,7 +228,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Withdraw
+          Withdraw Unstaked
         </Button>
         <Button
           isFullWidth
@@ -242,9 +245,9 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Send
+          Transfer Crucible
         </Button>
-      </ButtonGroup>
+      </HStack>
     </Box>
   );
 };

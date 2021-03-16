@@ -91,7 +91,9 @@ const Web3Provider: React.FC = (props) => {
             ...crucible,
             cleanBalance: formatUnits(crucible.balance),
             cleanLockedBalance: formatUnits(crucible.lockedBalance),
-            cleanUnlockedBalance: formatUnits(crucible.balance.sub(crucible.lockedBalance)),
+            cleanUnlockedBalance: formatUnits(
+              crucible.balance.sub(crucible.lockedBalance)
+            ),
           }));
           setCrucibles(reformatted);
           return getUserRewards(signer, ownedCrucibles);

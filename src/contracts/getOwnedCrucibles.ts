@@ -6,8 +6,8 @@ import IERC20 from "./IERC20.json";
 
 export async function getOwnedCrucibles(signer: any, provider: any) {
   const crucibleFactoryAddress = "0x54e0395CFB4f39beF66DBCd5bD93Cca4E9273D56";
-  const lpTokenAddress = "0xCD6bcca48069f8588780dFA274960F15685aEe0e"
-  const aludelAddress = "0xf0D415189949d913264A454F57f4279ad66cB24d"
+  const lpTokenAddress = "0xCD6bcca48069f8588780dFA274960F15685aEe0e";
+  const aludelAddress = "0xf0D415189949d913264A454F57f4279ad66cB24d";
   const walletAddress = await signer.getAddress();
 
   const token = new ethers.Contract(
@@ -28,8 +28,11 @@ export async function getOwnedCrucibles(signer: any, provider: any) {
     const owner = crucibleFactory.ownerOf(id);
     const balance = token.balanceOf(crucible.address);
     const lockedBalance = crucible.getBalanceLocked(lpTokenAddress);
-    const delegatedBalance = await crucible.getBalanceDelegated(lpTokenAddress, walletAddress ); 
-    console.log("Delegated Blanace", delegatedBalance)
+    const delegatedBalance = await crucible.getBalanceDelegated(
+      lpTokenAddress,
+      walletAddress
+    );
+    console.log("Delegated Blanace", delegatedBalance);
     return {
       id,
       balance: await balance,
