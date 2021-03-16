@@ -23,6 +23,7 @@ interface CrucibleCardProps {
     tokenRewards: number;
     etherRewards: number;
   };
+  setSelectedRewards: (rewards: any) => void;
 }
 const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
   const {
@@ -30,6 +31,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
     setModalOperation,
     setSelectedCrucible,
     setModalIsOpen,
+    setSelectedRewards,
     rewards,
   } = props;
   const cruciblesCardBg = useColorModeValue("white", "gray.600");
@@ -206,6 +208,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
           onClick={() => {
             setModalOperation("unstake");
             setSelectedCrucible(crucible["id"]);
+            setSelectedRewards(rewards)
             setModalIsOpen(true);
           }}
         >

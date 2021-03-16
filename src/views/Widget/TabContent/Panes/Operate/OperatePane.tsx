@@ -56,6 +56,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   >("unstake");
   const [selectedCrucible, setSelectedCrucible] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRewards, setSelectedRewards] = useState({
+    tokenRewards: "",
+    etherRewards: "",
+  })
 
   const [formValues, setFormValues] = useState({
     lnBalance: "",
@@ -205,6 +209,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   </>
                 ) : modalOperation === "unstake" ? (
                   <>
+                  You are claiming {selectedRewards?.tokenRewards} MIST and {selectedRewards?.etherRewards} Ether rewards.
+                  <br/>
                     Before unstaking you'll need to add a new network provider
                     following{" "}
                     <Link
@@ -320,6 +326,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     setModalOperation={setModalOperation}
                     setModalIsOpen={setModalIsOpen}
                     setSelectedCrucible={setSelectedCrucible}
+                    setSelectedRewards={setSelectedRewards} 
                   />
                 );
               })
