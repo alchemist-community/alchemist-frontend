@@ -64,7 +64,13 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     constantFee: "",
     nodeAddress: "",
   });
-  console.log("Token balances", tokenBalances);
+
+  // Check user LP balances and user's selected crucible for locked/unlocked balances
+  const foundCrucible = selectedCrucible && crucibles.find((crucible: any) => selectedCrucible === crucible.id )
+  const maxWithdrawAmount =  foundCrucible.cleanUnlockedBalance
+  const maxUnstakeAmount = foundCrucible.cleanLockedBalance
+  const maxStakeAmount = tokenBalances.lpBalance
+
   const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     //setXAmount is the amount displayed in the input, should be string
     const name = ev.target.name;
@@ -113,7 +119,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     await readyToTransact();
     const hash: string = await increaseStake(signer, selectedCrucible, amount);
     monitorTx(hash);
+    setModalIsOpen(false);
+    alert(
+      "You have added to your crucible stake and will start earning rewards once the transaction confirms."
+    );
   };
+
   const withdrawTokens = async () => {
     await withdraw(selectedCrucible, amount);
     setModalIsOpen(false);
@@ -208,18 +219,29 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                       variant="filled"
                       _focus={{ borderColor: "brand.400" }}
                       value={amount}
+                      isInvalid={modalOperation === "increaseStake"
+                      ? amount > maxStakeAmount
+                      : modalOperation === "withdraw" ? amount > maxWithdrawAmount
+                      : amount > maxUnstakeAmount
+                      }
                       onChange={formatAmount}
                       name="balance"
                       placeholder="0.0"
                       type="number"
                     />
+                    {console.log("REQWARDS", rewards)}
                     <InputRightElement width="4.5rem" zIndex={0}>
                       <Button
                         mr={2}
                         mt={2}
                         h="2rem"
                         variant="ghost"
-                        onClick={() => setAmount(tokenBalances.lpBalance)}
+                        onClick={() => {
+                          modalOperation === "increaseStake"
+                          ? setAmount(maxStakeAmount) :
+                          modalOperation === "withdraw" ? setAmount(maxWithdrawAmount)
+                          : setAmount(maxUnstakeAmount)
+                        }}
                       >
                         Max
                       </Button>

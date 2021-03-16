@@ -11,7 +11,8 @@ import {
 import { getOwnedCrucibles } from "../contracts/getOwnedCrucibles";
 import { getTokenBalances } from "../contracts/getTokenBalances";
 
-import { formatUnits } from "@ethersproject/units";
+import { formatUnits, parseUnits } from "@ethersproject/units";
+import { AnyARecord } from "node:dns";
 
 interface Rewards {
   etherRewards: any;
@@ -63,8 +64,10 @@ const Web3Provider: React.FC = (props) => {
       id: string;
       balance: string;
       lockedBalance: string;
+      owner: string;
       cleanBalance?: string;
       cleanLockedBalance?: string;
+      cleanUnlockedBalance?: any;
     }[]
   );
   const [rewards, setRewards] = useState<any>();
@@ -84,12 +87,13 @@ const Web3Provider: React.FC = (props) => {
     if (signer) {
       getOwnedCrucibles(signer, ethersProvider)
         .then((ownedCrucibles) => {
-          ownedCrucibles = ownedCrucibles.map((crucible) => ({
+          let reformatted = ownedCrucibles.map((crucible) => ({
             ...crucible,
             cleanBalance: formatUnits(crucible.balance),
-            cleanLockedBalance: formatUnits(crucible.balance),
+            cleanLockedBalance: formatUnits(crucible.lockedBalance),
+            cleanUnlockedBalance: formatUnits(crucible.balance.sub(crucible.lockedBalance)),
           }));
-          setCrucibles(ownedCrucibles);
+          setCrucibles(reformatted);
           return getUserRewards(signer, ownedCrucibles);
         })
         .then((rewards) => {
