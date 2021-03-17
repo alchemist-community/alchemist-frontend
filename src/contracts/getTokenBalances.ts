@@ -18,7 +18,6 @@ export async function getTokenBalances(signer: any) {
 
   let mistBalance = await token;
   let lpBalance = await lp;
-  console.log("Balances", mistBalance, lpBalance);
   return {
     mistBalance,
     lpBalance,
