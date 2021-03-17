@@ -26,13 +26,13 @@ export default function UserAddress() {
             {!tokenBalances && <Spinner />}
             {tokenBalances && (
               <Badge px={2} py={1} borderRadius="md" boxShadow="sm">
-                Alchemist: {toMaxDecimalsRound(tokenBalances.alchemist, 0.01)}{" "}
+                Alchemist: {toMaxDecimalsRound(tokenBalances.cleanMist, 0.01)}{" "}
                 ⚗️
               </Badge>
             )}
             {tokenBalances && (
               <Badge px={2} py={1} borderRadius="md" boxShadow="sm">
-                LP: {toMaxDecimalsRound(tokenBalances.lp, 0.01)} ⚗️
+                LP: {toMaxDecimalsRound(tokenBalances.cleanLp, 0.01)} ⚗️
               </Badge>
             )}
           </HStack>

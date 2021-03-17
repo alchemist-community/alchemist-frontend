@@ -208,7 +208,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
           onClick={() => {
             setModalOperation("unstake");
             setSelectedCrucible(crucible["id"]);
-            setSelectedRewards(rewards)
+            setSelectedRewards(rewards);
             setModalIsOpen(true);
           }}
         >

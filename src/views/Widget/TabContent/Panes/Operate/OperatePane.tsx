@@ -59,7 +59,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const [selectedRewards, setSelectedRewards] = useState({
     tokenRewards: "",
     etherRewards: "",
-  })
+  });
 
   const [formValues, setFormValues] = useState({
     lnBalance: "",
@@ -75,7 +75,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     crucibles.find((crucible: any) => selectedCrucible === crucible.id);
   const maxWithdrawAmount = foundCrucible.cleanUnlockedBalance;
   const maxUnstakeAmount = foundCrucible.cleanLockedBalance;
-  const maxStakeAmount = tokenBalances.lpBalance;
+  const maxStakeAmount = tokenBalances.cleanLp;
 
   const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     //setXAmount is the amount displayed in the input, should be string
@@ -144,7 +144,13 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   };
 
   const sendModal = (
-    <Modal isOpen onClose={() => setModalIsOpen(false)}>
+    <Modal
+      isOpen
+      onClose={() => {
+        setAmount("");
+        setModalIsOpen(false);
+      }}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Send</ModalHeader>
@@ -209,8 +215,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   </>
                 ) : modalOperation === "unstake" ? (
                   <>
-                  You are claiming {selectedRewards?.tokenRewards} MIST and {selectedRewards?.etherRewards} Ether rewards.
-                  <br/>
+                    You are claiming {selectedRewards?.tokenRewards} MIST and{" "}
+                    {selectedRewards?.etherRewards} Ether rewards.
+                    <br />
                     Before unstaking you'll need to add a new network provider
                     following{" "}
                     <Link
@@ -256,7 +263,6 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                       placeholder={"Uniswap LP Tokens"}
                       type="number"
                     />
-                    {console.log("REQWARDS", rewards)}
                     <InputRightElement width="4.5rem" zIndex={0}>
                       <Button
                         mr={2}
@@ -326,7 +332,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     setModalOperation={setModalOperation}
                     setModalIsOpen={setModalIsOpen}
                     setSelectedCrucible={setSelectedCrucible}
-                    setSelectedRewards={setSelectedRewards} 
+                    setSelectedRewards={setSelectedRewards}
                   />
                 );
               })

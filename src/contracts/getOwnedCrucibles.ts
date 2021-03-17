@@ -32,7 +32,7 @@ export async function getOwnedCrucibles(signer: any, provider: any) {
       lpTokenAddress,
       walletAddress
     );
-    console.log("Delegated Blanace", delegatedBalance);
+    console.log("Delegated Blanace", formatUnits(delegatedBalance));
     return {
       id,
       balance: await balance,

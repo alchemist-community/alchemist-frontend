@@ -15,8 +15,10 @@ export async function getTokenBalances(signer: any) {
     IERC20.abi,
     signer
   ).balanceOf(walletAddress);
+
   let mistBalance = await token;
   let lpBalance = await lp;
+  console.log("Balances", mistBalance, lpBalance);
   return {
     mistBalance,
     lpBalance,
