@@ -6,7 +6,6 @@ import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Alert } from "@chakra-ui/alert";
 import { Button, IconButton } from "@chakra-ui/button";
 import { Link, Text } from "@chakra-ui/layout";
-import { useColorModeValue } from "@chakra-ui/color-mode";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { getTokenBalances } from "../../../../../contracts/getTokenBalances";
 import {
@@ -52,19 +51,17 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     });
   }, [lpBalance, handleInputChange]);
 
-  const alertBgColor = useColorModeValue("gray.50", "gray.600");
-
   return (
     <>
       <Alert
         mb={8}
         status="info"
+        boxShadow="lg"
         borderWidth={1}
         borderRadius="lg"
-        borderColor="brand.400"
-        background={alertBgColor}
+        background="gray.700"
       >
-        <Text>
+        <Text color="gray.200">
           First you will need to provide liquidity to the{" "}
           <span role="img" aria-label="alembic">
             ⚗️
@@ -157,7 +154,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           Connect Wallet
         </Button>
       )}
-      <Text color="gray.500" mt={4} px={2}>
+      <Text color="gray.200" fontSize="sm" mt={4} px={2}>
         Ledger wallets on Metamask don't support the signature types required,
         so they won't work. See{" "}
         <Link
