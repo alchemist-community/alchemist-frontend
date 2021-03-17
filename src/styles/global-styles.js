@@ -20,9 +20,15 @@ export const GlobalStyles = css`
       width: 100%;
       max-width: 480px;
       border-radius: 3rem;
-      padding-right: 0.8em;
+      padding-right: 0.8rem;
 
       .bn-onboard-modal-content-close {
+        svg {
+          height: 14px;
+          width: 14px;
+          margin-right: 4px;
+          margin-top: 4px;
+        }
         :hover {
           background: unset;
         }
@@ -33,8 +39,8 @@ export const GlobalStyles = css`
         flex-direction: column;
         overflow: auto;
         height: 400px;
-        margin-top: 1.25em;
-        margin-bottom: 0;
+        margin-top: 1.25rem;
+        margin-bottom: 0.5rem;
 
         & > li {
           width: 100%;
@@ -60,7 +66,7 @@ export const GlobalStyles = css`
 
             & > span {
               font-size: 1.3rem;
-              font-weight: 400;
+              font-weight: 500;
               margin-left: 0;
 
               & > i {
