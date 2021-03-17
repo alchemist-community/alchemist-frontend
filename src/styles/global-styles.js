@@ -19,15 +19,13 @@ export const GlobalStyles = css`
       background: #192e54;
       width: 100%;
       max-width: 480px;
-      border-radius: 3rem;
-      padding-right: 0.8rem;
+      border-radius: 2rem;
+      padding-right: 0.6rem;
 
       .bn-onboard-modal-content-close {
         svg {
           height: 14px;
           width: 14px;
-          margin-right: 4px;
-          margin-top: 4px;
         }
         :hover {
           background: unset;
