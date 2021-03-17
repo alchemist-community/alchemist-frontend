@@ -289,6 +289,13 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   bg="brand.400"
                   color="white"
                   mr={3}
+                  isDisabled={
+                    modalOperation === "increaseStake"
+                    ? amount > maxStakeAmount
+                    : modalOperation === "withdraw"
+                    ? amount > maxWithdrawAmount
+                    : amount > maxUnstakeAmount
+                  }
                   onClick={
                     modalOperation === "withdraw"
                       ? withdrawTokens

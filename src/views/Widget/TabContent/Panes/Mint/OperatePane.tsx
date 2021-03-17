@@ -56,6 +56,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   }, [lpBalance, handleInputChange]);
 
   const alertBgColor = useColorModeValue("gray.50", "gray.600");
+  const maxStakeAmount = tokenBalances.cleanLp;
 
   return (
     <>
@@ -120,7 +121,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               mt={2}
               h="2rem"
               variant="ghost"
-              onClick={() => setLpBalance(tokenBalances.lpBalance)}
+              onClick={() => setLpBalance(maxStakeAmount)}
             >
               Max
             </Button>
@@ -137,6 +138,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           background="brand.400"
           _focus={{ boxShadow: "none" }}
           _hover={{ background: "brand.400" }}
+          isDisabled={ lpBalance > maxStakeAmount}
           onClick={async () => {
             await readyToTransact();
             const hash: string = await mintAndLock(signer, provider, lpBalance);
