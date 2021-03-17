@@ -22,8 +22,8 @@ const customTheme = extendTheme({
     },
   },
   fonts: {
-    heading: "Work Sans",
-    body: "Work Sans",
+    heading: "Poppins",
+    body: "Poppins",
   },
   components: {
     Heading: {
