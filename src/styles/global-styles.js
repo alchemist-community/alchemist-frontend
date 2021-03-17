@@ -14,13 +14,12 @@ export const GlobalStyles = css`
   .bn-onboard-custom.bn-onboard-modal {
     padding: 0 1.5rem;
     font-family: Poppins;
+
     .bn-onboard-modal-content.bn-onboard-dark-mode {
       background: #192e54;
       width: 100%;
       max-width: 480px;
       border-radius: 3rem;
-      @media (min-width: 480px) {
-      }
       padding-right: 0.8em;
 
       .bn-onboard-modal-content-close {
@@ -40,6 +39,7 @@ export const GlobalStyles = css`
         & > li {
           width: 100%;
           padding-right: 0.8em;
+
           & > button {
             height: 70px;
             width: inherit;
@@ -52,6 +52,7 @@ export const GlobalStyles = css`
               border-color: #0072ff;
               background: inherit;
             }
+
             &.bn-onboard-selected-wallet {
               background: inherit;
               border-color: #c45df4;
