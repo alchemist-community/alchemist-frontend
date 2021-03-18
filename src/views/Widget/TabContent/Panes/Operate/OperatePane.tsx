@@ -15,7 +15,7 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton,
+  ModalCloseButton
 } from "@chakra-ui/modal";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
@@ -32,33 +32,19 @@ interface OperatePaneProps {
 }
 
 const OperatePane: React.FC<OperatePaneProps> = (props) => {
-  const {
-    handleInputChange = () => null,
-    isConnected,
-    crucibles,
-    rewards,
-  } = props;
+  const { handleInputChange = () => null, isConnected, crucibles, rewards } = props;
 
-  const {
-    readyToTransact,
-    signer,
-    provider,
-    monitorTx,
-    reloadCrucibles,
-    tokenBalances,
-  } = useContext(Web3Context);
+  const { readyToTransact, signer, provider, monitorTx, reloadCrucibles, tokenBalances } = useContext(Web3Context);
 
   const [amount, setAmount] = useState("");
   const [sendAddress, setSendAddress] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalOperation, setModalOperation] = useState<
-    "withdraw" | "unstake" | "send" | "increaseStake"
-  >("unstake");
+  const [modalOperation, setModalOperation] = useState<"withdraw" | "unstake" | "send" | "increaseStake">("unstake");
   const [selectedCrucible, setSelectedCrucible] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRewards, setSelectedRewards] = useState({
     tokenRewards: "",
-    etherRewards: "",
+    etherRewards: ""
   });
 
   const [formValues, setFormValues] = useState({
@@ -66,13 +52,11 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     tbtcBalance: "",
     linearFee: "",
     constantFee: "",
-    nodeAddress: "",
+    nodeAddress: ""
   });
 
   // Check user LP balances and user's selected crucible for locked/unlocked balances
-  const foundCrucible =
-    selectedCrucible &&
-    crucibles.find((crucible: any) => selectedCrucible === crucible.id);
+  const foundCrucible = selectedCrucible && crucibles.find((crucible: any) => selectedCrucible === crucible.id);
   const maxWithdrawAmount = foundCrucible.cleanUnlockedBalance;
   const maxUnstakeAmount = foundCrucible.cleanLockedBalance;
   const maxStakeAmount = tokenBalances.cleanLp;
@@ -83,14 +67,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     let value = ev.target.value;
     if (ev.target.type === "number")
       value =
-        ev.target.value === ""
-          ? ev.target.value
-          : toMaxDecimalsRound(ev.target.value, +ev.target.step).toString();
+        ev.target.value === "" ? ev.target.value : toMaxDecimalsRound(ev.target.value, +ev.target.step).toString();
 
     setFormValues((old) => {
       return {
         ...old,
-        [name]: value,
+        [name]: value
       };
     });
   };
@@ -126,9 +108,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     const hash: string = await increaseStake(signer, selectedCrucible, amount);
     monitorTx(hash);
     setModalIsOpen(false);
-    alert(
-      "You have added to your crucible stake and will start earning rewards once the transaction confirms."
-    );
+    alert("You have added to your crucible stake and will start earning rewards once the transaction confirms.");
   };
 
   const withdrawTokens = async () => {
@@ -210,16 +190,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               <ModalBody>
                 {modalOperation === "withdraw" ? (
                   <>
-                    Before withdrawing your LP tokens from your crucible, you
-                    must first unstake and claim your rewards.
+                    Before withdrawing your LP tokens from your crucible, you must first unstake and claim your rewards.
                   </>
                 ) : modalOperation === "unstake" ? (
                   <>
-                    You are claiming {selectedRewards?.tokenRewards} MIST and{" "}
-                    {selectedRewards?.etherRewards} Ether rewards.
+                    You are claiming {selectedRewards?.tokenRewards} MIST and {selectedRewards?.etherRewards} Ether
+                    rewards.
                     <br />
-                    Before unstaking you'll need to add a new network provider
-                    following{" "}
+                    Before unstaking you'll need to add a new network provider following{" "}
                     <Link
                       color="brand.400"
                       href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
@@ -230,9 +208,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   </>
                 ) : (
                   <>
-                    Increase your Crucible Stake by depositing Uniswap Liquidity
-                    Pool tokens. You can get LP tokens by depositing ETH and
-                    MIST to the trading pair{" "}
+                    Increase your Crucible Stake by depositing Uniswap Liquidity Pool tokens. You can get LP tokens by
+                    depositing ETH and MIST to the trading pair{" "}
                     <Link
                       color="brand.400"
                       isExternal
@@ -291,10 +268,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   mr={3}
                   isDisabled={
                     modalOperation === "increaseStake"
-                    ? amount > maxStakeAmount
-                    : modalOperation === "withdraw"
-                    ? amount > maxWithdrawAmount
-                    : amount > maxUnstakeAmount
+                      ? amount > maxStakeAmount
+                      : modalOperation === "withdraw"
+                      ? amount > maxWithdrawAmount
+                      : amount > maxUnstakeAmount
                   }
                   onClick={
                     modalOperation === "withdraw"
@@ -316,12 +293,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         ))}
       {isConnected && (
         <Flex flexDirection="column">
-          <RepeatIcon
-            onClick={refreshCrucibles}
-            _hover={{ cursor: "pointer" }}
-            alignSelf="flex-end"
-            mb={4}
-          />
+          <RepeatIcon onClick={refreshCrucibles} _hover={{ cursor: "pointer" }} alignSelf="flex-end" mb={4} />
         </Flex>
       )}
       {isLoading ? (
@@ -329,8 +301,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
       ) : (
         <>
           {isConnected &&
-            rewards &&
-            (crucibles.length ? (
+            (crucibles.length && rewards ? (
               crucibles.map((crucible: any, i: number) => {
                 return (
                   <CrucibleCard
@@ -345,8 +316,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               })
             ) : (
               <Text textAlign="left">
-                Your crucibles may not be appearing if you are on a private
-                network. Switch to the Mainnet and click the refresh button.
+                Your crucibles may not be appearing if you are on a private network. Switch to the Mainnet and click the
+                refresh button.
               </Text>
             ))}
         </>
