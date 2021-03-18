@@ -1,12 +1,8 @@
 import React, { useContext } from "react";
 import Web3Context from "../../Web3Context";
-import {
-  Text,
-  Button,
-  Box,
-  IconButton,
-} from "@chakra-ui/react";
+import { Text, Button, Box, Image } from "@chakra-ui/react";
 import { IoMdClose } from "react-icons/io";
+import powerIcon from "../../img/power-icon.png";
 
 export default function UserAddress() {
   const { wallet, address, onboard, readyToTransact } = useContext(Web3Context);
@@ -17,38 +13,33 @@ export default function UserAddress() {
     <>
       <Button
         onClick={handleClick}
-        borderWidth={1}
-        variant="muted"
-        background="gray.800"
-        borderColor="cyan.500"
-        borderRadius="lg"
+        height={["40px", "40px", "60px"]}
+        background={wallet?.provider ? "#35C932" : "#FFBF00"}
+        borderRadius="0px 0px 0px 24px"
         boxShadow="xl"
       >
-        <Text fontSize="sm" color="gray.200" mr={2}>
-          {address ? "Mainnet:" : "Connect Wallet"}
+        <Text
+          fontFamily="Poppins"
+          fontWeight="700"
+          fontSize={["md", "md", "lg"]}
+          color={wallet?.provider ? "white" : "black"}
+          mr={2}
+        >
+          {wallet?.provider ? "Mainnet:" : "Connect Wallet"}
         </Text>
-        {address && (
+        {wallet?.provider && address && (
           <>
             <Text fontSize="sm" mr={4}>
-              {address.substring(0, 6) +
-                "..." +
-                address.substring(address.length - 4)}
+              {address.substring(0, 6) + "..." + address.substring(address.length - 4)}
             </Text>
           </>
         )}
-        <Box
-          background={address ? "green.500" : "gray.700"}
-          borderRadius="100%"
-          width={2.5}
-          height={2.5}
-        />
-        {wallet.provider && (
-          <IconButton
+        {wallet?.provider && (
+          <Image
+            src={powerIcon}
+            height={["20px", "20px", "30px"]}
             ml={2}
             mr={-2}
-            size="sm"
-            variant="ghost"
-            icon={<IoMdClose />}
             onClick={() => onboard.walletReset()}
             aria-label="reset wallet"
           />

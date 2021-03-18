@@ -11,21 +11,15 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <Flex justifyContent="space-between" alignItems="center" py={4}>
+      <Flex justifyContent="space-between" alignItems="center">
         {/* Hardcoded 246 for now to center user wallet component */}
-        <LinkBox width={["auto", "auto", 246]}>
+        <LinkBox width={["auto", "auto", 246]} py={4} pl={[4, 4, 12]}>
           <LinkOverlay href="/">
-            <Image
-              src={logo}
-              width={["50px", "50px", "60px"]}
-              alt="alchemist logo"
-            />
+            <Image src={logo} width={["50px", "50px", "60px"]} alt="alchemist logo" />
           </LinkOverlay>
         </LinkBox>
-        <Box display={["none", "none", "none", "block"]}>
-          {address && <UserWallet />}
-        </Box>
-        <Flex>
+        <Box display={["none", "none", "none", "block"]}>{address && <UserWallet />}</Box>
+        <Flex alignSelf="flex-start">
           <UserAddress />
         </Flex>
       </Flex>

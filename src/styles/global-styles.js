@@ -59,7 +59,11 @@ export const GlobalStyles = css`
 
             &.bn-onboard-selected-wallet {
               background: inherit;
-              border-color: #c45df4;
+              border-color: inherit;
+
+              :hover {
+                border-color: #0072ff;
+              }
             }
 
             & > span {
@@ -68,7 +72,7 @@ export const GlobalStyles = css`
               margin-left: 0;
 
               & > i {
-                margin-right: 8px;
+                display: none;
               }
             }
 
