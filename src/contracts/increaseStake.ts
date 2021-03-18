@@ -42,7 +42,6 @@ export async function increaseStake(
   const nonce = await crucible.getNonce();
   const deadline = Date.now() + 60 * 60 * 24; // 1 day deadline
   const salt = randomBytes(32);
-  const recipient = args.recipient;
 
   // validate balances
   // If unlocked LP balance is < amount, throw error
