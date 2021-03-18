@@ -8,6 +8,14 @@ import { withdraw } from "../../../../../contracts/withdraw";
 import { Button } from "@chakra-ui/button";
 import { Link, Flex } from "@chakra-ui/layout";
 import {
+  SimpleGrid,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  StatArrow,
+} from "@chakra-ui/react";
+import {
   Modal,
   ModalOverlay,
   ModalContent,
@@ -248,6 +256,31 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         <Spinner />
       ) : (
         <>
+          <SimpleGrid columns={[1, null, 3]} spacing="16px">
+            <Stat>
+              <StatLabel>Inflation</StatLabel>
+              <StatNumber>1%</StatNumber>
+              <StatHelpText>Every 14 days</StatHelpText>
+            </Stat>
+            <Stat>
+              <StatLabel>Reward Scaling</StatLabel>
+              <StatNumber>60 days</StatNumber>
+            </Stat>
+            <Stat>
+            <StatLabel>Liquidity Deposits</StatLabel>
+              <StatNumber>$140,000</StatNumber>
+            </Stat>
+            <Stat>
+            <StatLabel>Unlocked Rewards</StatLabel>
+              <StatNumber>$140,000</StatNumber>
+              <StatHelpText>of $2.5M</StatHelpText>
+            </Stat>
+            <Stat>
+            <StatLabel>Reward Unlock Rate</StatLabel>
+              <StatNumber>$10,000</StatNumber>
+              <StatHelpText>Every 7 days</StatHelpText>
+            </Stat>
+          </SimpleGrid>
           {isConnected &&
             rewards &&
             (crucibles.length ? (

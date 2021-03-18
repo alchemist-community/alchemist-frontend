@@ -22,6 +22,7 @@
     "react-icons": "^4.2.0",
     "react-scripts": "3.4.3",
     "react-transition-group": "^4.4.1",
+    "recharts": "^2.0.8",
     "web3": "^1.2.11"
   },
   "scripts": {
