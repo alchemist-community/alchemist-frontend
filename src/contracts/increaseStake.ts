@@ -19,7 +19,6 @@ export async function increaseStake(
     aludel: "0xf0D415189949d913264A454F57f4279ad66cB24d",
     transmuter: "0xB772ce9f14FC7C7db0D4525aDb9349FBD7ce456a",
     crucibleFactory: "0x54e0395CFB4f39beF66DBCd5bD93Cca4E9273D56",
-    recipient: walletAddress,
     amount: rawAmount,
   };
 

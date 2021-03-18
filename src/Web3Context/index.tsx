@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from "react";
-import Web3 from "web3";
 import { ethers } from "ethers";
 import { Web3Provider as Web3ProviderType } from "../ethereum";
 import { initNotify, initOnboard } from "../walletServices";
@@ -11,8 +10,7 @@ import {
 import { getOwnedCrucibles } from "../contracts/getOwnedCrucibles";
 import { getTokenBalances } from "../contracts/getTokenBalances";
 
-import { formatUnits, parseUnits } from "@ethersproject/units";
-import { AnyARecord } from "node:dns";
+import { formatUnits } from "@ethersproject/units";
 
 interface Rewards {
   etherRewards: any;
