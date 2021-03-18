@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from "react";
-import Web3 from "web3";
 import { ethers } from "ethers";
 import { Web3Provider as Web3ProviderType } from "../ethereum";
 import { initNotify, initOnboard } from "../walletServices";
@@ -9,6 +8,8 @@ import {
   calculateMistRewards,
 } from "../contracts/aludel";
 import { getOwnedCrucibles } from "../contracts/getOwnedCrucibles";
+import { getTokenBalances } from "../contracts/getTokenBalances";
+
 import { formatUnits } from "@ethersproject/units";
 
 interface Rewards {
@@ -29,6 +30,7 @@ const Web3Context = React.createContext<{
   crucibles: any;
   rewards: Rewards[];
   networkStats: any;
+  tokenBalances: any;
 }>({
   web3: null,
   onboard: null,
@@ -42,6 +44,7 @@ const Web3Context = React.createContext<{
   crucibles: null,
   rewards: [],
   networkStats: null,
+  tokenBalances: null,
 });
 
 const Web3Provider: React.FC = (props) => {
@@ -52,14 +55,17 @@ const Web3Provider: React.FC = (props) => {
   const [etherBalance, setEtherBalance] = useState<any>(null);
   const [signer, setSigner] = useState<any>();
   const [wallet, setWallet] = useState<any>({});
+  const [tokenBalances, setTokenBalances] = useState<any>({});
   const [networkStats, setNetworkStats] = useState<any>({});
   const [crucibles, setCrucibles] = useState(
     [] as {
       id: string;
       balance: string;
       lockedBalance: string;
+      owner: string;
       cleanBalance?: string;
       cleanLockedBalance?: string;
+      cleanUnlockedBalance?: any;
     }[]
   );
   const [rewards, setRewards] = useState<any>();
@@ -75,15 +81,19 @@ const Web3Provider: React.FC = (props) => {
     setSigner(signer);
     window.localStorage.setItem("selectedWallet", wallet.name);
     getNetworkStats(signer).then(setNetworkStats);
+    getTokenBalances(signer).then(setTokenBalances);
     if (signer) {
       getOwnedCrucibles(signer, ethersProvider)
         .then((ownedCrucibles) => {
-          ownedCrucibles = ownedCrucibles.map((crucible) => ({
+          let reformatted = ownedCrucibles.map((crucible) => ({
             ...crucible,
             cleanBalance: formatUnits(crucible.balance),
-            cleanLockedBalance: formatUnits(crucible.balance),
+            cleanLockedBalance: formatUnits(crucible.lockedBalance),
+            cleanUnlockedBalance: formatUnits(
+              crucible.balance.sub(crucible.lockedBalance)
+            ),
           }));
-          setCrucibles(ownedCrucibles);
+          setCrucibles(reformatted);
           return getUserRewards(signer, ownedCrucibles);
         })
         .then((rewards) => {
@@ -183,6 +193,7 @@ const Web3Provider: React.FC = (props) => {
         crucibles,
         rewards,
         networkStats,
+        tokenBalances,
       }}
     >
       {props.children}
