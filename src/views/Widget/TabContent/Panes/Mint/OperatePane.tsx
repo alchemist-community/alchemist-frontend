@@ -138,7 +138,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           background="brand.400"
           _focus={{ boxShadow: "none" }}
           _hover={{ background: "brand.400" }}
-          isDisabled={ lpBalance > maxStakeAmount}
+          isDisabled={lpBalance > maxStakeAmount}
           onClick={async () => {
             await readyToTransact();
             const hash: string = await mintAndLock(signer, provider, lpBalance);

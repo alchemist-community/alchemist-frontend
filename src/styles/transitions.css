@@ -15,7 +15,7 @@
   opacity: 0;
   transform: translateY(40px);
   transition: opacity 1000ms, transform 1000ms;
-} 
+}
 
 .slideDown-enter {
   opacity: 0;
@@ -34,4 +34,4 @@
   opacity: 0;
   transform: translateY(-40px);
   transition: opacity 1000ms, transform 1000ms, box-shadow 1000ms;
-} 
+}
