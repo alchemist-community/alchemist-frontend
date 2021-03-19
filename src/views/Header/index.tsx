@@ -18,7 +18,7 @@ const Header: React.FC = () => {
             <Image src={logo} width={["50px", "50px", "60px"]} alt="alchemist logo" />
           </LinkOverlay>
         </LinkBox>
-        <Box display={["none", "none", "none", "block"]}>{address && <UserWallet />}</Box>
+        <Box position="absolute" transform="translateX(-50%)" left="50%" display={["none", "none", "none", "block"]}>{address && <UserWallet />}</Box>
         <Flex alignSelf="flex-start">
           <UserAddress />
         </Flex>
