@@ -182,7 +182,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
           isFullWidth
           color="white"
           borderWidth={1}
-          borderColor={cruciblesCardBg}
+          borderColor="gray.600"
           background="brand.400"
           fontSize={{ base: "sm", sm: "md" }}
           _focus={{ boxShadow: "none" }}
