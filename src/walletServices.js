@@ -9,9 +9,9 @@ const APP_NAME = "Alchemist";
 export function initOnboard(subscriptions) {
   return Onboard({
     dappId,
-    hideBranding: false,
+    hideBranding: true,
     networkId,
-    // darkMode: true,
+    darkMode: true,
     subscriptions,
     walletSelect: {
       wallets: [
@@ -22,42 +22,42 @@ export function initOnboard(subscriptions) {
         {
           walletName: "walletConnect",
           infuraKey: "d5e29c9b9a9d4116a7348113f57770a8",
-          preferred: true,
+          preferred: true
         },
         {
           walletName: "portis",
           label: "Portis",
           apiKey: "e86e917b-b682-4a5c-bbc5-0f8c3b787562",
-          preferred: true,
+          preferred: true
         },
-        { walletName: "opera" },
-        { walletName: "torus" },
-        { walletName: "status" },
-        { walletName: "walletLink", appName: APP_NAME, rpcUrl },
-        { walletName: "frame" },
-        { walletName: "operaTouch" },
-        { walletName: "imToken", rpcUrl },
-        { walletName: "meetone" },
-        { walletName: "mykey", rpcUrl },
-        { walletName: "wallet.io", rpcUrl },
-        { walletName: "huobiwallet", rpcUrl },
-        { walletName: "hyperpay" },
-        { walletName: "atoken" },
-        { walletName: "liquality" },
-      ],
+        { walletName: "opera", preferred: true },
+        { walletName: "torus", preferred: true },
+        { walletName: "walletLink", appName: APP_NAME, rpcUrl, preferred: true },
+        { walletName: "liquality", preferred: true },
+        { walletName: "frame", preferred: true },
+        { walletName: "status", preferred: true },
+        { walletName: "operaTouch", preferred: true },
+        { walletName: "imToken", rpcUrl, preferred: true },
+        { walletName: "meetone", preferred: true },
+        { walletName: "mykey", rpcUrl, preferred: true },
+        { walletName: "wallet.io", rpcUrl, preferred: true },
+        { walletName: "huobiwallet", rpcUrl, preferred: true },
+        { walletName: "hyperpay", preferred: true },
+        { walletName: "atoken", preferred: true }
+      ]
     },
     walletCheck: [
       { checkName: "derivationPath" },
       { checkName: "connect" },
       { checkName: "accounts" },
-      { checkName: "network" },
-    ],
+      { checkName: "network" }
+    ]
   });
 }
 
 export function initNotify() {
   return Notify({
     dappId,
-    networkId,
+    networkId
   });
 }

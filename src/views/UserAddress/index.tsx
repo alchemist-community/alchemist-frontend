@@ -1,55 +1,38 @@
 import React, { useContext } from "react";
 import Web3Context from "../../Web3Context";
-import {
-  Text,
-  Button,
-  Box,
-  useColorModeValue,
-  IconButton,
-} from "@chakra-ui/react";
-import { IoMdClose } from "react-icons/io";
+import { Text, Button, Image } from "@chakra-ui/react";
+import powerIcon from "../../img/power-icon.png";
 
 export default function UserAddress() {
   const { wallet, address, onboard, readyToTransact } = useContext(Web3Context);
 
   const handleClick = () => (!wallet.provider ? readyToTransact() : null);
 
-  const buttonBgColor = useColorModeValue("white", "gray.700");
-
   return (
     <>
       <Button
         onClick={handleClick}
-        background={buttonBgColor}
-        variant="muted"
-        boxShadow="md"
-        borderRadius="lg"
+        height={["40px", "40px", "50px"]}
+        background={wallet?.provider ? "#35C932" : "#FFBF00"}
+        borderRadius="0px 0px 0px 24px"
+        boxShadow="xl"
+        _hover={{ background: wallet?.provider ? "#35C932" : "#FFBF00" }}
       >
-        <Text fontSize="sm" color="gray.500" mr={2}>
-          {address ? "Mainnet:" : "Connect Wallet"}
+        <Text
+          fontFamily="Poppins"
+          fontWeight="700"
+          fontSize={["md", "md", "lg"]}
+          color={wallet?.provider ? "white" : "black"}
+          mr={2}
+        >
+          {wallet?.provider && address ?  address.substring(0, 6) + "..." + address.substring(address.length - 4) : "Connect to a Wallet"}
         </Text>
-        {address && (
-          <>
-            <Text fontSize="sm" mr={4}>
-              {address.substring(0, 6) +
-                "..." +
-                address.substring(address.length - 4)}
-            </Text>
-          </>
-        )}
-        <Box
-          background={address ? "green.500" : "gray.400"}
-          borderRadius="100%"
-          width={2.5}
-          height={2.5}
-        />
-        {wallet.provider && (
-          <IconButton
+        {wallet?.provider && (
+          <Image
+            src={powerIcon}
+            height={["20px", "20px", "25px"]}
             ml={2}
             mr={-2}
-            size="sm"
-            variant="ghost"
-            icon={<IoMdClose />}
             onClick={() => onboard.walletReset()}
             aria-label="reset wallet"
           />
