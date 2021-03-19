@@ -13,7 +13,7 @@ export default function UserAddress() {
     <>
       <Button
         onClick={handleClick}
-        height={["40px", "40px", "60px"]}
+        height={["40px", "40px", "50px"]}
         background={wallet?.provider ? "#35C932" : "#FFBF00"}
         borderRadius="0px 0px 0px 24px"
         boxShadow="xl"
@@ -25,19 +25,12 @@ export default function UserAddress() {
           color={wallet?.provider ? "white" : "black"}
           mr={2}
         >
-          {wallet?.provider ? "Mainnet:" : "Connect Wallet"}
+          {wallet?.provider && address ?  address.substring(0, 6) + "..." + address.substring(address.length - 4) : "Connect to a Wallet"}
         </Text>
-        {wallet?.provider && address && (
-          <>
-            <Text fontSize="sm" mr={4}>
-              {address.substring(0, 6) + "..." + address.substring(address.length - 4)}
-            </Text>
-          </>
-        )}
         {wallet?.provider && (
           <Image
             src={powerIcon}
-            height={["20px", "20px", "30px"]}
+            height={["20px", "20px", "25px"]}
             ml={2}
             mr={-2}
             onClick={() => onboard.walletReset()}
