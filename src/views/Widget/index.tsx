@@ -36,7 +36,7 @@ const Widget: React.FC<WidgetProps> = () => {
                 borderBottomWidth: 3,
               }}
             >
-              Mint
+              Crucibles
             </Tab>
             <Tab
               fontSize="xl"
@@ -47,16 +47,16 @@ const Widget: React.FC<WidgetProps> = () => {
                 borderBottomWidth: 3,
               }}
             >
-              Crucibles
+              Mint
             </Tab>
           </TabList>
 
           <TabPanels p={4} overflowY="auto" maxH="480px">
             <TabPanel>
-              <SwapPane />
+              <OperatePane />
             </TabPanel>
             <TabPanel>
-              <OperatePane />
+              <SwapPane />
             </TabPanel>
           </TabPanels>
         </Tabs>

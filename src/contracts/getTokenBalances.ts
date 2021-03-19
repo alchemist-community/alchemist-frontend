@@ -4,7 +4,6 @@ import IERC20 from "./IERC20.json";
 
 export async function getTokenBalances(signer: any) {
   const walletAddress = await signer.getAddress();
-
   const lp = new ethers.Contract(
     "0xCD6bcca48069f8588780dFA274960F15685aEe0e",
     IERC20.abi,
@@ -17,8 +16,12 @@ export async function getTokenBalances(signer: any) {
     signer
   ).balanceOf(walletAddress);
 
+  let mistBalance = await token;
+  let lpBalance = await lp;
   return {
-    alchemist: formatUnits(await token),
-    lp: formatUnits(await lp),
+    mistBalance,
+    lpBalance,
+    cleanMist: formatUnits(mistBalance),
+    cleanLp: formatUnits(lpBalance),
   };
 }

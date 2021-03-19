@@ -8,20 +8,7 @@ import { Badge, Box, HStack, Text } from "@chakra-ui/layout";
 
 export default function UserAddress() {
   const [inProp, setInProp] = useState(false);
-  const { signer, provider } = useContext(Web3Context);
-  const [tokenBalance, setTokenBalance] = useState<{
-    alchemist: string;
-    lp: string;
-  }>();
-
-  useEffect(() => {
-    (async () => {
-      if (signer) {
-        const balances = await getTokenBalances(signer);
-        setTokenBalance(balances);
-      }
-    })();
-  }, [signer]);
+  const { signer, provider, tokenBalances } = useContext(Web3Context);
 
   useEffect(() => {
     setInProp(true);
@@ -36,15 +23,16 @@ export default function UserAddress() {
         <Box py={2} px={2} borderRadius="lg" bg={userWalletBgColor} shadow="xl">
           <HStack>
             <Text color={userWalletTextColor}>My wallet:</Text>
-            {!tokenBalance && <Spinner />}
-            {tokenBalance && (
+            {!tokenBalances && <Spinner />}
+            {tokenBalances && (
               <Badge px={2} py={1} borderRadius="md" boxShadow="sm">
-                Alchemist: {toMaxDecimalsRound(tokenBalance.alchemist, 0.01)} ⚗️
+                Alchemist: {toMaxDecimalsRound(tokenBalances.cleanMist, 0.01)}{" "}
+                ⚗️
               </Badge>
             )}
-            {tokenBalance && (
+            {tokenBalances && (
               <Badge px={2} py={1} borderRadius="md" boxShadow="sm">
-                LP: {toMaxDecimalsRound(tokenBalance.lp, 0.01)} ⚗️
+                LP: {toMaxDecimalsRound(tokenBalances.cleanLp, 0.01)} ⚗️
               </Badge>
             )}
           </HStack>

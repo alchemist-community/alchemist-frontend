@@ -22,22 +22,36 @@ Your Stats (per crucible)
 * Starting WETH
 * Current WETH
 
+Future Rewards Line Chart:
+Ownership Ratio = getFutureVaultStakeUnits / getFutureTotalStakeUnits
+Ether rewards = Ownership Ratio * Future unlocked rewards
+Future Mist = current mist * 1.1 ^ periods elapsed
+Future Mist = Ownership Ratio * Future Mist
 
-Chart
-* 30-60-90 day rewards earned
 
 Progress Bar
 * Days until reward multiplier maximum reached
 
+REWARD MATH
+Changing Variables- duration, mist supply
+  unlocked rewards 
+* stake units (amount * duration)
+% total stake units  
+* (duration/60 days) 
+* 90/100
+=  wei rewards
+* mist supply
+/ unlocked rewards
+= mist rewards
+
 Scaling
-100-10
-60 days (5184000)
+- 90% (floor-ceiling)
+- 60 day duration (5184000)
+
 
 Reward Amount * duration / 60 days *  90/100
 
 Slight linear increase in scaling rewards multiplier
-
-Day 1
 
 Supply
 * Supply
@@ -49,3 +63,6 @@ Reward schedule
 * Duration - 7776000 (90 days)
 * Start - 1613656364
 * Reward Shares - 35000000000000000000000000
+
+
+

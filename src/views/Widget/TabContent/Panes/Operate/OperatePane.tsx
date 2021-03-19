@@ -5,8 +5,10 @@ import { getOwnedCrucibles } from "../../../../../contracts/getOwnedCrucibles";
 import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
 import { sendNFT } from "../../../../../contracts/sendNFT";
 import { withdraw } from "../../../../../contracts/withdraw";
+import { increaseStake } from "../../../../../contracts/increaseStake";
 import { Button } from "@chakra-ui/button";
 import { Link, Flex } from "@chakra-ui/layout";
+import RewardsChart from "./RewardsChart";
 import {
   SimpleGrid,
   Stat,
@@ -24,7 +26,7 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/modal";
-import { Input } from "@chakra-ui/input";
+import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { RepeatIcon } from "@chakra-ui/icons";
 import { Spinner, Text } from "@chakra-ui/react";
@@ -52,8 +54,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     provider,
     monitorTx,
     reloadCrucibles,
+    tokenBalances,
+    chartData,
   } = useContext(Web3Context);
-
+  console.log("CHART DATA", chartData);
   const [amount, setAmount] = useState("");
   const [sendAddress, setSendAddress] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -62,6 +66,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   >("unstake");
   const [selectedCrucible, setSelectedCrucible] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRewards, setSelectedRewards] = useState({
+    tokenRewards: "",
+    etherRewards: "",
+  });
 
   const [formValues, setFormValues] = useState({
     lnBalance: "",
@@ -70,6 +78,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     constantFee: "",
     nodeAddress: "",
   });
+
+  // Check user LP balances and user's selected crucible for locked/unlocked balances
+  const foundCrucible =
+    selectedCrucible &&
+    crucibles.find((crucible: any) => selectedCrucible === crucible.id);
+  const maxWithdrawAmount = foundCrucible.cleanUnlockedBalance;
+  const maxUnstakeAmount = foundCrucible.cleanLockedBalance;
+  const maxStakeAmount = tokenBalances.cleanLp;
 
   const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     //setXAmount is the amount displayed in the input, should be string
@@ -114,11 +130,17 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     );
     setModalIsOpen(false);
   };
-  const increaseStake = async () => {
+
+  const increaseStakeAmount = async () => {
     await readyToTransact();
-    const hash: string = await mintAndLock(signer, provider, amount);
+    const hash: string = await increaseStake(signer, selectedCrucible, amount);
     monitorTx(hash);
+    setModalIsOpen(false);
+    alert(
+      "You have added to your crucible stake and will start earning rewards once the transaction confirms."
+    );
   };
+
   const withdrawTokens = async () => {
     await withdraw(selectedCrucible, amount);
     setModalIsOpen(false);
@@ -132,7 +154,13 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   };
 
   const sendModal = (
-    <Modal isOpen onClose={() => setModalIsOpen(false)}>
+    <Modal
+      isOpen
+      onClose={() => {
+        setAmount("");
+        setModalIsOpen(false);
+      }}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Send</ModalHeader>
@@ -140,6 +168,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         <ModalBody>
           <FormControl mb={4}>
             <FormLabel>Address</FormLabel>
+
             <Input
               size="lg"
               variant="filled"
@@ -148,6 +177,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               onChange={(ev) => setSendAddress(ev.target.value)}
               name="address"
               type="string"
+              placeholder="0x4ab..."
             />
           </FormControl>
         </ModalBody>
@@ -183,39 +213,84 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 {modalOperation === "withdraw"
                   ? "Withdraw"
                   : modalOperation === "unstake"
-                  ? "Unstake"
-                  : "Increase stake"}
+                  ? "Unstake and claim"
+                  : "Increase Stake"}
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                {modalOperation === "unstake" ? (
+                {modalOperation === "withdraw" ? (
                   <>
+                    Before withdrawing your LP tokens from your crucible, you
+                    must first unstake and claim your rewards.
+                  </>
+                ) : modalOperation === "unstake" ? (
+                  <>
+                    You are claiming {selectedRewards?.tokenRewards} MIST and{" "}
+                    {selectedRewards?.etherRewards} Ether rewards.
+                    <br />
                     Before unstaking you'll need to add a new network provider
                     following{" "}
                     <Link
-                      color="green.300"
+                      color="brand.400"
                       href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
                       isExternal
                     >
-                      this guide
+                      this guide.
                     </Link>
                   </>
                 ) : (
-                  ""
+                  <>
+                    Increase your Crucible Stake by depositing Uniswap Liquidity
+                    Pool tokens. You can get LP tokens by depositing ETH and
+                    MIST to the trading pair{" "}
+                    <Link
+                      color="brand.400"
+                      isExternal
+                      href="https://app.uniswap.org/#/add/0x88acdd2a6425c3faae4bc9650fd7e27e0bebb7ab/ETH"
+                    >
+                      here.
+                    </Link>
+                  </>
                 )}
-                <FormControl mb={4}>
+                <FormControl mb={4} mt={4}>
                   <FormLabel>Amount</FormLabel>
                   {/* TODO: Add max button */}
-                  <Input
-                    size="lg"
-                    variant="filled"
-                    _focus={{ borderColor: "brand.400" }}
-                    value={amount}
-                    onChange={formatAmount}
-                    name="balance"
-                    placeholder="0.0"
-                    type="number"
-                  />
+                  <InputGroup size="md">
+                    <Input
+                      size="lg"
+                      variant="filled"
+                      _focus={{ borderColor: "brand.400" }}
+                      value={amount}
+                      isInvalid={
+                        modalOperation === "increaseStake"
+                          ? amount > maxStakeAmount
+                          : modalOperation === "withdraw"
+                          ? amount > maxWithdrawAmount
+                          : amount > maxUnstakeAmount
+                      }
+                      onChange={formatAmount}
+                      name="balance"
+                      placeholder={"Uniswap LP Tokens"}
+                      type="number"
+                    />
+                    <InputRightElement width="4.5rem" zIndex={0}>
+                      <Button
+                        mr={2}
+                        mt={2}
+                        h="2rem"
+                        variant="ghost"
+                        onClick={() => {
+                          modalOperation === "increaseStake"
+                            ? setAmount(maxStakeAmount)
+                            : modalOperation === "withdraw"
+                            ? setAmount(maxWithdrawAmount)
+                            : setAmount(maxUnstakeAmount);
+                        }}
+                      >
+                        Max
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
                 </FormControl>
               </ModalBody>
 
@@ -224,18 +299,25 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   bg="brand.400"
                   color="white"
                   mr={3}
+                  isDisabled={
+                    modalOperation === "increaseStake"
+                      ? amount > maxStakeAmount
+                      : modalOperation === "withdraw"
+                      ? amount > maxWithdrawAmount
+                      : amount > maxUnstakeAmount
+                  }
                   onClick={
                     modalOperation === "withdraw"
                       ? withdrawTokens
                       : modalOperation === "unstake"
                       ? unstake
-                      : increaseStake
+                      : increaseStakeAmount
                   }
                 >
                   {modalOperation === "withdraw"
                     ? "Withdraw"
                     : modalOperation === "unstake"
-                    ? "Unstake"
+                    ? "Unstake and claim"
                     : "Increase stake"}
                 </Button>
               </ModalFooter>
@@ -267,20 +349,24 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               <StatNumber>60 days</StatNumber>
             </Stat>
             <Stat>
-            <StatLabel>Liquidity Deposits</StatLabel>
+              <StatLabel>Liquidity Deposits</StatLabel>
               <StatNumber>$140,000</StatNumber>
             </Stat>
             <Stat>
-            <StatLabel>Unlocked Rewards</StatLabel>
+              <StatLabel>Unlocked Rewards</StatLabel>
               <StatNumber>$140,000</StatNumber>
               <StatHelpText>of $2.5M</StatHelpText>
             </Stat>
             <Stat>
-            <StatLabel>Reward Unlock Rate</StatLabel>
+              <StatLabel>Reward Unlock Rate</StatLabel>
               <StatNumber>$10,000</StatNumber>
               <StatHelpText>Every 7 days</StatHelpText>
             </Stat>
           </SimpleGrid>
+          <Flex width="100%" height="100%">
+            <RewardsChart data={chartData} />
+          </Flex>
+
           {isConnected &&
             rewards &&
             (crucibles.length ? (
@@ -292,6 +378,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     setModalOperation={setModalOperation}
                     setModalIsOpen={setModalIsOpen}
                     setSelectedCrucible={setSelectedCrucible}
+                    setSelectedRewards={setSelectedRewards}
                   />
                 );
               })
