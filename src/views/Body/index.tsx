@@ -12,15 +12,12 @@ const Body: React.FC = () => {
 
   return (
     <Box textAlign="center" mt={[8, 16, 24]}>
-      <Heading size="lg" mb={2}>
-        Alchemist
-      </Heading>
-      <Text fontSize="lg" color="gray.500" mb={16}>
-        The only plan is there is no plan{" "}
-        <span role="img" aria-label="alchemist logo">
-          ⚗️
-        </span>
+      <Text fontSize="2xl" mb={2}>
+        alchemist
       </Text>
+      <Heading size="2xl" mb={16}>
+        Mint a crucible
+      </Heading>
       <CSSTransition in={inProp} timeout={1000} classNames="slideUp">
         <Widget />
       </CSSTransition>

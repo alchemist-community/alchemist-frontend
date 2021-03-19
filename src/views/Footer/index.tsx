@@ -26,7 +26,7 @@ const links = [
 
 const Footer: React.FC = () => {
   return (
-    <Box as="footer">
+    <Box as="footer" px={[4, 4, 12]}>
       <Flex
         py={8}
         flexDirection={["column", "column", "row"]}
@@ -38,7 +38,7 @@ const Footer: React.FC = () => {
           <Text fontWeight="bold" fontSize="md">
             alchemist.farm
           </Text>
-          <Text fontSize="sm" color="gray.500">
+          <Text fontSize="sm" color="gray.200">
             Searching for the philosopher's stone
           </Text>
         </Box>
