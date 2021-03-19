@@ -7,7 +7,6 @@ import { Alert } from "@chakra-ui/alert";
 import { Button, IconButton } from "@chakra-ui/button";
 import { Link, Text } from "@chakra-ui/layout";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
-import { getTokenBalances } from "../../../../../contracts/getTokenBalances";
 import {
   Popover,
   PopoverArrow,
@@ -26,9 +25,13 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const { handleInputChange = () => null, isConnected } = props;
 
   // Todo: type the extended web3context
-  const { signer, provider, readyToTransact, monitorTx } = useContext(
-    Web3Context
-  );
+  const {
+    signer,
+    provider,
+    readyToTransact,
+    monitorTx,
+    tokenBalances,
+  } = useContext(Web3Context);
 
   const [lpBalance, setLpBalance] = useState("");
 
@@ -50,6 +53,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
       lpBalance,
     });
   }, [lpBalance, handleInputChange]);
+
+  const maxStakeAmount = tokenBalances.cleanLp;
 
   return (
     <>
@@ -114,9 +119,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               mt={2}
               h="2rem"
               variant="ghost"
-              onClick={() =>
-                getTokenBalances(signer).then(({ lp }) => setLpBalance(lp))
-              }
+              onClick={() => setLpBalance(maxStakeAmount)}
             >
               Max
             </Button>
@@ -133,6 +136,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           background="brand.400"
           _focus={{ boxShadow: "none" }}
           _hover={{ background: "brand.400" }}
+          isDisabled={ lpBalance > maxStakeAmount}
           onClick={async () => {
             await readyToTransact();
             const hash: string = await mintAndLock(signer, provider, lpBalance);

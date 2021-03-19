@@ -4,7 +4,7 @@ import { Text, Button, Image } from "@chakra-ui/react";
 import powerIcon from "../../img/power-icon.png";
 
 export default function UserAddress() {
-  const { wallet, address, onboard, readyToTransact, resetWallet } = useContext(Web3Context);
+  const { wallet, address, onboard, readyToTransact } = useContext(Web3Context);
 
   const handleClick = () => (!wallet.provider ? readyToTransact() : null);
 
@@ -33,7 +33,7 @@ export default function UserAddress() {
             height={["20px", "20px", "25px"]}
             ml={2}
             mr={-2}
-            onClick={resetWallet}
+            onClick={() => onboard.walletReset()}
             aria-label="reset wallet"
           />
         )}
