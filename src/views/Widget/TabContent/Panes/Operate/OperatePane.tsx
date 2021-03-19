@@ -99,6 +99,16 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     handleInputChange(formValues);
   }, [formValues, handleInputChange]);
 
+  useEffect(() => {
+    if(isLoading){
+      reloadCrucibles();
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, [crucibles]);
+  
   //todo
   const formatAmount = (ev: React.ChangeEvent<HTMLInputElement>) => {
     let amount = ev.target.value;
@@ -134,13 +144,6 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const withdrawTokens = async () => {
     await withdraw(selectedCrucible, amount);
     setModalIsOpen(false);
-  };
-
-  const refreshCrucibles = () => {
-    setIsLoading(true);
-    reloadCrucibles().then(() => {
-      setIsLoading(false);
-    });
   };
 
   const sendModal = (
@@ -317,7 +320,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
       {isConnected && (
         <Flex flexDirection="column">
           <RepeatIcon
-            onClick={refreshCrucibles}
+            onClick={() => setIsLoading(true)}
             _hover={{ cursor: "pointer" }}
             alignSelf="flex-end"
             mb={4}
