@@ -16,6 +16,7 @@ export default function UserAddress() {
         background={wallet?.provider ? "#35C932" : "#FFBF00"}
         borderRadius="0px 0px 0px 24px"
         boxShadow="xl"
+        _hover={{ background: wallet?.provider ? "#35C932" : "#FFBF00" }}
       >
         <Text
           fontFamily="Poppins"
