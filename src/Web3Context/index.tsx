@@ -29,6 +29,7 @@ const Web3Context = React.createContext<{
   crucibles: any;
   rewards: Rewards[];
   networkStats: any;
+  resetWallet: () => void;
 }>({
   web3: null,
   onboard: null,
@@ -42,6 +43,7 @@ const Web3Context = React.createContext<{
   crucibles: null,
   rewards: [],
   networkStats: null,
+  resetWallet: () => null
 });
 
 const Web3Provider: React.FC = (props) => {
@@ -168,6 +170,11 @@ const Web3Provider: React.FC = (props) => {
     emitter.on("txFailed", console.log);
   }
 
+  function resetWallet(){
+    window.localStorage.removeItem("selectedWallet");
+    onboard.walletReset();
+  }
+
   return (
     <Web3Context.Provider
       value={{
@@ -183,6 +190,7 @@ const Web3Provider: React.FC = (props) => {
         crucibles,
         rewards,
         networkStats,
+        resetWallet,
       }}
     >
       {props.children}
