@@ -37,7 +37,6 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
   const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     //setXAmount is the amount displayed in the input, should be string
-    const name = ev.target.name;
     let value = ev.target.value;
     if (ev.target.type === "number")
       value =

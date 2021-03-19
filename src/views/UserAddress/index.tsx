@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import Web3Context from "../../Web3Context";
-import { Text, Button, Box, Image } from "@chakra-ui/react";
-import { IoMdClose } from "react-icons/io";
+import { Text, Button, Image } from "@chakra-ui/react";
 import powerIcon from "../../img/power-icon.png";
 
 export default function UserAddress() {

@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
 import Web3Context from "../../Web3Context";
-import { getTokenBalances } from "../../contracts/getTokenBalances";
 import { toMaxDecimalsRound } from "../Widget/utils";
 import { Spinner } from "@chakra-ui/react";
 import { CSSTransition } from "react-transition-group";
@@ -8,7 +7,7 @@ import { Badge, Box, HStack, Text } from "@chakra-ui/layout";
 
 export default function UserAddress() {
   const [inProp, setInProp] = useState(false);
-  const { signer, provider, tokenBalances } = useContext(Web3Context);
+  const { provider, tokenBalances } = useContext(Web3Context);
 
   useEffect(() => {
     setInProp(true);
