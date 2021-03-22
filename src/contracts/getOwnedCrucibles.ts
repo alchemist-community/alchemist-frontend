@@ -23,7 +23,10 @@ export async function getOwnedCrucibles(signer: any, provider: any) {
   const filter = crucibleFactory.filters.Transfer(null, walletAddress);
   const crucibleEvents = await crucibleFactory.queryFilter(filter, 0, "latest");
   const crucibles = crucibleEvents.map(async (data) => {
-    const id = (data.args!.tokenId as ethers.BigNumber).toHexString();
+    let id = (data.args!.tokenId as ethers.BigNumber).toHexString();
+    if(id.length<42){
+      id = '0x'+id.slice(2).padStart(40, '0')
+    }
     const crucible = new ethers.Contract(id, Crucible.abi, signer);
     const owner = crucibleFactory.ownerOf(id);
     const balance = token.balanceOf(crucible.address);
