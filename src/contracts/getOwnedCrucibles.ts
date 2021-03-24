@@ -32,10 +32,6 @@ export async function getOwnedCrucibles(signer: any, provider: any) {
     const balance = token.balanceOf(crucible.address);
     const lockedBalance = crucible.getBalanceLocked(lpTokenAddress);
     const stakes = aludel.getVaultData(id) 
-    const delegatedBalance = await crucible.getBalanceDelegated(
-      lpTokenAddress,
-      walletAddress
-    );
     return {
       id,
       balance: await balance,
