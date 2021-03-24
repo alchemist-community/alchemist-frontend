@@ -90,7 +90,11 @@ const Web3Provider: React.FC = (props) => {
         .then((ownedCrucibles) => {
           let total = 0;
           let reformatted = ownedCrucibles.map((crucible) => {
-            console.log("Crucible", crucible.lockedBalance);
+            console.log("Crucible", crucible.stakes );
+            let [totalStake, stakes] = crucible.stakes;
+            console.log("SSPREEAD", totalStake, stakes)
+            let [amount, timestamp] = stakes[0]
+
             // total += crucible.lockedBalance;
             console.log("TOTAL", total);
             return {
@@ -103,7 +107,8 @@ const Web3Provider: React.FC = (props) => {
             };
           });
           setCrucibles(reformatted);
-          getChartData(signer, reformatted[0].lockedBalance).then(setChartData);
+          // StakeData.timestamp
+          getChartData(signer, reformatted[0].lockedBalance, reformatted).then(setChartData);
           return getUserRewards(signer, ownedCrucibles);
         })
         .then((rewards) => {

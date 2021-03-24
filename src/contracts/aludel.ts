@@ -2,7 +2,7 @@ import aludelAbi from "./aludelAbi";
 import { ethers } from "ethers";
 import { formatUnits, parseEther } from "ethers/lib/utils";
 import IERC20 from "./IERC20.json";
-import { BigNumber } from "ethers";
+import { FixedNumber } from "ethers";
 
 const args = {
   aludel: "0xf0D415189949d913264A454F57f4279ad66cB24d",
@@ -57,45 +57,47 @@ export async function getNetworkStats(signer: any) {
   };
 }
 
-export async function getChartData(signer: any, amount: number) {
+export async function getChartData(signer: any, amount: any, stakingStart:any) {
+  console.log("Amount", amount.toString(), stakingStart)
   const aludel = new ethers.Contract(args.aludel, aludelAbi, signer);
   const bonusMistToken = new ethers.Contract(args.mist, IERC20.abi, signer);
   const inflationStart = 1612643118;
   const rewardScalingDays = 60 * 24 * 60 * 60;
   const floor = 1;
   const ceiling = 10;
-  const now = Math.floor(Date.now() / 1000);
-  console.log("here", aludel);
+  const now = Math.floor(Date.now() / 1000); // Replace with staking period start
+  console.log("Now", now)
   // Total rewards pool
   let mistPoolBalance = await bonusMistToken.balanceOf(args.rewardPool); //returns BN
   console.log("mistPoolBalance", mistPoolBalance.toString());
   let chartData = [];
   for (let day = 0; day < 90; day += 3) {
-    const secondsElapsed = day * 60 * 60 * 24;
+    const daysAdditional =  day * 60 * 60 * 24;
+    const stakeDuration = stakingStart - inflationStart + daysAdditional
     // Get rewards and stake units at future time (days elapsed)
-    const totalUnlockedWeiRewards = getFutureUnlockedRewards(secondsElapsed); //returns BN
-    console.log(
-      "Total unlocked rewards",
-      day,
-      " ",
-      totalUnlockedWeiRewards.toString()
-    );
+    const totalUnlockedWeiRewards = getFutureUnlockedRewards(daysAdditional); //returns BN
     const totalStakeUnits = totalUnlockedWeiRewards.mul(
-      now + secondsElapsed - inflationStart
+      now  - inflationStart + daysAdditional
     );
-    // console.log("Total Unlocked Rewards", totalUnlockedWeiRewards.toString(), totalStakeUnits.toString())
+
+    console.log("Total Stake Units", totalStakeUnits.toString())
+    console.log("Total Unlocked Rewards", totalUnlockedWeiRewards.toString(), totalStakeUnits.toString())
+    console.log("Seconds Elapsed", daysAdditional.toString())
+    console.log("Stake Duuration", stakeDuration)
+    console.log("Amouunt", FixedNumber.from(amount))
 
     // Get user's wei rewards
-    let weiRewards = totalUnlockedWeiRewards
-      .mul(amount)
-      .mul(secondsElapsed) //duration
-      .div(totalStakeUnits); // creates ratio of pool owned
+    let weiRewards = FixedNumber.from(amount)
+      .mulUnsafe(FixedNumber.from(stakeDuration)) // = user stake units
+      .divUnsafe(FixedNumber.from(totalStakeUnits)); // creates ratio of pool owned
+    console.log("WEIREWRDS", weiRewards)
     if (day <= 60) {
+      console.log("less than 60 days")
       weiRewards = weiRewards
-        .mul(secondsElapsed)
-        .div(rewardScalingDays)
-        .mul(ceiling - floor)
-        .div(ceiling); // .9
+        .mulUnsafe(FixedNumber.from(stakeDuration))
+        .divUnsafe(FixedNumber.from(rewardScalingDays))
+        .mulUnsafe(FixedNumber.from(ceiling - floor)) // 9
+        .divUnsafe(FixedNumber.from(ceiling)); // 10
     }
 
     console.log("weiRewards", weiRewards);
@@ -106,37 +108,39 @@ export async function getChartData(signer: any, amount: number) {
     const inflationToBonusRate = 2;
     const initialSupply = parseEther("1000000"); //1000000000000000000000000 (10 mil tokens)
     const inflationPeriodsElapsedFromNow = Math.floor(
-      secondsElapsed / inflationPeriod
+      daysAdditional / inflationPeriod
     );
+    
     const bonusTokensFromInflation = initialSupply
       .mul(inflationRate ^ inflationPeriodsElapsedFromNow)
       .div(inflationToBonusRate);
     const futureMistBalance = mistPoolBalance.add(bonusTokensFromInflation);
     console.log("Bonus Tokens", futureMistBalance.toString());
+    console.log("Fixed total Unlocked ", FixedNumber.from(totalUnlockedWeiRewards).toString());
 
     // Calculate future mist reward pool size
     const mistRewards = weiRewards
-      .mul(futureMistBalance)
-      .div(totalUnlockedWeiRewards);
+      .mulUnsafe(FixedNumber.from(futureMistBalance))
+      .divUnsafe(FixedNumber.from(totalUnlockedWeiRewards));
 
     console.log("Mist Rewards", mistRewards.toString());
-
+    // Convert to string
     chartData.push({
       name: `Day ${day}`,
-      weiRewards: formatUnits(weiRewards),
-      mistRewards: formatUnits(mistRewards),
+      weiRewards: weiRewards.toString(),
+      mistRewards: mistRewards.toString(),
     });
   }
   return chartData;
 }
 
-function getFutureUnlockedRewards(secondsElapsed: number) {
+function getFutureUnlockedRewards(daysAdditional: number) {
   const totalWeiRewards = parseEther("35000000");
   const now = Math.floor(Date.now() / 1000);
-  console.log("(now + secondsElapsed ", now + secondsElapsed);
-  const unlockStart = 1613656364;
+  console.log("(now + daysAdditional ", now + daysAdditional);
+  const unlockStart = 1613656364; //feb 18 2021
   const unlockDuration = 7776000;
-  const secondsSinceUnlock = now + secondsElapsed - unlockStart;
+  const secondsSinceUnlock = now + daysAdditional - unlockStart;
   if (secondsSinceUnlock > unlockDuration) return totalWeiRewards;
   const unlockedRewards = totalWeiRewards
     .mul(secondsSinceUnlock)
