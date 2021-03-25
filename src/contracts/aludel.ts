@@ -59,42 +59,54 @@ export async function getNetworkStats(signer: any) {
 
 export async function getChartData(signer: any, amount: any, stakingStart:any) {
   console.log("Amount", amount.toString(), stakingStart)
+  console.log("Amouunt", FixedNumber.from(amount), FixedNumber.from(amount).toString())
+
   const aludel = new ethers.Contract(args.aludel, aludelAbi, signer);
   const bonusMistToken = new ethers.Contract(args.mist, IERC20.abi, signer);
+  const wethRewardToken = new ethers.Contract(args.weth, IERC20.abi, signer);
   const inflationStart = 1612643118;
   const rewardScalingPeriod = 60 * 24 * 60 * 60;
   const floor = 1;
   const ceiling = 10;
   const now = Math.floor(Date.now() / 1000); // Replace with staking period start
-  console.log("Now", now)
   // Total rewards pool
-  let mistPoolBalance = await bonusMistToken.balanceOf(args.rewardPool); //returns BN
-  console.log("mistPoolBalance", mistPoolBalance.toString());
+  let [mistRewardsBalance, wethRewardsBalance, aludelData, totalMistSupply] = await Promise.all([
+    bonusMistToken.balanceOf(args.rewardPool), //returns BN
+    wethRewardToken.balanceOf(args.rewardPool), //returns BN
+    aludel.getAludelData(), // 5th or 7th arg
+    bonusMistToken.totalSupply(),
+  ])
+  console.log("Aludel data", aludelData)
+
   let chartData = [];
-  for (let day = 0; day < 10; day += 3) {
-    const daysAdditional =  day * 60 * 60 * 24;
-    const stakeDuration = now + daysAdditional - stakingStart; 
+  for (let day = 0; day < 3; day += 3) {
+    const daysAdditionalInSecs =  day * 60 * 60 * 24;
+    const stakeDuration = now + daysAdditionalInSecs - stakingStart; 
     // Get rewards and stake units at future time (days elapsed)
-    const totalUnlockedWeiRewards = getFutureUnlockedRewards(daysAdditional); //returns BN
+    let sharesOutstanding = aludelData[4]
+    let currentTotalStakeUnits = aludelData[6]
+    let currentTotalStake = aludelData[5]
+    let scheduleShares = aludelData[8][0][2] // assumes 1 schedule
 
-    //total stake amount * total duration
-    const totalStakeUnits = totalUnlockedWeiRewards.mul(
-      now  + daysAdditional - inflationStart 
-    );
+    const totalUnlockedWeiRewards = getFutureUnlockedRewards(daysAdditionalInSecs, wethRewardsBalance, sharesOutstanding, scheduleShares); //returns BN
 
-    console.log("Total Stake Units", totalStakeUnits.toString())
-    console.log("Total Unlocked Rewards", totalUnlockedWeiRewards.toString(), totalStakeUnits.toString())
-    console.log("Seconds Elapsed", daysAdditional.toString())
+    // total stake units = total stake amount * total duration
+    // const totalStakeUnits = FixedNumber.from(currentTotalStake).mulUnsafe(FixedNumber.from(now  + daysAdditionalInSecs - inflationStart));
+
+    // Stake units = LP token amount * user stake duration
+    let userStake = FixedNumber.from(amount).mulUnsafe(FixedNumber.from(now  + daysAdditionalInSecs - stakingStart)) 
+
+    console.log("User Stake", userStake.toString())
+    console.log("Total Stake", aludelData[5].toString())
+    console.log("Total Stake Units", currentTotalStakeUnits.toString())
+    console.log("Total Unlocked Rewards", totalUnlockedWeiRewards.toString(), currentTotalStakeUnits.toString())
+    console.log("Seconds Elapsed", daysAdditionalInSecs.toString())
     console.log("Stake Duration", stakeDuration)
-    console.log("Amouunt", FixedNumber.from(amount))
-
-    // Get user's wei rewards... TOO LOW
-    let weiRewards = FixedNumber.from(totalUnlockedWeiRewards)
-      .mulUnsafe(FixedNumber.from(amount))
-      .mulUnsafe(FixedNumber.from(stakeDuration)) // = user stake units
-      .divUnsafe(FixedNumber.from(totalStakeUnits)); // creates ratio of pool owned
-
+    
+    // total unlocked wei * user stake / total stake 
+    let weiRewards = totalUnlockedWeiRewards.mulUnsafe(userStake).divUnsafe(FixedNumber.from(currentTotalStakeUnits)); // creates ratio of pool owned
     console.log("Wei rewards before multiplier", weiRewards.toString())
+
     if (stakeDuration <= 5184000) {
       console.log("less than 60 days")
       weiRewards = weiRewards
@@ -107,25 +119,21 @@ export async function getChartData(signer: any, amount: any, stakingStart:any) {
     console.log("Wei Rewards with multiplier", weiRewards.toString());
 
     // Calculate inflation bonuses to mist rewards pools
-    const inflationPeriod = 1209600;
+    const inflationPeriodLength = 1209600;
     const inflationRate = 1.01;
     const inflationToBonusRate = 2;
-    const initialSupply = parseEther("10000000"); //1000000000000000000000000 (10 mil tokens)
     const inflationPeriodsElapsedFromNow = Math.floor(
-      daysAdditional / inflationPeriod
+      daysAdditionalInSecs / inflationPeriodLength
     );
+    let totalMist = totalMistSupply.toString().slice(0, totalMistSupply.toString().length - 18)
     
-    const bonusTokensFromInflation = initialSupply
-      .mul(inflationRate ^ inflationPeriodsElapsedFromNow)
-      .div(inflationToBonusRate);
-    const futureMistBalance = mistPoolBalance.add(bonusTokensFromInflation);
-    console.log("Bonus Tokens", futureMistBalance.toString());
-    console.log("Fixed total Unlocked ", FixedNumber.from(totalUnlockedWeiRewards).toString());
-
+    let bonusTokensFromInflation = parseEther((( totalMist * Math.pow(inflationRate, inflationPeriodsElapsedFromNow )- totalMist)/inflationToBonusRate).toString())
+    const futureMistBalance = mistRewardsBalance.add(bonusTokensFromInflation);
     // Calculate future mist reward pool size
     const mistRewards = weiRewards
       .mulUnsafe(FixedNumber.from(futureMistBalance))
-      .divUnsafe(FixedNumber.from(totalUnlockedWeiRewards));
+      .divUnsafe(FixedNumber.from(totalUnlockedWeiRewards))
+
 
     console.log("Mist Rewards", mistRewards.toString());
     // Convert to string
@@ -138,19 +146,45 @@ export async function getChartData(signer: any, amount: any, stakingStart:any) {
   return chartData;
 }
 
-function getFutureUnlockedRewards(additionlDaysInSeconds: number) {
-  const totalWeiRewards = parseEther("35000000"); //starting * 10^18
-  const now = Math.floor(Date.now() / 1000);
-  console.log("(now + daysAdditional ", now + additionlDaysInSeconds);
-  const unlockStart = 1613656364; //feb 18 2021
-  const unlockDuration = 7776000;
-  const secondsSinceUnlock = now + additionlDaysInSeconds - unlockStart;
-  console.log("Here", totalWeiRewards.toString(), secondsSinceUnlock)
-  if (secondsSinceUnlock > unlockDuration) return totalWeiRewards;
-  const unlockedRewards = totalWeiRewards
-    .mul(secondsSinceUnlock)
-    .div(unlockDuration);
+function getFutureUnlockedRewards(additionlDaysInSeconds: number, rewardBalance: any, sharesOutstanding: any, scheduleShares: any) {
+  const now = Math.floor(Date.now() / 1000); // good
+  console.log("sharesOutstanding", sharesOutstanding);
+  console.log("days in seconds", additionlDaysInSeconds);
+  const scheduleStart = 1613656364; // good
+  const scheduleDuration = 7776000; // good
+  const duration = now + additionlDaysInSeconds - scheduleStart;
+  console.log("Here", duration, scheduleDuration)
+  if (duration > scheduleDuration) {
+    return FixedNumber.from(scheduleShares).mulUnsafe(FixedNumber.from(rewardBalance)).divUnsafe(FixedNumber.from(sharesOutstanding))
+  }
+  // Correct!
+  const sharesLocked = FixedNumber.from(scheduleShares)
+  .subUnsafe(
+    FixedNumber.from(scheduleShares)
+    .mulUnsafe(FixedNumber.from(now - scheduleStart))
+    .divUnsafe(FixedNumber.from(scheduleDuration)))
+  console.log("Shares locked", sharesLocked.toString())
+
+    
+  // const rewardLocked  = sharesLocked
+  //   .mulUnsafe(FixedNumber.from(rewardBalance))
+  //   .divUnsafe(FixedNumber.from(sharesOutstanding))
+
+    const rewardLocked  = sharesLocked
+    .mulUnsafe(FixedNumber.from(rewardBalance))
+    .divUnsafe(FixedNumber.from(scheduleShares)) // ?
+  
+  console.log("Reward locked", rewardLocked.toString())
+
+
+  const unlockedRewards = FixedNumber.from(rewardBalance).subUnsafe(rewardLocked)
   console.log("Unlcoked rewards", unlockedRewards.toString())
+  console.log("What it should be 12398635547290105021 ")
+  console.log("args", duration.toString(),
+  scheduleDuration.toString(),
+  rewardBalance.toString(),
+  sharesOutstanding.toString(),
+  scheduleShares.toString())
   return unlockedRewards;
 }
 
