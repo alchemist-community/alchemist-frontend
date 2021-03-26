@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { config } from "../config/app";
-import IERC20 from "./IERC20.json";
+import IUniswapV2ERC20 from "@uniswap/v2-core/build/IUniswapV2ERC20.json";
 
 const { lpTokenAddress, mistTokenAddress } = config;
 
@@ -9,13 +9,13 @@ export async function getTokenBalances(signer: any) {
   const walletAddress = await signer.getAddress();
   const lp = new ethers.Contract(
     lpTokenAddress,
-    IERC20.abi,
+    IUniswapV2ERC20.abi,
     signer
   ).balanceOf(walletAddress);
 
   const token = new ethers.Contract(
     mistTokenAddress,
-    IERC20.abi,
+    IUniswapV2ERC20.abi,
     signer
   ).balanceOf(walletAddress);
 

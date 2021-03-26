@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import crucibleFactoryAbi from "./crucibleFactoryAbi";
 import Crucible from "./Crucible.json";
-import IERC20 from "./IERC20.json";
+import IUniswapV2ERC20 from "@uniswap/v2-core/build/IUniswapV2ERC20.json";
 import { config } from "../config/app";
 
 export async function getOwnedCrucibles(signer: any, provider: any) {
@@ -13,7 +13,7 @@ export async function getOwnedCrucibles(signer: any, provider: any) {
 
   const token = new ethers.Contract(
     lpTokenAddress,
-    IERC20.abi,
+    IUniswapV2ERC20.abi,
     signer
   );
   const crucibleFactory = new ethers.Contract(
