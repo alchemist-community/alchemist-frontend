@@ -38,7 +38,6 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
     rewards,
     chartData
   } = props;
-  console.log("Reward chart data", chartData)
   const cruciblesCardBg = useColorModeValue("white", "gray.600");
   const [expandBalance, setExpandBalance] = useState(false);
   const [expandLock, setExpandLock] = useState(false);
