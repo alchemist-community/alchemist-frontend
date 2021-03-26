@@ -1,11 +1,11 @@
 import { Box, Flex } from "@chakra-ui/layout";
+import { Image } from "@chakra-ui/image";
 import Footer from "../views/Footer";
 import Header from "../views/Header";
 import Body from "../views/Body";
 import bg from "../img/bg.jpg";
 import pool from "../img/pool.png";
 import React from "react";
-import { Image } from "@chakra-ui/image";
 
 interface LayoutProps {}
 

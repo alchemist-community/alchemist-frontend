@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { ethers } from "ethers";
-import { Web3Provider as Web3ProviderType } from "../ethereum";
-import { initNotify, initOnboard } from "../walletServices";
+import { Web3Provider as Web3ProviderType } from "../types";
+import { initNotify, initOnboard } from "../services/walletServices";
 import {
   getUserRewards,
   getNetworkStats,

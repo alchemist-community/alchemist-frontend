@@ -2,17 +2,18 @@ import { ethers } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import crucibleFactoryAbi from "./crucibleFactoryAbi";
 import Crucible from "./Crucible.json";
-import IERC20 from "./IERC20.json";
+import IUniswapV2ERC20 from "@uniswap/v2-core/build/IUniswapV2ERC20.json";
+import { config } from "../config/app";
 
 export async function getOwnedCrucibles(signer: any, provider: any) {
-  const crucibleFactoryAddress = "0x54e0395CFB4f39beF66DBCd5bD93Cca4E9273D56";
-  const lpTokenAddress = "0xCD6bcca48069f8588780dFA274960F15685aEe0e";
-  const aludelAddress = "0xf0D415189949d913264A454F57f4279ad66cB24d";
+
+  const { crucibleFactoryAddress, lpTokenAddress } = config
+
   const walletAddress = await signer.getAddress();
 
   const token = new ethers.Contract(
-    "0xCD6bcca48069f8588780dFA274960F15685aEe0e",
-    IERC20.abi,
+    lpTokenAddress,
+    IUniswapV2ERC20.abi,
     signer
   );
   const crucibleFactory = new ethers.Contract(

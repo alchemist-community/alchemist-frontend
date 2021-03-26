@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { toMaxDecimalsRound } from "../../../utils";
-import Web3Context from "../../../../../Web3Context";
+import Web3Context from "../../../../../context/web3";
 import { getOwnedCrucibles } from "../../../../../contracts/getOwnedCrucibles";
 import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
 import { sendNFT } from "../../../../../contracts/sendNFT";

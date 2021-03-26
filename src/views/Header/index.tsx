@@ -2,7 +2,7 @@ import React from "react";
 import UserWallet from "../UserWallet";
 import UserAddress from "../UserAddress";
 import logo from "../../img/logo.png";
-import Web3Context from "../../Web3Context";
+import Web3Context from "../../context/web3";
 import { Image } from "@chakra-ui/image";
 import { Box, Flex, LinkBox, LinkOverlay } from "@chakra-ui/layout";
 

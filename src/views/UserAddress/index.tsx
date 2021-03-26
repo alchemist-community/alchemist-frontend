@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import Web3Context from "../../Web3Context";
-import { Text, Button, Image } from "@chakra-ui/react";
-import powerIcon from "../../img/power-icon.png";
+import Web3Context from "../../context/web3";
+import Power from "../../components/icons/power";
+import { Text, Button, IconButton } from "@chakra-ui/react";
 
 export default function UserAddress() {
   const { wallet, address, onboard, readyToTransact } = useContext(Web3Context);
@@ -28,11 +28,10 @@ export default function UserAddress() {
           {wallet?.provider && address ?  address.substring(0, 6) + "..." + address.substring(address.length - 4) : "Connect to a Wallet"}
         </Text>
         {wallet?.provider && (
-          <Image
-            src={powerIcon}
-            height={["20px", "20px", "25px"]}
+          <IconButton
             ml={2}
             mr={-2}
+            icon={<Power color="white" />}
             onClick={() => onboard.walletReset()}
             aria-label="reset wallet"
           />

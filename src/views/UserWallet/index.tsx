@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import Web3Context from "../../Web3Context";
+import Web3Context from "../../context/web3";
 import { toMaxDecimalsRound } from "../Widget/utils";
 import { Spinner } from "@chakra-ui/react";
 import { CSSTransition } from "react-transition-group";
