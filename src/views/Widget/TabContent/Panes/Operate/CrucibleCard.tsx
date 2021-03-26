@@ -67,10 +67,10 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
       flexDirection={"column"}
     >
       <Box mb={4}>
-        <Text as="div" fontSize="lg" textAlign={["center", "center", "left"]}>
         <Flex width="100%" height="100%">
-            <RewardsChart chartData={chartData} />
-          </Flex>
+          <RewardsChart chartData={chartData} />
+        </Flex>
+        <Text as="div" fontSize="lg" textAlign={["center", "center", "left"]}>
           <Flex justifyContent="space-between" flexDirection="column">
             <Flex justifyContent="space-between">
               <Tooltip
@@ -217,7 +217,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Unstake & Claim Rewards
+          Unstake & Claim
         </Button>
       </HStack>
       <HStack mt={4}>

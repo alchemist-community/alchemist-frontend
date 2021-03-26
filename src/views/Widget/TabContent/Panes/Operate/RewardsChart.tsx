@@ -24,20 +24,20 @@ const RewardsChart : React.FC<RewardsChartProps>  = (props) => {
         data={chartData}
         margin={{
           top: 20,
-          right: 80,
+          right: 100,
           left: 20,
-          bottom: 5,
+          bottom: 28,
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="day" />
-        <YAxis yAxisId="left" />
-        <YAxis yAxisId="right" orientation="right" />        
+        <XAxis dataKey="day" tick={{ fill: 'white' }} />
+        <YAxis yAxisId="left"tick={{ fill: 'white' }}  />
+        <YAxis yAxisId="right" orientation="right" tick={{ fill: 'white' }} />        
         <Tooltip />
         {/* <ReferenceLine x="Page C" stroke="red" label="Max PV PAGE" />
         <ReferenceLine y={9800} label="Max" stroke="red" /> */}
         <Line type="monotone" yAxisId="left" dataKey="Mist Rewards" stroke="#0bc5ea" />
-        <Line type="monotone" yAxisId="right"dataKey="Ether Rewards" stroke="#24233a" />
+        <Line type="monotone" yAxisId="right"dataKey="Ether Rewards" stroke="#35c932" />
       </LineChart>
     </>
   );
