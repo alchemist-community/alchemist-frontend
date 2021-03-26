@@ -1,9 +1,9 @@
 import React from "react";
 import Layout from "./layouts";
-import { Web3Provider } from "./Web3Context";
+import { Web3Provider } from "./context/web3";
 import { ChakraProvider } from "@chakra-ui/react";
-import { Global } from "@emotion/react";
 import { GlobalStyles } from "./styles/global-styles";
+import { Global } from "@emotion/react";
 import theme from "./config/theme";
 
 function App() {

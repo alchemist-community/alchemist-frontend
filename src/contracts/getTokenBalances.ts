@@ -1,17 +1,20 @@
 import { ethers } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
+import { config } from "../config/app";
 import IERC20 from "./IERC20.json";
+
+const { lpTokenAddress, mistTokenAddress } = config;
 
 export async function getTokenBalances(signer: any) {
   const walletAddress = await signer.getAddress();
   const lp = new ethers.Contract(
-    "0xCD6bcca48069f8588780dFA274960F15685aEe0e",
+    lpTokenAddress,
     IERC20.abi,
     signer
   ).balanceOf(walletAddress);
 
   const token = new ethers.Contract(
-    "0x88ACDd2a6425c3FaAE4Bc9650Fd7E27e0Bebb7aB",
+    mistTokenAddress,
     IERC20.abi,
     signer
   ).balanceOf(walletAddress);

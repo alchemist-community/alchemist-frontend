@@ -6,6 +6,9 @@ import aludelAbi from "./aludelAbi";
 import crucibleFactoryAbi from "./crucibleFactoryAbi";
 import transmuterAbi from "./transmuterAbi";
 import Crucible from "./Crucible.json";
+import { config } from "../config/app";
+
+const { aludelAddress, crucibleFactoryAddress, transmuterAddress } = config;
 
 export async function mintAndLock(
   signer: any,
@@ -13,9 +16,9 @@ export async function mintAndLock(
   rawAmount: string
 ): Promise<string> {
   const args = {
-    aludel: "0xf0D415189949d913264A454F57f4279ad66cB24d",
-    crucibleFactory: "0x54e0395CFB4f39beF66DBCd5bD93Cca4E9273D56",
-    transmuter: "0xB772ce9f14FC7C7db0D4525aDb9349FBD7ce456a",
+    aludel: aludelAddress,
+    crucibleFactory: crucibleFactoryAddress,
+    transmuter: transmuterAddress,
     amount: rawAmount,
   };
   const walletAddress = await signer.getAddress();

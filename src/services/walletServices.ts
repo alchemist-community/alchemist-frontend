@@ -1,12 +1,20 @@
-import Notify from "bnc-notify";
 import Onboard from "bnc-onboard";
+import { Network } from "../types";
+import { config } from "../config/app";
+import { Dispatch, SetStateAction } from "react";
+import Notify, { API as NotifyAPI } from "bnc-notify";
+import { API as OnboardAPI, Wallet } from 'bnc-onboard/dist/src/interfaces';
 
-const networkId = 1;
-const rpcUrl = "https://mainnet.infura.io/v3/965c5ec028c84ffcb22c799eddba83a4";
-const dappId = "ad454b00-3218-4403-95e9-22c3c7d3adc0";
-const APP_NAME = "Alchemist";
+type Subscriptions = {
+  address: Dispatch<SetStateAction<string | null>>;
+  network: Dispatch<SetStateAction<Network | null>>;
+  balance: (balance: string) => void;
+  wallet: (wallet: Wallet) => void;
+};
 
-export function initOnboard(subscriptions) {
+const { dappId, networkId, rpcUrl, appName, portisApiKey, infuraApiKey } = config;
+
+export function initOnboard(subscriptions: Subscriptions): OnboardAPI {
   return Onboard({
     dappId,
     hideBranding: true,
@@ -21,18 +29,18 @@ export function initOnboard(subscriptions) {
         { walletName: "coinbase", preferred: true },
         {
           walletName: "walletConnect",
-          infuraKey: "d5e29c9b9a9d4116a7348113f57770a8",
+          infuraKey: infuraApiKey,
           preferred: true
         },
         {
           walletName: "portis",
           label: "Portis",
-          apiKey: "e86e917b-b682-4a5c-bbc5-0f8c3b787562",
+          apiKey: portisApiKey,
           preferred: true
         },
         { walletName: "opera", preferred: true },
         { walletName: "torus", preferred: true },
-        { walletName: "walletLink", appName: APP_NAME, rpcUrl, preferred: true },
+        { walletName: "walletLink", appName, rpcUrl, preferred: true },
         { walletName: "liquality", preferred: true },
         { walletName: "frame", preferred: true },
         { walletName: "status", preferred: true },
@@ -55,7 +63,7 @@ export function initOnboard(subscriptions) {
   });
 }
 
-export function initNotify() {
+export function initNotify(): NotifyAPI {
   return Notify({
     dappId,
     networkId

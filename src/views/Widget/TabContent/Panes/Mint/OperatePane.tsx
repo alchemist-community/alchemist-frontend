@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import Web3Context from "../../../../../Web3Context";
+import Web3Context from "../../../../../context/web3";
 import { toMaxDecimalsRound } from "../../../utils";
 import { mintAndLock } from "../../../../../contracts/alchemist";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";

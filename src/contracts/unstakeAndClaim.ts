@@ -4,6 +4,9 @@ import { parseUnits } from "ethers/lib/utils";
 import { signPermission } from "./utils";
 import aludelAbi from "./aludelAbi";
 import Crucible from "./Crucible.json";
+import { config } from "../config/app";
+
+const { aludelAddress } = config
 
 export async function unstakeAndClaim(
   signer: any,
@@ -15,7 +18,7 @@ export async function unstakeAndClaim(
 
   const args = {
     crucible: crucibleAddress,
-    aludel: "0xf0D415189949d913264A454F57f4279ad66cB24d",
+    aludel: aludelAddress,
     recipient: walletAddress,
     amount: rawAmount,
   };

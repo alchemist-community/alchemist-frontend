@@ -1,9 +1,9 @@
-import { ColorModeScript } from "@chakra-ui/color-mode";
+import App from "./App";
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
 import theme from "./config/theme";
 import * as serviceWorker from "./serviceWorker";
+import { ColorModeScript } from "@chakra-ui/color-mode";
 
 import "../src/styles/transitions.css";
 import "focus-visible/dist/focus-visible";
