@@ -1,7 +1,7 @@
 import aludelAbi from "./aludelAbi";
 import { ethers } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
-import IUniswapV2ERC20 from "@uniswap/v2-core/build/IUniswapV2ERC20.json";
+import IERC20 from "./IERC20.json";
 import { config } from "../config/app";
 
 const { aludelAddress, mistTokenAddress, wethAddress, rewardPool } = config;
@@ -112,12 +112,12 @@ export async function calculateMistRewards(
   // Bonus token (mist) & Reward Pool Addreess
   let bonusMistToken = new ethers.Contract(
     mistTokenAddress, // bonus token address
-    IUniswapV2ERC20.abi,
+    IERC20.abi,
     signer
   );
   let weth = new ethers.Contract(
     wethAddress, // bonus token address
-    IUniswapV2ERC20.abi,
+    IERC20.abi,
     signer
   );
   let totalWeiRewards = await weth.balanceOf(
