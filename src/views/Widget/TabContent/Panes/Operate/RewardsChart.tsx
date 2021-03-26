@@ -24,7 +24,7 @@ const RewardsChart : React.FC<RewardsChartProps>  = (props) => {
         data={chartData}
         margin={{
           top: 20,
-          right: 50,
+          right: 80,
           left: 20,
           bottom: 5,
         }}
