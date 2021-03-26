@@ -1,7 +1,7 @@
-import IUniswapV2ERC20 from "@uniswap/v2-core/build/IUniswapV2ERC20.json";
 import { ethers } from "ethers";
 import { parseUnits, randomBytes } from "ethers/lib/utils";
 import { signPermission, signPermitEIP2612 } from "./utils";
+import IERC20 from "./IERC20.json";
 import aludelAbi from "./aludelAbi";
 import Crucible from "./Crucible.json";
 import transmuterAbi from "./transmuterAbi";
@@ -28,7 +28,7 @@ export async function increaseStake(
   const aludel = new ethers.Contract(args.aludel, aludelAbi, signer);
   const stakingToken = new ethers.Contract(
     (await aludel.getAludelData()).stakingToken,
-    IUniswapV2ERC20.abi,
+    IERC20.abi,
     signer
   );
   const crucible = new ethers.Contract(args.crucible, Crucible.abi, signer);
