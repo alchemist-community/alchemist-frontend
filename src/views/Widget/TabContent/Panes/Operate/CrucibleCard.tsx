@@ -4,6 +4,8 @@ import { Button } from "@chakra-ui/button";
 import { Badge, Box, Flex, HStack, Text } from "@chakra-ui/layout";
 import { FaLock } from "react-icons/fa";
 import { Tooltip } from "@chakra-ui/tooltip";
+import RewardsChart from "./RewardsChart";
+
 
 interface CrucibleCardProps {
   crucible: {
@@ -23,6 +25,7 @@ interface CrucibleCardProps {
     etherRewards: number;
   };
   setSelectedRewards: (rewards: any) => void;
+  chartData?: any;
 }
 const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
   const {
@@ -32,6 +35,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
     setModalIsOpen,
     setSelectedRewards,
     rewards,
+    chartData
   } = props;
   const [expandBalance, setExpandBalance] = useState(false);
   const [expandLock, setExpandLock] = useState(false);
@@ -63,6 +67,9 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
       flexDirection={"column"}
     >
       <Box mb={4}>
+        <Flex width="100%" height="100%">
+          <RewardsChart chartData={chartData} />
+        </Flex>
         <Text as="div" fontSize="lg" textAlign={["center", "center", "left"]}>
           <Flex justifyContent="space-between" flexDirection="column">
             <Flex justifyContent="space-between">
@@ -210,7 +217,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Unstake & Claim Rewards
+          Unstake & Claim
         </Button>
       </HStack>
       <HStack mt={4}>

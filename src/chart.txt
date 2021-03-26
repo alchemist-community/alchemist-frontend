@@ -1,0 +1,67 @@
+Network Stats
+* 14 day inflation period  ->  Occurs every 14 days, mist reward pool grows
+* Inflation 1% 
+* 60 day reward scaling period
+* Days until next inflation event
+
+* Total LP balance
+* Unlocked Eth Rewards / Pool Eth balance
+* Unlocked MIST Rewards / Pool MIST Rewards Balance
+
+
+Your Stats (per crucible)
+* Eth Rewards earned
+* Mist Rewards earned
+* Locked LP balance
+* % of LP pool owned
+* Staking duration
+* Current multiplier
+
+* Starting MIST
+* Current MIST
+* Starting WETH
+* Current WETH
+
+Future Rewards Line Chart:
+Ownership Ratio = getFutureVaultStakeUnits / getFutureTotalStakeUnits
+Ether rewards = Ownership Ratio * Future unlocked rewards
+Future Mist = current mist * 1.1 ^ periods elapsed
+Future Mist = Ownership Ratio * Future Mist
+
+
+Progress Bar
+* Days until reward multiplier maximum reached
+
+REWARD MATH
+Changing Variables- duration, mist supply
+  unlocked rewards 
+* stake units (amount * duration)
+% total stake units  
+* (duration/60 days) 
+* 90/100
+=  wei rewards
+* mist supply
+/ unlocked rewards
+= mist rewards
+
+Scaling
+- 90% (floor-ceiling)
+- 60 day duration (5184000)
+
+
+Reward Amount * duration / 60 days *  90/100
+
+Slight linear increase in scaling rewards multiplier
+
+Supply
+* Supply
+* Price
+* Market Cap
+* Rewards
+
+Reward schedule 
+* Duration - 7776000 (90 days)
+* Start - 1613656364
+* Reward Shares - 35000000000000000000000000
+
+Total stake units + total stake * duration since last update

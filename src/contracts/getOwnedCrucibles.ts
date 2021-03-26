@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import crucibleFactoryAbi from "./crucibleFactoryAbi";
+import aludelAbi from "./aludelAbi";
 import Crucible from "./Crucible.json";
 import IERC20 from "./IERC20.json";
 
@@ -20,6 +21,8 @@ export async function getOwnedCrucibles(signer: any, provider: any) {
     crucibleFactoryAbi,
     signer
   );
+  const aludel = new ethers.Contract(aludelAddress, aludelAbi, signer);
+
   const filter = crucibleFactory.filters.Transfer(null, walletAddress);
   const crucibleEvents = await crucibleFactory.queryFilter(filter, 0, "latest");
   const crucibles = crucibleEvents.map(async (data) => {
@@ -31,16 +34,13 @@ export async function getOwnedCrucibles(signer: any, provider: any) {
     const owner = crucibleFactory.ownerOf(id);
     const balance = token.balanceOf(crucible.address);
     const lockedBalance = crucible.getBalanceLocked(lpTokenAddress);
-    const delegatedBalance = await crucible.getBalanceDelegated(
-      lpTokenAddress,
-      walletAddress
-    );
-    console.log("Delegated Blanace", formatUnits(delegatedBalance));
+    const stakes = aludel.getVaultData(id);
     return {
       id,
       balance: await balance,
       lockedBalance: await lockedBalance,
       owner: await owner,
+      stakes: await stakes,
     };
   });
   return (await Promise.all(crucibles)).filter(

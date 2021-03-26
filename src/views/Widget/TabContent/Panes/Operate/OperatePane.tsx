@@ -8,6 +8,15 @@ import { withdraw } from "../../../../../contracts/withdraw";
 import { increaseStake } from "../../../../../contracts/increaseStake";
 import { Button } from "@chakra-ui/button";
 import { Link, Flex } from "@chakra-ui/layout";
+import RewardsChart from "./RewardsChart";
+import {
+  SimpleGrid,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  StatArrow,
+} from "@chakra-ui/react";
 import {
   Modal,
   ModalOverlay,
@@ -46,8 +55,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     monitorTx,
     reloadCrucibles,
     tokenBalances,
+    chartData,
   } = useContext(Web3Context);
-
+  console.log("CHART DATA", chartData);
   const [amount, setAmount] = useState("");
   const [sendAddress, setSendAddress] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -328,6 +338,33 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         <Spinner />
       ) : (
         <>
+          {/* <SimpleGrid columns={[1, null, 3]} spacing="16px">
+            <Stat>
+              <StatLabel>Inflation</StatLabel>
+              <StatNumber>1%</StatNumber>
+              <StatHelpText>Every 14 days</StatHelpText>
+            </Stat>
+            <Stat>
+              <StatLabel>Reward Scaling</StatLabel>
+              <StatNumber>60 days</StatNumber>
+            </Stat>
+            <Stat>
+              <StatLabel>Liquidity Deposits</StatLabel>
+              <StatNumber>$140,000</StatNumber>
+            </Stat>
+            <Stat>
+              <StatLabel>Unlocked Rewards</StatLabel>
+              <StatNumber>$140,000</StatNumber>
+              <StatHelpText>of $2.5M</StatHelpText>
+            </Stat>
+            <Stat>
+              <StatLabel>Reward Unlock Rate</StatLabel>
+              <StatNumber>$10,000</StatNumber>
+              <StatHelpText>Every 7 days</StatHelpText>
+            </Stat>
+          </SimpleGrid> */}
+
+
           {isConnected &&
             rewards &&
             (crucibles.length ? (
@@ -340,6 +377,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     setModalIsOpen={setModalIsOpen}
                     setSelectedCrucible={setSelectedCrucible}
                     setSelectedRewards={setSelectedRewards}
+                    chartData={chartData}
                   />
                 );
               })

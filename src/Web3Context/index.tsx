@@ -9,7 +9,7 @@ import {
 } from "../contracts/aludel";
 import { getOwnedCrucibles } from "../contracts/getOwnedCrucibles";
 import { getTokenBalances } from "../contracts/getTokenBalances";
-
+import { getChartData } from "../contracts/aludel";
 import { formatUnits } from "@ethersproject/units";
 
 interface Rewards {
@@ -29,6 +29,7 @@ const Web3Context = React.createContext<{
   reloadCrucibles: () => Promise<any>;
   crucibles: any;
   rewards: Rewards[];
+  chartData: [];
   networkStats: any;
   tokenBalances: any;
 }>({
@@ -43,6 +44,7 @@ const Web3Context = React.createContext<{
   reloadCrucibles: async () => undefined,
   crucibles: null,
   rewards: [],
+  chartData: [],
   networkStats: null,
   tokenBalances: null,
 });
@@ -57,12 +59,14 @@ const Web3Provider: React.FC = (props) => {
   const [wallet, setWallet] = useState<any>({});
   const [tokenBalances, setTokenBalances] = useState<any>({});
   const [networkStats, setNetworkStats] = useState<any>({});
+  const [chartData, setChartData] = useState<any>([]);
   const [crucibles, setCrucibles] = useState(
     [] as {
       id: string;
       balance: string;
       lockedBalance: string;
       owner: string;
+      stakes: any;
       cleanBalance?: string;
       cleanLockedBalance?: string;
       cleanUnlockedBalance?: any;
@@ -85,14 +89,26 @@ const Web3Provider: React.FC = (props) => {
     if (signer) {
       getOwnedCrucibles(signer, ethersProvider)
         .then((ownedCrucibles) => {
-          let reformatted = ownedCrucibles.map((crucible) => ({
-            ...crucible,
-            cleanBalance: formatUnits(crucible.balance),
-            cleanLockedBalance: formatUnits(crucible.lockedBalance),
-            cleanUnlockedBalance: formatUnits(
-              crucible.balance.sub(crucible.lockedBalance)
-            ),
-          }));
+          let reformatted = ownedCrucibles.map((crucible) => {
+            console.log("Crucible", crucible.stakes);
+            let [totalStake, stakes] = crucible.stakes;
+            console.log("SSPREEAD", totalStake, stakes);
+            let reformattedStakes = stakes.map((stake: any) => ({
+              amount: stake[0],
+              start: stake[1],
+            }));
+            // total += crucible.lockedBalance;
+            return {
+              ...crucible,
+              totalStake,
+              stakes: reformattedStakes,
+              cleanBalance: formatUnits(crucible.balance),
+              cleanLockedBalance: formatUnits(crucible.lockedBalance),
+              cleanUnlockedBalance: formatUnits(
+                crucible.balance.sub(crucible.lockedBalance)
+              ),
+            };
+          });
           setCrucibles(reformatted);
           return getUserRewards(signer, ownedCrucibles);
         })
@@ -130,6 +146,16 @@ const Web3Provider: React.FC = (props) => {
     setOnboard(onboard);
     setNotify(initNotify());
   }, [updateWallet]);
+
+  useEffect(() => {
+    if (crucibles.length) {
+      getChartData(
+        signer,
+        crucibles[0].lockedBalance,
+        crucibles[0].stakes[0].start
+      ).then(setChartData);
+    }
+  }, [crucibles, signer]);
 
   useEffect(() => {
     const previouslySelectedWallet = window.localStorage.getItem(
@@ -192,6 +218,7 @@ const Web3Provider: React.FC = (props) => {
         reloadCrucibles,
         crucibles,
         rewards,
+        chartData,
         networkStats,
         tokenBalances,
       }}
