@@ -1,6 +1,6 @@
 import aludelAbi from "./aludelAbi";
 import { ethers } from "ethers";
-import { formatUnits, parseEther } from "ethers/lib/utils";
+import { formatUnits, formatEther, parseEther } from "ethers/lib/utils";
 import IERC20 from "./IERC20.json";
 import { FixedNumber } from "ethers";
 
@@ -56,7 +56,9 @@ export async function getNetworkStats(signer: any) {
     lastUpdate: lastUpdate.toNumber(),
   };
 }
-
+function getFutureTotalStakeUnits(currentTotalStakeUnits: any, currentTotalStake: any, timestamp: number){
+  return currentTotalStakeUnits.add(currentTotalStake.mul(timestamp))
+}
 export async function getChartData(signer: any, amount: any, stakingStart:any) {
   console.log("Amount", amount.toString(), stakingStart)
   console.log("Amouunt", FixedNumber.from(amount), FixedNumber.from(amount).toString())
@@ -64,32 +66,32 @@ export async function getChartData(signer: any, amount: any, stakingStart:any) {
   const aludel = new ethers.Contract(args.aludel, aludelAbi, signer);
   const bonusMistToken = new ethers.Contract(args.mist, IERC20.abi, signer);
   const wethRewardToken = new ethers.Contract(args.weth, IERC20.abi, signer);
-  const inflationStart = 1612643118;
   const rewardScalingPeriod = 60 * 24 * 60 * 60;
   const floor = 1;
   const ceiling = 10;
   const now = Math.floor(Date.now() / 1000); // Replace with staking period start
   // Total rewards pool
-  let [mistRewardsBalance, wethRewardsBalance, aludelData, totalMistSupply] = await Promise.all([
+  let [mistRewardsBalance, wethRewardsBalance, aludelData] = await Promise.all([
     bonusMistToken.balanceOf(args.rewardPool), //returns BN
     wethRewardToken.balanceOf(args.rewardPool), //returns BN
     aludel.getAludelData(), // 5th or 7th arg
-    bonusMistToken.totalSupply(),
   ])
   console.log("Aludel data", aludelData)
 
   let chartData = [];
-  for (let day = 0; day < 3; day += 3) {
+    // Get rewards and stake units at future time (days elapsed)
+  let sharesOutstanding = aludelData[4]
+  let currentTotalStakeUnits = aludelData[6]
+  let currentTotalStake = aludelData[5]
+  let scheduleShares = aludelData[8][0][2] // assumes 1 schedule
+  let lastUpdate = now;
+
+  for (let day = 0; day <= 60; day += 3) {
     const daysAdditionalInSecs =  day * 60 * 60 * 24;
     const stakeDuration = now + daysAdditionalInSecs - stakingStart; 
-    // Get rewards and stake units at future time (days elapsed)
-    let sharesOutstanding = aludelData[4]
-    let currentTotalStakeUnits = aludelData[6]
-    let currentTotalStake = aludelData[5]
-    let scheduleShares = aludelData[8][0][2] // assumes 1 schedule
-
     const totalUnlockedWeiRewards = getFutureUnlockedRewards(daysAdditionalInSecs, wethRewardsBalance, sharesOutstanding, scheduleShares); //returns BN
-
+    currentTotalStakeUnits = getFutureTotalStakeUnits(currentTotalStakeUnits, currentTotalStake, now + daysAdditionalInSecs - lastUpdate)
+    lastUpdate = now + daysAdditionalInSecs
     // total stake units = total stake amount * total duration
     // const totalStakeUnits = FixedNumber.from(currentTotalStake).mulUnsafe(FixedNumber.from(now  + daysAdditionalInSecs - inflationStart));
 
@@ -116,18 +118,19 @@ export async function getChartData(signer: any, amount: any, stakingStart:any) {
         .divUnsafe(FixedNumber.from(ceiling)); // 10
     }
 
-    console.log("Wei Rewards with multiplier", weiRewards.toString());
+    console.log("Wei Rewards after multiplier", weiRewards.toString());
 
     // Calculate inflation bonuses to mist rewards pools
+    const inflationStart = 1612643118;
     const inflationPeriodLength = 1209600;
+    const startingSupply = 1000000
     const inflationRate = 1.01;
     const inflationToBonusRate = 2;
-    const inflationPeriodsElapsedFromNow = Math.floor(
-      daysAdditionalInSecs / inflationPeriodLength
-    );
-    let totalMist = totalMistSupply.toString().slice(0, totalMistSupply.toString().length - 18)
-    
-    let bonusTokensFromInflation = parseEther((( totalMist * Math.pow(inflationRate, inflationPeriodsElapsedFromNow )- totalMist)/inflationToBonusRate).toString())
+    const inflationPeriodsElapsed= Math.floor(
+      (now + daysAdditionalInSecs - inflationStart) / inflationPeriodLength
+    );    
+    let bonusTokensFromInflation = parseEther((( startingSupply * Math.pow(inflationRate, inflationPeriodsElapsed)- startingSupply)/inflationToBonusRate).toString())
+    console.log("Bonuus tokens- ", day, inflationPeriodsElapsed, bonusTokensFromInflation )
     const futureMistBalance = mistRewardsBalance.add(bonusTokensFromInflation);
     // Calculate future mist reward pool size
     const mistRewards = weiRewards
@@ -138,9 +141,9 @@ export async function getChartData(signer: any, amount: any, stakingStart:any) {
     console.log("Mist Rewards", mistRewards.toString());
     // Convert to string
     chartData.push({
-      name: `Day ${day}`,
-      weiRewards: weiRewards.toString(),
-      mistRewards: mistRewards.toString(),
+      day: `Day ${day}`,
+      "Mist Rewards": parseFloat(mistRewards.toString()),
+      "Ether Rewards": parseFloat(weiRewards.divUnsafe(FixedNumber.from(parseEther('1'))).toString()),
     });
   }
   return chartData;
@@ -153,7 +156,6 @@ function getFutureUnlockedRewards(additionlDaysInSeconds: number, rewardBalance:
   const scheduleStart = 1613656364; // good
   const scheduleDuration = 7776000; // good
   const duration = now + additionlDaysInSeconds - scheduleStart;
-  console.log("Here", duration, scheduleDuration)
   if (duration > scheduleDuration) {
     return FixedNumber.from(scheduleShares).mulUnsafe(FixedNumber.from(rewardBalance)).divUnsafe(FixedNumber.from(sharesOutstanding))
   }

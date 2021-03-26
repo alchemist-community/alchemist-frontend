@@ -5,6 +5,8 @@ import { Badge, Box, Flex, HStack, Text } from "@chakra-ui/layout";
 import { FaLock } from "react-icons/fa";
 import { Tooltip } from "@chakra-ui/tooltip";
 import { useColorModeValue } from "@chakra-ui/color-mode";
+import RewardsChart from "./RewardsChart";
+
 
 interface CrucibleCardProps {
   crucible: {
@@ -24,6 +26,7 @@ interface CrucibleCardProps {
     etherRewards: number;
   };
   setSelectedRewards: (rewards: any) => void;
+  chartData?: any;
 }
 const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
   const {
@@ -33,7 +36,9 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
     setModalIsOpen,
     setSelectedRewards,
     rewards,
+    chartData
   } = props;
+  console.log("Reward chart data", chartData)
   const cruciblesCardBg = useColorModeValue("white", "gray.600");
   const [expandBalance, setExpandBalance] = useState(false);
   const [expandLock, setExpandLock] = useState(false);
@@ -66,6 +71,9 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
     >
       <Box mb={4}>
         <Text as="div" fontSize="lg" textAlign={["center", "center", "left"]}>
+        <Flex width="100%" height="100%">
+            <RewardsChart chartData={chartData} />
+          </Flex>
           <Flex justifyContent="space-between" flexDirection="column">
             <Flex justifyContent="space-between">
               <Tooltip

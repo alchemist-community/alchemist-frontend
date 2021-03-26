@@ -90,10 +90,13 @@ const Web3Provider: React.FC = (props) => {
       getOwnedCrucibles(signer, ethersProvider)
         .then((ownedCrucibles) => {
           let reformatted = ownedCrucibles.map((crucible) => {
-            console.log("Crucible", crucible.stakes );
+            console.log("Crucible", crucible.stakes);
             let [totalStake, stakes] = crucible.stakes;
-            console.log("SSPREEAD", totalStake, stakes)
-            let reformattedStakes = stakes.map((stake: any)=>({amount: stake[0], start: stake[1]}));
+            console.log("SSPREEAD", totalStake, stakes);
+            let reformattedStakes = stakes.map((stake: any) => ({
+              amount: stake[0],
+              start: stake[1],
+            }));
             // total += crucible.lockedBalance;
             return {
               ...crucible,
@@ -144,11 +147,15 @@ const Web3Provider: React.FC = (props) => {
     setNotify(initNotify());
   }, [updateWallet]);
 
-  useEffect(()=>{
-    if(crucibles.length){
-      getChartData(signer, crucibles[0].lockedBalance, crucibles[0].stakes[0].start).then(setChartData);
+  useEffect(() => {
+    if (crucibles.length) {
+      getChartData(
+        signer,
+        crucibles[0].lockedBalance,
+        crucibles[0].stakes[0].start
+      ).then(setChartData);
     }
-  }, [crucibles, signer])
+  }, [crucibles, signer]);
 
   useEffect(() => {
     const previouslySelectedWallet = window.localStorage.getItem(

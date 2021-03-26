@@ -338,7 +338,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         <Spinner />
       ) : (
         <>
-          <SimpleGrid columns={[1, null, 3]} spacing="16px">
+          {/* <SimpleGrid columns={[1, null, 3]} spacing="16px">
             <Stat>
               <StatLabel>Inflation</StatLabel>
               <StatNumber>1%</StatNumber>
@@ -362,10 +362,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               <StatNumber>$10,000</StatNumber>
               <StatHelpText>Every 7 days</StatHelpText>
             </Stat>
-          </SimpleGrid>
-          <Flex width="100%" height="100%">
-            <RewardsChart data={chartData} />
-          </Flex>
+          </SimpleGrid> */}
+
 
           {isConnected &&
             rewards &&
@@ -379,6 +377,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     setModalIsOpen={setModalIsOpen}
                     setSelectedCrucible={setSelectedCrucible}
                     setSelectedRewards={setSelectedRewards}
+                    chartData={chartData}
                   />
                 );
               })
