@@ -1,12 +1,19 @@
-import { ColorModeScript } from "@chakra-ui/color-mode";
+import App from "./App";
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
 import theme from "./config/theme";
 import * as serviceWorker from "./serviceWorker";
+import { ColorModeScript } from "@chakra-ui/color-mode";
 
 import "../src/styles/transitions.css";
 import "focus-visible/dist/focus-visible";
+
+// This app previously supported multiple color modes,
+// we need to clear out users local storage to avoid
+// color mode issues
+if (localStorage.getItem('chakra-ui-color-mode')) {
+  localStorage.removeItem('chakra-ui-color-mode')
+}
 
 ReactDOM.render(
   <React.StrictMode>

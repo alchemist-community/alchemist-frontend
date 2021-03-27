@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import OperatePane from "./OperatePane";
-import Web3Context from "../../../../../Web3Context";
+import Web3Context from "../../../../../context/web3";
 
 const Operate: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string>();

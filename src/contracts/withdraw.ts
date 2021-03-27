@@ -1,7 +1,10 @@
 import { ethers } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
+import { config } from "../config/app";
 import Crucible from "./Crucible.json";
-import IERC20 from "./IERC20.json";
+import IUniswapV2ERC20 from "@uniswap/v2-core/build/IUniswapV2ERC20.json";
+
+const { lpTokenAddress } = config
 
 export async function withdraw(crucibleAddress: string, rawAmount: string) {
   const provider = new ethers.providers.Web3Provider((window as any).ethereum);
@@ -11,14 +14,14 @@ export async function withdraw(crucibleAddress: string, rawAmount: string) {
 
   const args = {
     crucible: crucibleAddress,
-    token: "0xCD6bcca48069f8588780dFA274960F15685aEe0e",
+    token: lpTokenAddress,
     recipient: walletAddress,
     amount: rawAmount,
   };
 
   // fetch contracts
 
-  const token = new ethers.Contract(args.token, IERC20.abi, signer);
+  const token = new ethers.Contract(args.token, IUniswapV2ERC20.abi, signer);
   const crucible = new ethers.Contract(args.crucible, Crucible.abi, signer);
 
   // declare config

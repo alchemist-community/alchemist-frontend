@@ -1,10 +1,13 @@
-import IUniswapV2ERC20 from "@uniswap/v2-core/build/IUniswapV2ERC20.json";
 import { ethers } from "ethers";
 import { parseUnits, randomBytes } from "ethers/lib/utils";
 import { signPermission, signPermitEIP2612 } from "./utils";
+import IUniswapV2ERC20 from "@uniswap/v2-core/build/IUniswapV2ERC20.json";
 import aludelAbi from "./aludelAbi";
 import Crucible from "./Crucible.json";
 import transmuterAbi from "./transmuterAbi";
+import { config } from "../config/app";
+
+const { aludelAddress, transmuterAddress, crucibleFactoryAddress } = config;
 
 export async function increaseStake(
   signer: any,
@@ -13,13 +16,11 @@ export async function increaseStake(
 ) {
   const walletAddress = await signer.getAddress();
 
-  // Recipient doesn't make much sense when increasing stake
   const args = {
     crucible: crucibleAddress,
-    aludel: "0xf0D415189949d913264A454F57f4279ad66cB24d",
-    transmuter: "0xB772ce9f14FC7C7db0D4525aDb9349FBD7ce456a",
-    crucibleFactory: "0x54e0395CFB4f39beF66DBCd5bD93Cca4E9273D56",
-    recipient: walletAddress,
+    aludel: aludelAddress,
+    transmuter: transmuterAddress,
+    crucibleFactory: crucibleFactoryAddress,
     amount: rawAmount,
   };
 
@@ -43,7 +44,6 @@ export async function increaseStake(
   const nonce = await crucible.getNonce();
   const deadline = Date.now() + 60 * 60 * 24; // 1 day deadline
   const salt = randomBytes(32);
-  const recipient = args.recipient;
 
   // validate balances
   // If unlocked LP balance is < amount, throw error

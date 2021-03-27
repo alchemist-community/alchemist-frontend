@@ -1,24 +1,30 @@
 import { ethers } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
-import IERC20 from "./IERC20.json";
+import { config } from "../config/app";
+import IUniswapV2ERC20 from "@uniswap/v2-core/build/IUniswapV2ERC20.json";
+
+const { lpTokenAddress, mistTokenAddress } = config;
 
 export async function getTokenBalances(signer: any) {
   const walletAddress = await signer.getAddress();
-
   const lp = new ethers.Contract(
-    "0xCD6bcca48069f8588780dFA274960F15685aEe0e",
-    IERC20.abi,
+    lpTokenAddress,
+    IUniswapV2ERC20.abi,
     signer
   ).balanceOf(walletAddress);
 
   const token = new ethers.Contract(
-    "0x88ACDd2a6425c3FaAE4Bc9650Fd7E27e0Bebb7aB",
-    IERC20.abi,
+    mistTokenAddress,
+    IUniswapV2ERC20.abi,
     signer
   ).balanceOf(walletAddress);
 
+  let mistBalance = await token;
+  let lpBalance = await lp;
   return {
-    alchemist: formatUnits(await token),
-    lp: formatUnits(await lp),
+    mistBalance,
+    lpBalance,
+    cleanMist: formatUnits(mistBalance),
+    cleanLp: formatUnits(lpBalance),
   };
 }

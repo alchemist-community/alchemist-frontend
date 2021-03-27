@@ -1,10 +1,9 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { decimalCount } from "../../../utils";
-import { Button, ButtonGroup } from "@chakra-ui/button";
+import { Button } from "@chakra-ui/button";
 import { Badge, Box, Flex, HStack, Text } from "@chakra-ui/layout";
 import { FaLock } from "react-icons/fa";
 import { Tooltip } from "@chakra-ui/tooltip";
-import { useColorModeValue } from "@chakra-ui/color-mode";
 
 interface CrucibleCardProps {
   crucible: {
@@ -23,6 +22,7 @@ interface CrucibleCardProps {
     tokenRewards: number;
     etherRewards: number;
   };
+  setSelectedRewards: (rewards: any) => void;
 }
 const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
   const {
@@ -30,9 +30,9 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
     setModalOperation,
     setSelectedCrucible,
     setModalIsOpen,
+    setSelectedRewards,
     rewards,
   } = props;
-  const cruciblesCardBg = useColorModeValue("white", "gray.600");
   const [expandBalance, setExpandBalance] = useState(false);
   const [expandLock, setExpandLock] = useState(false);
 
@@ -54,7 +54,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
       key={crucible.id}
       p={4}
       mb={6}
-      bg={cruciblesCardBg}
+      bg="gray.700"
       boxShadow="md"
       borderWidth={1}
       borderRadius="lg"
@@ -76,11 +76,11 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   onClick={isBalanceTrunc ? expandBalanceNumber : undefined}
                   _hover={isBalanceTrunc ? { cursor: "pointer" } : undefined}
                 >
-                  <strong>Balance: </strong>
+                  <strong>Total Balance: </strong>
                   {!expandBalance ? (
                     <>
                       {`${parseFloat(
-                        Number(crucible?.cleanBalance).toFixed(3)
+                        Number(crucible?.cleanBalance).toFixed(4)
                       )}`}
                       {isBalanceTrunc && "..."}
                     </>
@@ -119,7 +119,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                     <Tooltip
                       hasArrow
                       label="Staked amount"
-                      bg="gray.400"
+                      bg="gray.600"
                       color="white"
                       placement="bottom-end"
                       offset={[0, 16]}
@@ -134,7 +134,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             </Flex>
             <Flex
               fontSize="sm"
-              color="gray.400"
+              color="gray.200"
               textAlign="left"
               verticalAlign="top"
               marginTop="8px"
@@ -176,47 +176,49 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
           )}
         </Text>
       </Box>
-      <ButtonGroup isAttached variant="outline" mb={[4, 4, 0]} width="100%">
-        {/*
-              <Button
-                isFullWidth
-                color="white"
-                borderWidth={1}
-                borderColor={cruciblesCardBg}
-                background="brand.400"
-                fontSize={{ base: "sm", sm: "md" }}
-                _focus={{ boxShadow: "none" }}
-                _hover={{ background: "brand.400" }}
-                onClick={() => {
-                  setModalOperation("increaseStake");
-                  setSelectedCrucible(crucible["id"]);
-                  setModalIsOpen(true);
-                }}
-              >
-                Increase stake
-              </Button>
-              */}
+      {/* <ButtonGroup isAttached variant="outline" mb={[4, 4, 0]} spacing="4" width="100%"> */}
+      <HStack mt={4}>
         <Button
           isFullWidth
           color="white"
           borderWidth={1}
-          borderColor={cruciblesCardBg}
+          borderColor="gray.600"
+          background="brand.400"
+          fontSize={{ base: "sm", sm: "md" }}
+          _focus={{ boxShadow: "none" }}
+          _hover={{ background: "brand.400" }}
+          onClick={() => {
+            setModalOperation("increaseStake");
+            setSelectedCrucible(crucible["id"]);
+            setModalIsOpen(true);
+          }}
+        >
+          Increase Stake
+        </Button>
+        <Button
+          isFullWidth
+          color="white"
+          borderWidth={1}
+          borderColor="gray.600"
           background="brand.400"
           _focus={{ boxShadow: "none" }}
           _hover={{ background: "brand.400" }}
           onClick={() => {
             setModalOperation("unstake");
             setSelectedCrucible(crucible["id"]);
+            setSelectedRewards(rewards);
             setModalIsOpen(true);
           }}
         >
-          Unstake
+          Unstake & Claim Rewards
         </Button>
+      </HStack>
+      <HStack mt={4}>
         <Button
           isFullWidth
           color="white"
           borderWidth={1}
-          borderColor={cruciblesCardBg}
+          borderColor="gray.600"
           background="brand.400"
           fontSize={{ base: "sm", sm: "md" }}
           _focus={{ boxShadow: "none" }}
@@ -227,13 +229,13 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Withdraw
+          Withdraw Unstaked
         </Button>
         <Button
           isFullWidth
           color="white"
           borderWidth={1}
-          borderColor={cruciblesCardBg}
+          borderColor="gray.600"
           background="brand.400"
           fontSize={{ base: "sm", sm: "md" }}
           _focus={{ boxShadow: "none" }}
@@ -244,9 +246,9 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Send
+          Transfer Crucible
         </Button>
-      </ButtonGroup>
+      </HStack>
     </Box>
   );
 };

@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import Web3Context from "../../../../../Web3Context";
+import Web3Context from "../../../../../context/web3";
 import { toMaxDecimalsRound } from "../../../utils";
 import { mintAndLock } from "../../../../../contracts/alchemist";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Alert } from "@chakra-ui/alert";
 import { Button, IconButton } from "@chakra-ui/button";
 import { Link, Text } from "@chakra-ui/layout";
-import { useColorModeValue } from "@chakra-ui/color-mode";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
-import { getTokenBalances } from "../../../../../contracts/getTokenBalances";
 import {
   Popover,
   PopoverArrow,
@@ -27,15 +25,18 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const { handleInputChange = () => null, isConnected } = props;
 
   // Todo: type the extended web3context
-  const { signer, provider, readyToTransact, monitorTx } = useContext(
-    Web3Context
-  );
+  const {
+    signer,
+    provider,
+    readyToTransact,
+    monitorTx,
+    tokenBalances,
+  } = useContext(Web3Context);
 
   const [lpBalance, setLpBalance] = useState("");
 
   const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     //setXAmount is the amount displayed in the input, should be string
-    const name = ev.target.name;
     let value = ev.target.value;
     if (ev.target.type === "number")
       value =
@@ -52,19 +53,19 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     });
   }, [lpBalance, handleInputChange]);
 
-  const alertBgColor = useColorModeValue("gray.50", "gray.600");
+  const maxStakeAmount = tokenBalances.cleanLp;
 
   return (
     <>
       <Alert
         mb={8}
         status="info"
+        boxShadow="lg"
         borderWidth={1}
         borderRadius="lg"
-        borderColor="brand.400"
-        background={alertBgColor}
+        background="gray.700"
       >
-        <Text>
+        <Text color="gray.200">
           First you will need to provide liquidity to the{" "}
           <span role="img" aria-label="alembic">
             ⚗️
@@ -117,9 +118,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               mt={2}
               h="2rem"
               variant="ghost"
-              onClick={() =>
-                getTokenBalances(signer).then(({ lp }) => setLpBalance(lp))
-              }
+              onClick={() => setLpBalance(maxStakeAmount)}
             >
               Max
             </Button>
@@ -136,6 +135,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           background="brand.400"
           _focus={{ boxShadow: "none" }}
           _hover={{ background: "brand.400" }}
+          isDisabled={lpBalance > maxStakeAmount}
           onClick={async () => {
             await readyToTransact();
             const hash: string = await mintAndLock(signer, provider, lpBalance);
@@ -157,7 +157,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           Connect Wallet
         </Button>
       )}
-      <Text color="gray.500" mt={4} px={2}>
+      <Text color="gray.200" fontSize="sm" mt={4} px={2}>
         Ledger wallets on Metamask don't support the signature types required,
         so they won't work. See{" "}
         <Link
