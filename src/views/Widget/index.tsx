@@ -39,6 +39,8 @@ const Widget: React.FC<WidgetProps> = () => {
   const { wallet } = useContext(Web3Context);
   const [steps, setSteps] = useState(initSteps);
 
+  const isConnected = !!wallet.provider;
+
   useEffect(() => {
     if (wallet.provider) {
       const stepsClone = [...steps];
@@ -66,6 +68,9 @@ const Widget: React.FC<WidgetProps> = () => {
   };
 
   const handleStepUpdate = (index: number) => {
+    if (!isConnected) {
+      return null;
+    }
     const updatedSteps = steps.map((step, stepIndex) => ({
       ...step,
       isActive: stepIndex === index,
@@ -88,6 +93,10 @@ const Widget: React.FC<WidgetProps> = () => {
             overflow="hidden"
             onClick={() => handleStepUpdate(index)}
             bg={isComplete && !isActive ? "#35C932" : "gray.800"}
+            transition="box-shadow 0.3s ease"
+            _hover={{
+              boxShadow: "2xl",
+            }}
           >
             {isActive ? (
               component
@@ -97,7 +106,9 @@ const Widget: React.FC<WidgetProps> = () => {
               </Flex>
             ) : (
               <Flex justifyContent="center" alignItems="center" height="100%">
-                <Heading color="gray.700">{index + 1}</Heading>
+                <Heading color={isConnected ? "white" : "gray.700"}>
+                  {index + 1}
+                </Heading>
               </Flex>
             )}
           </Box>
