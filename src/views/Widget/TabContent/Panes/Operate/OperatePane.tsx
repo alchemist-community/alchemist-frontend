@@ -315,7 +315,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           </Modal>
         ))}
       {isConnected && (
-        <Flex flexDirection="column">
+        <Flex flexDirection="column" p={8}>
           <RepeatIcon
             onClick={refreshCrucibles}
             _hover={{ cursor: "pointer" }}

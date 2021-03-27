@@ -5,7 +5,7 @@ import { mintAndLock } from "../../../../../contracts/alchemist";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Alert } from "@chakra-ui/alert";
 import { Button, IconButton } from "@chakra-ui/button";
-import { Link, Text } from "@chakra-ui/layout";
+import { Box, Link, Text } from "@chakra-ui/layout";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import {
   Popover,
@@ -56,7 +56,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const maxStakeAmount = tokenBalances.cleanLp;
 
   return (
-    <>
+    <Box p={8}>
       <Alert
         mb={8}
         status="info"
@@ -169,7 +169,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         </Link>{" "}
         for more info.
       </Text>
-    </>
+    </Box>
   );
 };
 
