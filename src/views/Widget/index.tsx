@@ -89,8 +89,8 @@ const Widget: React.FC<WidgetProps> = () => {
         {steps.map(({ isActive, isComplete, component }, index) => (
           <Box
             height={440}
+            overflowY="auto"
             borderRadius="3xl"
-            overflow="hidden"
             onClick={() => handleStepUpdate(index)}
             bg={isComplete && !isActive ? "#35C932" : "gray.800"}
             transition="box-shadow 0.3s ease"
