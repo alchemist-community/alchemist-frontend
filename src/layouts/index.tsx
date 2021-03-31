@@ -29,7 +29,8 @@ const Layout: React.FC<LayoutProps> = () => {
         display={["none", "none", "block"]}
         bottom={-200}
         zIndex={-1}
-        left={0}
+        left="50%"
+        transform="translateX(-50%)"
       />
       <Header />
       <Box flexGrow={1}>
