@@ -120,14 +120,9 @@ export async function calculateMistRewards(
     IERC20.abi,
     signer
   );
-  let totalWeiRewards = await weth.balanceOf(
-    rewardPool
-  ); // Reward Pool
+  let totalWeiRewards = await weth.balanceOf(rewardPool); // Reward Pool
   let mistRewards =
-    ((await bonusMistToken.balanceOf(
-      rewardPool
-    )) *
-      weiRewards) /
+    ((await bonusMistToken.balanceOf(rewardPool)) * weiRewards) /
     totalWeiRewards;
   return { tokenRewards: mistRewards, etherRewards: weiRewards };
 }

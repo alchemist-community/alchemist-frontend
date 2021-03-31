@@ -12,6 +12,10 @@ interface CrucibleCardProps {
     lockedBalance: string;
     cleanBalance: string;
     cleanLockedBalance: string;
+    mistValue: string;
+    wethValue: string;
+    wethValueUsd: number;
+    mistValueUsd: number;
   };
   setModalOperation: Dispatch<
     SetStateAction<"withdraw" | "unstake" | "send" | "increaseStake">
@@ -48,7 +52,6 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
 
   const isBalanceTrunc = decimalCount(crucible?.cleanBalance) > 3;
   const isLockTrunc = decimalCount(crucible?.cleanLockedBalance) > 3;
-
   return (
     <Box
       key={crucible.id}
@@ -154,7 +157,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
           </Flex>
           {rewards && (
             <>
-              <HStack mt={4}>
+              <HStack mt={4} justifyContent="space-between">
                 <Box mr={2}>
                   <strong>MIST Rewards:</strong> {`${rewards.tokenRewards}`}
                 </Box>
@@ -162,16 +165,24 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   <strong>Ether Rewards:</strong> {`${rewards.etherRewards}`}
                 </Box>
               </HStack>
-              {/* <HStack>
-                      <Box mr={2}>
-                        <strong>Staking Rewards (Y):</strong>{" "}
-                        {`${rewards[i].futStakeRewards}`}
-                      </Box>
-                      <Box mr={2}>
-                        <strong>Future Vault Rewards (Y):</strong>{" "}
-                        {`${rewards[i].futVaultRewards}`}
-                      </Box>
-                    </HStack> */}
+            </>
+          )}
+          {crucible.mistValue && (
+            <>
+              <HStack mt={4} justifyContent="space-between">
+                <Box mr={2}>
+                  <strong>Deposited WETH:</strong> <br />
+                  {`${parseFloat(Number(crucible?.wethValue).toFixed(3))} ($${
+                    crucible?.wethValueUsd
+                  })`}
+                </Box>
+                <Box mr={2}>
+                  <strong>Deposited MIST:</strong> <br />
+                  {`${parseFloat(Number(crucible?.mistValue).toFixed(3))} ($${
+                    crucible?.mistValueUsd
+                  })`}
+                </Box>
+              </HStack>
             </>
           )}
         </Text>
