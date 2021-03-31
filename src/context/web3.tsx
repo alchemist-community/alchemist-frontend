@@ -92,6 +92,8 @@ const Web3Provider: React.FC = (props) => {
             cleanUnlockedBalance: formatUnits(
               crucible.balance.sub(crucible.lockedBalance)
             ),
+            mistPrice: balances.mistPrice,
+            wethPrice: balances.wethPrice,
             ...getUniswapBalances(
               crucible.balance,
               balances.lpMistBalance,

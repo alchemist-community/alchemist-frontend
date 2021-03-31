@@ -16,6 +16,8 @@ interface CrucibleCardProps {
     wethValue: string;
     wethValueUsd: number;
     mistValueUsd: number;
+    wethPrice: number;
+    mistPrice: number;
   };
   setModalOperation: Dispatch<
     SetStateAction<"withdraw" | "unstake" | "send" | "increaseStake">
@@ -82,9 +84,9 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   <strong>Total Balance: </strong>
                   {!expandBalance ? (
                     <>
-                      {`${parseFloat(
+                      {`${
                         Number(crucible?.cleanBalance).toFixed(4)
-                      )}`}
+                      }`}
                       {isBalanceTrunc && "..."}
                     </>
                   ) : (
@@ -110,9 +112,9 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                     <Box>
                       {!expandLock ? (
                         <>
-                          {parseFloat(
+                          {
                             Number(crucible?.cleanLockedBalance).toFixed(3)
-                          )}
+                          }
                           {isLockTrunc && "..."}
                         </>
                       ) : (
@@ -159,10 +161,10 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             <>
               <HStack mt={4} justifyContent="space-between">
                 <Box mr={2}>
-                  <strong>MIST Rewards:</strong> {`${rewards.tokenRewards}`}
+                  <strong>MIST Rewards:</strong><br/> {`${Number(rewards.tokenRewards).toFixed(4)} ($${(rewards.tokenRewards * crucible.mistPrice).toFixed(2)})`}
                 </Box>
                 <Box mr={2}>
-                  <strong>Ether Rewards:</strong> {`${rewards.etherRewards}`}
+                  <strong>Ether Rewards:</strong> <br/> {`${Number(rewards.etherRewards).toFixed(4)} ($${(rewards.etherRewards * crucible.wethPrice).toFixed(2)})`}
                 </Box>
               </HStack>
             </>
@@ -172,13 +174,13 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
               <HStack mt={4} justifyContent="space-between">
                 <Box mr={2}>
                   <strong>Deposited WETH:</strong> <br />
-                  {`${parseFloat(Number(crucible?.wethValue).toFixed(3))} ($${
+                  {`${Number(crucible?.wethValue).toFixed(3)} ($${
                     crucible?.wethValueUsd
                   })`}
                 </Box>
                 <Box mr={2}>
                   <strong>Deposited MIST:</strong> <br />
-                  {`${parseFloat(Number(crucible?.mistValue).toFixed(3))} ($${
+                  {`${Number(crucible?.mistValue).toFixed(3)} ($${
                     crucible?.mistValueUsd
                   })`}
                 </Box>
