@@ -30,7 +30,7 @@ const Layout: React.FC<LayoutProps> = () => {
         bottom={-200}
         zIndex={-1}
         left="50%"
-        transform="translate: translateX(-50%)"
+        transform="translateX(-50%)"
       />
       <Header />
       <Box flexGrow={1}>
