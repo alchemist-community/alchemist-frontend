@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { config } from "../config/app";
 import crucibleFactoryAbi from "./crucibleFactoryAbi";
 
-const { crucibleFactoryAddress } = config
+const { crucibleFactoryAddress } = config;
 
 export async function sendNFT(signer: any, id: string, to: string) {
   const walletAddress = await signer.getAddress();

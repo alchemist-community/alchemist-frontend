@@ -4,7 +4,7 @@ import { config } from "../config/app";
 import Crucible from "./Crucible.json";
 import IERC20 from "./IERC20.json";
 
-const { lpTokenAddress } = config
+const { lpTokenAddress } = config;
 
 export async function withdraw(crucibleAddress: string, rawAmount: string) {
   const provider = new ethers.providers.Web3Provider((window as any).ethereum);

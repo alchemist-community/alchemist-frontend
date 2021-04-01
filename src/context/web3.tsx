@@ -9,7 +9,7 @@ import {
 } from "../contracts/aludel";
 import { getOwnedCrucibles } from "../contracts/getOwnedCrucibles";
 import { getTokenBalances } from "../contracts/getTokenBalances";
-
+import { getUniswapBalances } from "../contracts/getUniswapBalances";
 import { formatUnits } from "@ethersproject/units";
 
 interface Rewards {
@@ -81,8 +81,8 @@ const Web3Provider: React.FC = (props) => {
     setSigner(signer);
     window.localStorage.setItem("selectedWallet", wallet.name);
     getNetworkStats(signer).then(setNetworkStats);
-    getTokenBalances(signer).then(setTokenBalances);
-    if (signer) {
+    getTokenBalances(signer).then((balances) => {
+      setTokenBalances(balances);
       getOwnedCrucibles(signer, ethersProvider)
         .then((ownedCrucibles) => {
           let reformatted = ownedCrucibles.map((crucible) => ({
@@ -91,6 +91,16 @@ const Web3Provider: React.FC = (props) => {
             cleanLockedBalance: formatUnits(crucible.lockedBalance),
             cleanUnlockedBalance: formatUnits(
               crucible.balance.sub(crucible.lockedBalance)
+            ),
+            mistPrice: balances.mistPrice,
+            wethPrice: balances.wethPrice,
+            ...getUniswapBalances(
+              crucible.balance,
+              balances.lpMistBalance,
+              balances.lpWethBalance,
+              balances.totalLpSupply,
+              balances.wethPrice,
+              balances.mistPrice
             ),
           }));
           setCrucibles(reformatted);
@@ -109,7 +119,7 @@ const Web3Provider: React.FC = (props) => {
             ).then(setRewards);
           }
         });
-    }
+    });
   }, []);
 
   useEffect(() => {
