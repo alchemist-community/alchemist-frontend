@@ -29,6 +29,7 @@ const Web3Context = React.createContext<{
   reloadCrucibles: () => Promise<any>;
   crucibles: any;
   rewards: Rewards[];
+  network: any;
   networkStats: any;
   tokenBalances: any;
 }>({
@@ -43,6 +44,7 @@ const Web3Context = React.createContext<{
   reloadCrucibles: async () => undefined,
   crucibles: null,
   rewards: [],
+  network: null,
   networkStats: null,
   tokenBalances: null,
 });
@@ -170,12 +172,13 @@ const Web3Provider: React.FC = (props) => {
 
   async function monitorTx(hash: string) {
     const { emitter } = notify.hash(hash);
+    const networkName = network === 1 ? "mainnet" : "rinkeby";
     interface Transaction {
       hash: string;
     }
     emitter.on("txPool", (transaction: Transaction) => {
       return {
-        message: `Your transaction is pending, click <a href="https://mainnet.etherscan.io/tx/${transaction.hash}" rel="noopener noreferrer" target="_blank">here</a> for more info.`,
+        message: `Your transaction is pending, click <a href="https://${networkName}.etherscan.io/tx/${transaction.hash}" rel="noopener noreferrer" target="_blank">here</a> for more info.`,
         // onclick: () =>
         //   window.open(`https://mainnet.etherscan.io/tx/${transaction.hash}`)
       };
@@ -202,6 +205,7 @@ const Web3Provider: React.FC = (props) => {
         reloadCrucibles,
         crucibles,
         rewards,
+        network,
         networkStats,
         tokenBalances,
       }}
