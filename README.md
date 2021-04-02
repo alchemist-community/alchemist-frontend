@@ -19,3 +19,7 @@ Original frontend design: bakarapara
 
 - Mint and Stake <> Mint Crucible, Lock LP tokens, and Stake
 - Lock <> Take unlocked LP tokens already on the crucible and lock them
+
+## Running on a test network
+
+- You can run the project locally on Rinkeby with `npm run start:rinkeby`
