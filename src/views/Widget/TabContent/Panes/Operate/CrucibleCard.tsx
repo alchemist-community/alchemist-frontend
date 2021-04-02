@@ -28,6 +28,7 @@ interface CrucibleCardProps {
     tokenRewards: number;
     etherRewards: number;
   };
+  lpStats: any;
   setSelectedRewards: (rewards: any) => void;
 }
 const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
@@ -38,6 +39,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
     setModalIsOpen,
     setSelectedRewards,
     rewards,
+    lpStats,
   } = props;
   const [expandBalance, setExpandBalance] = useState(false);
   const [expandLock, setExpandLock] = useState(false);
@@ -84,9 +86,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   <strong>Total Balance: </strong>
                   {!expandBalance ? (
                     <>
-                      {`${
-                        Number(crucible?.cleanBalance).toFixed(4)
-                      }`}
+                      {`${Number(crucible?.cleanBalance).toFixed(4)}`}
                       {isBalanceTrunc && "..."}
                     </>
                   ) : (
@@ -112,9 +112,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                     <Box>
                       {!expandLock ? (
                         <>
-                          {
-                            Number(crucible?.cleanLockedBalance).toFixed(3)
-                          }
+                          {Number(crucible?.cleanLockedBalance).toFixed(3)}
                           {isLockTrunc && "..."}
                         </>
                       ) : (
@@ -161,28 +159,50 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             <>
               <HStack mt={4} justifyContent="space-between">
                 <Box mr={2}>
-                  <strong>MIST Rewards:</strong><br/> {`${Number(rewards.tokenRewards).toFixed(4)} ($${(rewards.tokenRewards * crucible.mistPrice).toFixed(2)})`}
+                  <strong>MIST Rewards:</strong>
+                  <br />{" "}
+                  {`${Number(rewards.tokenRewards).toFixed(4)} ($${(
+                    rewards.tokenRewards * crucible.mistPrice
+                  ).toFixed(2)})`}
                 </Box>
                 <Box mr={2}>
-                  <strong>Ether Rewards:</strong> <br/> {`${Number(rewards.etherRewards).toFixed(4)} ($${(rewards.etherRewards * crucible.wethPrice).toFixed(2)})`}
+                  <strong>Ether Rewards:</strong> <br />{" "}
+                  {`${Number(rewards.etherRewards).toFixed(4)} ($${(
+                    rewards.etherRewards * crucible.wethPrice
+                  ).toFixed(2)})`}
                 </Box>
               </HStack>
             </>
           )}
-          {crucible.mistValue && (
+          {crucible.mistValue  && (
             <>
               <HStack mt={4} justifyContent="space-between">
                 <Box mr={2}>
-                  <strong>Deposited WETH:</strong> <br />
+                  <strong>Current WETH:</strong> <br />
                   {`${Number(crucible?.wethValue).toFixed(3)} ($${
                     crucible?.wethValueUsd
                   })`}
                 </Box>
                 <Box mr={2}>
-                  <strong>Deposited MIST:</strong> <br />
+                  <strong>Current MIST:</strong> <br />
                   {`${Number(crucible?.mistValue).toFixed(3)} ($${
                     crucible?.mistValueUsd
                   })`}
+                </Box>
+              </HStack>
+            </>
+          )}
+          {lpStats && (
+            <>
+              <HStack mt={4} justifyContent="space-between">
+                <Box mr={2}>
+                  <strong>Starting WETH:</strong> <br />
+                  {`${Number(lpStats?.totalWethDeposited).toFixed(3)}
+                  `}
+                </Box>
+                <Box mr={2}>
+                  <strong>Starting MIST:</strong> <br />
+                  {`${Number(lpStats?.totalMistDeposited).toFixed(3)}`}
                 </Box>
               </HStack>
             </>

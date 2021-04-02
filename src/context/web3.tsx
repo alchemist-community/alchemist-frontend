@@ -11,6 +11,40 @@ import { getOwnedCrucibles } from "../contracts/getOwnedCrucibles";
 import { getTokenBalances } from "../contracts/getTokenBalances";
 import { getUniswapBalances } from "../contracts/getUniswapBalances";
 import { formatUnits } from "@ethersproject/units";
+import { useLazyQuery, gql } from "@apollo/client";
+
+const GET_UNISWAP_MINTS = gql`
+  query getUserMints($userAddress: String!) {
+    mints(
+      where: {
+        to: $userAddress
+        pair: "0xcd6bcca48069f8588780dfa274960f15685aee0e"
+      }
+    ) {
+      id
+      timestamp
+      transaction {
+        id
+      }
+      amount0
+      amount1
+      pair {
+        id
+        token0 {
+          id
+          symbol
+          derivedETH
+        }
+        token1 {
+          id
+          symbol
+          derivedETH
+        }
+      }
+      amountUSD
+    }
+  }
+`;
 
 interface Rewards {
   etherRewards: any;
@@ -31,6 +65,7 @@ const Web3Context = React.createContext<{
   rewards: Rewards[];
   networkStats: any;
   tokenBalances: any;
+  lpStats: any;
 }>({
   web3: null,
   onboard: null,
@@ -45,6 +80,7 @@ const Web3Context = React.createContext<{
   rewards: [],
   networkStats: null,
   tokenBalances: null,
+  lpStats: null,
 });
 
 const Web3Provider: React.FC = (props) => {
@@ -57,6 +93,7 @@ const Web3Provider: React.FC = (props) => {
   const [wallet, setWallet] = useState<any>({});
   const [tokenBalances, setTokenBalances] = useState<any>({});
   const [networkStats, setNetworkStats] = useState<any>({});
+  const [lpStats, setLpStats] = useState<any>();
   const [crucibles, setCrucibles] = useState(
     [] as {
       id: string;
@@ -73,6 +110,38 @@ const Web3Provider: React.FC = (props) => {
     null as any
   );
   const [notify, setNotify] = useState<any>(null);
+  const [getUserDeposits,{ loading, error, data }] = useLazyQuery(GET_UNISWAP_MINTS, {
+    variables: { userAddress: address },
+  });
+  console.log ("LOADING1", loading)
+  if(error){
+    console.log("LOADING2", loading)
+    console.log("ERROR", error)
+  }
+  if (data && !lpStats) {
+    console.log("DATA FOUND", data);
+    let totalAmountUSD = 0;
+    let totalMistDeposited = 0;
+    let totalWethDeposited = 0;
+
+    let reformatted = data.mints?.length && data.mints.map((mint: any) => {
+      totalAmountUSD += Number(mint.amountUSD);
+      totalMistDeposited += Number(mint.amount0);
+      totalWethDeposited += Number(mint.amount1);
+      return {
+        ...mint,
+        mistAmount: mint.amount0,
+        lpAmount: mint.amount1,
+      };
+    });
+    setLpStats({
+      ...reformatted,
+      totalAmountUSD,
+      totalMistDeposited,
+      totalWethDeposited,
+    });
+  }
+
   const updateWallet = useCallback((wallet: any) => {
     setWallet(wallet);
     const ethersProvider = new ethers.providers.Web3Provider(wallet.provider);
@@ -141,6 +210,10 @@ const Web3Provider: React.FC = (props) => {
     setNotify(initNotify());
   }, [updateWallet]);
 
+  useEffect(()=>{
+    if(address) getUserDeposits()
+  }, [address, getUserDeposits])
+
   useEffect(() => {
     const previouslySelectedWallet = window.localStorage.getItem(
       "selectedWallet"
@@ -204,6 +277,7 @@ const Web3Provider: React.FC = (props) => {
         rewards,
         networkStats,
         tokenBalances,
+        lpStats,
       }}
     >
       {props.children}

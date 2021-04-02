@@ -46,6 +46,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     monitorTx,
     reloadCrucibles,
     tokenBalances,
+    lpStats,
   } = useContext(Web3Context);
 
   const [amount, setAmount] = useState("");
@@ -220,8 +221,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     You are claiming {selectedRewards?.tokenRewards} MIST and{" "}
                     {selectedRewards?.etherRewards} Ether rewards.
                     <br />
-                    Before unstaking you'll need to add a new network provider
-                    following{" "}
+                    <br />
+                    <strong>Warning! </strong>Before unstaking you'll need to
+                    add a new network provider following{" "}
                     <Link
                       color="brand.400"
                       href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
@@ -342,6 +344,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     setModalIsOpen={setModalIsOpen}
                     setSelectedCrucible={setSelectedCrucible}
                     setSelectedRewards={setSelectedRewards}
+                    lpStats={lpStats}
                   />
                 );
               })

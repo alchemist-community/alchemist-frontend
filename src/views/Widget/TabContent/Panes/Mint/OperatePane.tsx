@@ -66,17 +66,17 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         background="gray.700"
       >
         <Text color="gray.200">
-          First you will need to provide liquidity to the{" "}
+          First, you will need to provide liquidity to the{" "}
           <span role="img" aria-label="alembic">
             ⚗️
           </span>
-          /ETH pair on Uniswap through{" "}
+          /ETH liquidity pool on
           <Link
             color="brand.400"
             isExternal
             href="https://app.uniswap.org/#/add/0x88acdd2a6425c3faae4bc9650fd7e27e0bebb7ab/ETH"
           >
-            this
+            Uniswap.
           </Link>
           .
         </Text>
@@ -84,7 +84,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
       <FormControl mb={4}>
         <FormLabel>
-          LP Balance
+          Mist/ETH Liquidity Token Balance
           <Popover placement="right-start">
             <PopoverTrigger>
               <IconButton
@@ -142,7 +142,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             monitorTx(hash);
           }}
         >
-          Stake
+          Mint Crucible and Stake
         </Button>
       ) : (
         <Button
