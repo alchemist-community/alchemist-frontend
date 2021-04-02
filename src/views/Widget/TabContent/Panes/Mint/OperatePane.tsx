@@ -54,7 +54,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const maxStakeAmount = tokenBalances.cleanLp;
 
   return (
-    <Box p={8}>
+    <Box px={8} py={4}>
       <FormControl mb={4}>
         <FormLabel>
           <HStack>

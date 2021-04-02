@@ -6,16 +6,11 @@ import IERC20 from "./IERC20.json";
 import { config } from "../config/app";
 
 export async function getOwnedCrucibles(signer: any, provider: any) {
-
-  const { crucibleFactoryAddress, lpTokenAddress } = config
+  const { crucibleFactoryAddress, lpTokenAddress } = config;
 
   const walletAddress = await signer.getAddress();
 
-  const token = new ethers.Contract(
-    lpTokenAddress,
-    IERC20.abi,
-    signer
-  );
+  const token = new ethers.Contract(lpTokenAddress, IERC20.abi, signer);
   const crucibleFactory = new ethers.Contract(
     crucibleFactoryAddress,
     crucibleFactoryAbi,
@@ -25,8 +20,8 @@ export async function getOwnedCrucibles(signer: any, provider: any) {
   const crucibleEvents = await crucibleFactory.queryFilter(filter, 0, "latest");
   const crucibles = crucibleEvents.map(async (data) => {
     let id = (data.args!.tokenId as ethers.BigNumber).toHexString();
-    if(id.length<42){
-      id = '0x'+id.slice(2).padStart(40, '0')
+    if (id.length < 42) {
+      id = "0x" + id.slice(2).padStart(40, "0");
     }
     const crucible = new ethers.Contract(id, Crucible.abi, signer);
     const owner = crucibleFactory.ownerOf(id);

@@ -13,6 +13,12 @@ interface CrucibleCardProps {
     lockedBalance: string;
     cleanBalance: string;
     cleanLockedBalance: string;
+    mistValue: string;
+    wethValue: string;
+    wethValueUsd: number;
+    mistValueUsd: number;
+    wethPrice: number;
+    mistPrice: number;
   };
   setModalOperation: Dispatch<
     SetStateAction<"withdraw" | "unstake" | "send" | "increaseStake">
@@ -49,7 +55,6 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
 
   const isBalanceTrunc = decimalCount(crucible?.cleanBalance) > 3;
   const isLockTrunc = decimalCount(crucible?.cleanLockedBalance) > 3;
-
   return (
     <Box
       key={crucible.id}

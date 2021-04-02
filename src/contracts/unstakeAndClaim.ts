@@ -6,7 +6,7 @@ import aludelAbi from "./aludelAbi";
 import Crucible from "./Crucible.json";
 import { config } from "../config/app";
 
-const { aludelAddress } = config
+const { aludelAddress } = config;
 
 export async function unstakeAndClaim(
   signer: any,

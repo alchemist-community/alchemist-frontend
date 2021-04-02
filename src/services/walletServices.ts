@@ -3,7 +3,7 @@ import { Network } from "../types";
 import { config } from "../config/app";
 import { Dispatch, SetStateAction } from "react";
 import Notify, { API as NotifyAPI } from "bnc-notify";
-import { API as OnboardAPI, Wallet } from 'bnc-onboard/dist/src/interfaces';
+import { API as OnboardAPI, Wallet } from "bnc-onboard/dist/src/interfaces";
 
 type Subscriptions = {
   address: Dispatch<SetStateAction<string | null>>;
@@ -12,7 +12,14 @@ type Subscriptions = {
   wallet: (wallet: Wallet) => void;
 };
 
-const { dappId, networkId, rpcUrl, appName, portisApiKey, infuraApiKey } = config;
+const {
+  dappId,
+  networkId,
+  rpcUrl,
+  appName,
+  portisApiKey,
+  infuraApiKey,
+} = config;
 
 export function initOnboard(subscriptions: Subscriptions): OnboardAPI {
   return Onboard({
@@ -30,13 +37,13 @@ export function initOnboard(subscriptions: Subscriptions): OnboardAPI {
         {
           walletName: "walletConnect",
           infuraKey: infuraApiKey,
-          preferred: true
+          preferred: true,
         },
         {
           walletName: "portis",
           label: "Portis",
           apiKey: portisApiKey,
-          preferred: true
+          preferred: true,
         },
         { walletName: "opera", preferred: true },
         { walletName: "torus", preferred: true },
@@ -51,21 +58,21 @@ export function initOnboard(subscriptions: Subscriptions): OnboardAPI {
         { walletName: "wallet.io", rpcUrl, preferred: true },
         { walletName: "huobiwallet", rpcUrl, preferred: true },
         { walletName: "hyperpay", preferred: true },
-        { walletName: "atoken", preferred: true }
-      ]
+        { walletName: "atoken", preferred: true },
+      ],
     },
     walletCheck: [
       { checkName: "derivationPath" },
       { checkName: "connect" },
       { checkName: "accounts" },
-      { checkName: "network" }
-    ]
+      { checkName: "network" },
+    ],
   });
 }
 
 export function initNotify(): NotifyAPI {
   return Notify({
     dappId,
-    networkId
+    networkId,
   });
 }

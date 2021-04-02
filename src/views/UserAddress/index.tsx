@@ -25,7 +25,11 @@ export default function UserAddress() {
           color={wallet?.provider ? "white" : "black"}
           mr={2}
         >
-          {wallet?.provider && address ?  address.substring(0, 6) + "..." + address.substring(address.length - 4) : "Connect to a Wallet"}
+          {wallet?.provider && address
+            ? address.substring(0, 6) +
+              "..." +
+              address.substring(address.length - 4)
+            : "Connect to a Wallet"}
         </Text>
         {wallet?.provider && (
           <IconButton
