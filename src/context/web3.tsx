@@ -143,13 +143,16 @@ const Web3Provider: React.FC = (props) => {
 
   const [getPricesAtTimestamp,{ loading: pricesLoading, error: pricesError, data: pricesData}] = useLazyQuery(GET_PRICES, {
     variables: {
-      beforeTimestamp: Number(lpStats?.timestamp), 
-      afterTimestamp: Number(lpStats?.timestamp) - 24 * 60 * 60 
+      beforeTimestamp: Number(lpStats?.deposits[0].timestamp) || 1615350363, 
+      afterTimestamp: (Number(lpStats?.deposits[0].timestamp) || 1615350363) - 24 * 60 * 60 
     },
   });
 
   if(error){
-    console.log("Error fetching from subgraph", error)
+    console.log("Error fetching data from subgraph", error)
+  }
+  if (pricesError){
+    console.log("Error fetching prices from subgraph", pricesError)
   }
   if (data && !lpStats) {
 
@@ -166,12 +169,8 @@ const Web3Provider: React.FC = (props) => {
         lpAmount: mint.amount1,
       };
     });
-    console.log("Data",       ...reformatted,
-    totalAmountUSD,
-    totalMistDeposited,
-    totalWethDeposited)
     setLpStats({
-      ...reformatted,
+      deposits: reformatted,
       totalAmountUSD,
       totalMistDeposited,
       totalWethDeposited,
@@ -179,11 +178,11 @@ const Web3Provider: React.FC = (props) => {
   }
 
   if(pricesData){
-    console.log("Prices Data", pricesData)
+    console.log("Fetched Prices Data", pricesData)
     setLpStats((lpStats: any) => ({
       ...lpStats,
-      wethPriceUSD: pricesData.wethPriceUSD.priceUSD,
-      mistPriceUSD: pricesData.mistPriceUSD.priceUSD
+      wethPriceUSD: pricesData?.wethPriceUSD.priceUSD,
+      mistPriceUSD: pricesData?.mistPriceUSD.priceUSD
     }))
   }
 
@@ -261,7 +260,7 @@ const Web3Provider: React.FC = (props) => {
   
   useEffect(()=>{
     if(lpStats){
-      console.log("Getting prices")
+      console.log("Getting prices", lpStats.deposits[0].timestamp)
       getPricesAtTimestamp()
     }
   }, [lpStats, getPricesAtTimestamp])
