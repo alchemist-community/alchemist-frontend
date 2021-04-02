@@ -14,7 +14,7 @@ import { formatUnits } from "@ethersproject/units";
 import { useLazyQuery, gql } from "@apollo/client";
 
 const GET_UNISWAP_MINTS = gql`
-  query getUserMints($userAddress: String!) {
+  query getUserMints($userAddress: String!  ) {
     mints(
       where: {
         to: $userAddress
@@ -42,6 +42,33 @@ const GET_UNISWAP_MINTS = gql`
         }
       }
       amountUSD
+    }
+  }
+`;
+
+const GET_PRICES = gql`
+  query getPrices($beforeTimestamp: Number!, $afterTimestamp: Number! ) {
+  wethPriceUSD: tokenDayDatas(
+    where: {
+      token:"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", # Eth Address
+      date_lt: $beforeTimestamp
+      date_gt: $afterTimestamp
+      }) 
+    {
+      id
+      date
+      priceUSD
+    }
+  mistPriceUSD: tokenDayDatas(
+    where: {
+      token:"0x88acdd2a6425c3faae4bc9650fd7e27e0bebb7ab", # Eth Address
+      date_lt: $beforeTimestamp
+      date_gt: $afterTimestamp
+    }) 
+    {
+      id
+      date
+      priceUSD
     }
   }
 `;
@@ -113,17 +140,22 @@ const Web3Provider: React.FC = (props) => {
   const [getUserDeposits,{ loading, error, data }] = useLazyQuery(GET_UNISWAP_MINTS, {
     variables: { userAddress: address },
   });
-  console.log ("LOADING1", loading)
+
+  const [getPricesAtTimestamp,{ loading: pricesLoading, error: pricesError, data: pricesData}] = useLazyQuery(GET_PRICES, {
+    variables: {
+      beforeTimestamp: Number(lpStats?.timestamp), 
+      afterTimestamp: Number(lpStats?.timestamp) - 24 * 60 * 60 
+    },
+  });
+
   if(error){
-    console.log("LOADING2", loading)
-    console.log("ERROR", error)
+    console.log("Error fetching from subgraph", error)
   }
   if (data && !lpStats) {
-    console.log("DATA FOUND", data);
+
     let totalAmountUSD = 0;
     let totalMistDeposited = 0;
     let totalWethDeposited = 0;
-
     let reformatted = data.mints?.length && data.mints.map((mint: any) => {
       totalAmountUSD += Number(mint.amountUSD);
       totalMistDeposited += Number(mint.amount0);
@@ -134,12 +166,25 @@ const Web3Provider: React.FC = (props) => {
         lpAmount: mint.amount1,
       };
     });
+    console.log("Data",       ...reformatted,
+    totalAmountUSD,
+    totalMistDeposited,
+    totalWethDeposited)
     setLpStats({
       ...reformatted,
       totalAmountUSD,
       totalMistDeposited,
       totalWethDeposited,
     });
+  }
+
+  if(pricesData){
+    console.log("Prices Data", pricesData)
+    setLpStats((lpStats: any) => ({
+      ...lpStats,
+      wethPriceUSD: pricesData.wethPriceUSD.priceUSD,
+      mistPriceUSD: pricesData.mistPriceUSD.priceUSD
+    }))
   }
 
   const updateWallet = useCallback((wallet: any) => {
@@ -213,6 +258,13 @@ const Web3Provider: React.FC = (props) => {
   useEffect(()=>{
     if(address) getUserDeposits()
   }, [address, getUserDeposits])
+  
+  useEffect(()=>{
+    if(lpStats){
+      console.log("Getting prices")
+      getPricesAtTimestamp()
+    }
+  }, [lpStats, getPricesAtTimestamp])
 
   useEffect(() => {
     const previouslySelectedWallet = window.localStorage.getItem(

@@ -56,6 +56,11 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
 
   const isBalanceTrunc = decimalCount(crucible?.cleanBalance) > 3;
   const isLockTrunc = decimalCount(crucible?.cleanLockedBalance) > 3;
+  const netWethGain = Number(crucible.wethValue)- Number(lpStats?.totalWethDeposited)
+  const netWethGainUSD= netWethGain * crucible.wethPrice
+  const netMistGain = Number(crucible.mistValue)- Number(lpStats?.totalMistDeposited)
+  const netMistGainUSD= netMistGain  * crucible.mistPrice
+
   return (
     <Box
       key={crucible.id}
@@ -203,6 +208,32 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                 <Box mr={2}>
                   <strong>Starting MIST:</strong> <br />
                   {`${Number(lpStats?.totalMistDeposited).toFixed(3)}`}
+                </Box>
+              </HStack>
+            </>
+          )}
+          {lpStats && (
+            <>
+              <HStack mt={4} justifyContent="space-between">
+                <Box mr={2}>
+                  <strong>Net Gain WETH:</strong> <br />
+                  {`${netWethGain.toFixed(4)} ($${netWethGainUSD.toFixed(2)})
+                  `}
+                </Box>
+                <Box mr={2}>
+                  <strong>Net Gain MIST:</strong> <br />
+                  {`${netMistGain.toFixed(4)} ($${netMistGainUSD.toFixed(2)})
+                  `}                </Box>
+              </HStack>
+            </>
+          )}
+          {lpStats && (
+            <>
+              <HStack mt={4} justifyContent="space-between">
+                <Box mr={2}>
+                  <strong>Net Market Gains:</strong> <br />
+                  {`${netWethGain.toFixed(4)} ($${netWethGainUSD.toFixed(2)})
+                  `}
                 </Box>
               </HStack>
             </>
