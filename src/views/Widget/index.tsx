@@ -46,7 +46,7 @@ const Widget: React.FC<WidgetProps> = () => {
             </Tab>
           </TabList>
 
-          <TabPanels p={4} overflowY="auto" maxH="480px">
+          <TabPanels p={4} overflowY="auto" maxH="640px">
             <TabPanel>
               <SwapPane />
             </TabPanel>

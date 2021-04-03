@@ -325,6 +325,26 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
         >
           Increase Stake
         </Button>
+
+        <Button
+          isFullWidth
+          color="white"
+          borderWidth={1}
+          borderColor="gray.600"
+          background="brand.400"
+          fontSize={{ base: "sm", sm: "md" }}
+          _focus={{ boxShadow: "none" }}
+          _hover={{ background: "brand.400" }}
+          onClick={() => {
+            setModalOperation("send");
+            setSelectedCrucible(crucible["id"]);
+            setModalIsOpen(true);
+          }}
+        >
+          Transfer Crucible
+        </Button>
+      </HStack>
+      <HStack mt={4}>
         <Button
           isFullWidth
           color="white"
@@ -342,8 +362,6 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
         >
           Unstake & Claim Rewards
         </Button>
-      </HStack>
-      <HStack mt={4}>
         <Button
           isFullWidth
           color="white"
@@ -360,23 +378,6 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
           }}
         >
           Withdraw Unstaked
-        </Button>
-        <Button
-          isFullWidth
-          color="white"
-          borderWidth={1}
-          borderColor="gray.600"
-          background="brand.400"
-          fontSize={{ base: "sm", sm: "md" }}
-          _focus={{ boxShadow: "none" }}
-          _hover={{ background: "brand.400" }}
-          onClick={() => {
-            setModalOperation("send");
-            setSelectedCrucible(crucible["id"]);
-            setModalIsOpen(true);
-          }}
-        >
-          Transfer Crucible
         </Button>
       </HStack>
     </Box>
