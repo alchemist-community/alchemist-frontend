@@ -56,10 +56,12 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
 
   const isBalanceTrunc = decimalCount(crucible?.cleanBalance) > 3;
   const isLockTrunc = decimalCount(crucible?.cleanLockedBalance) > 3;
-  const netWethGain = Number(crucible.wethValue)- Number(lpStats?.totalWethDeposited)
-  const netWethGainUSD= netWethGain * crucible.wethPrice
-  const netMistGain = Number(crucible.mistValue)- Number(lpStats?.totalMistDeposited)
-  const netMistGainUSD= netMistGain  * crucible.mistPrice
+  const netWethGain =
+    Number(crucible.wethValue) - Number(lpStats?.totalWethDeposited);
+  const netWethGainUSD = netWethGain * crucible.wethPrice;
+  const netMistGain =
+    Number(crucible.mistValue) - Number(lpStats?.totalMistDeposited);
+  const netMistGainUSD = netMistGain * crucible.mistPrice;
 
   return (
     <Box
@@ -163,78 +165,142 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
           {rewards && (
             <>
               <HStack mt={4} justifyContent="space-between">
-                <Box mr={2}>
-                  <strong>MIST Rewards:</strong>
-                  <br />{" "}
-                  {`${Number(rewards.tokenRewards).toFixed(4)} ($${(
-                    rewards.tokenRewards * crucible.mistPrice
-                  ).toFixed(2)})`}
-                </Box>
-                <Box mr={2}>
-                  <strong>Ether Rewards:</strong> <br />{" "}
-                  {`${Number(rewards.etherRewards).toFixed(4)} ($${(
-                    rewards.etherRewards * crucible.wethPrice
-                  ).toFixed(2)})`}
-                </Box>
+                <Tooltip
+                  label="Total protocol rewards from MIST inflation"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Box mr={2}>
+                    <strong>MIST Rewards</strong>
+                    <br />{" "}
+                    {`${Number(rewards.tokenRewards).toFixed(4)} ($${(
+                      rewards.tokenRewards * crucible.mistPrice
+                    ).toFixed(2)})`}
+                  </Box>
+                </Tooltip>
+                <Tooltip
+                  label="Total protocol rewards from the ETH rewards pool"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Box mr={2}>
+                    <strong>ETH Rewards</strong> <br />{" "}
+                    {`${Number(rewards.etherRewards).toFixed(4)} ($${(
+                      rewards.etherRewards * crucible.wethPrice
+                    ).toFixed(2)})`}
+                  </Box>
+                </Tooltip>
               </HStack>
             </>
           )}
-          {crucible.mistValue  && (
+          {crucible.mistValue && (
             <>
               <HStack mt={4} justifyContent="space-between">
-                <Box mr={2}>
-                  <strong>Current WETH:</strong> <br />
-                  {`${Number(crucible?.wethValue).toFixed(3)} ($${
-                    crucible?.wethValueUsd
-                  })`}
-                </Box>
-                <Box mr={2}>
-                  <strong>Current MIST:</strong> <br />
-                  {`${Number(crucible?.mistValue).toFixed(3)} ($${
-                    crucible?.mistValueUsd
-                  })`}
-                </Box>
-              </HStack>
-            </>
-          )}
-          {lpStats && (
-            <>
-              <HStack mt={4} justifyContent="space-between">
-                <Box mr={2}>
-                  <strong>Starting WETH:</strong> <br />
-                  {`${Number(lpStats?.totalWethDeposited).toFixed(3)}
-                  `}
-                </Box>
-                <Box mr={2}>
-                  <strong>Starting MIST:</strong> <br />
-                  {`${Number(lpStats?.totalMistDeposited).toFixed(3)}`}
-                </Box>
-              </HStack>
-            </>
-          )}
-          {lpStats && (
-            <>
-              <HStack mt={4} justifyContent="space-between">
-                <Box mr={2}>
-                  <strong>Net Gain WETH:</strong> <br />
-                  {`${netWethGain.toFixed(4)} ($${netWethGainUSD.toFixed(2)})
-                  `}
-                </Box>
-                <Box mr={2}>
-                  <strong>Net Gain MIST:</strong> <br />
-                  {`${netMistGain.toFixed(4)} ($${netMistGainUSD.toFixed(2)})
-                  `}                </Box>
+                <Tooltip
+                  label="Current ETH deposited in your staked liquidity pool tokens"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Box mr={2}>
+                    <strong>Current ETH</strong> <br />
+                    {`${Number(crucible?.wethValue).toFixed(3)} ($${
+                      crucible?.wethValueUsd
+                    })`}
+                  </Box>
+                </Tooltip>
+                <Tooltip
+                  label="Current MIST deposited in your staked liquidity pool tokens"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Box mr={2}>
+                    <strong>Current MIST</strong> <br />
+                    {`${Number(crucible?.mistValue).toFixed(3)} ($${
+                      crucible?.mistValueUsd
+                    })`}
+                  </Box>
+                </Tooltip>
               </HStack>
             </>
           )}
           {lpStats && (
             <>
               <HStack mt={4} justifyContent="space-between">
-                <Box mr={2}>
-                  <strong>Net Market Gains:</strong> <br />
-                  {`${netWethGain.toFixed(4)} ($${netWethGainUSD.toFixed(2)})
+                <Tooltip
+                  label="The initial amount of ETH you deposited for ETH/MIST liquidity pool tokens"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Box mr={2}>
+                    <strong>Starting ETH:</strong> <br />
+                    {`${Number(lpStats?.totalWethDeposited).toFixed(3)}
                   `}
-                </Box>
+                  </Box>
+                </Tooltip>
+                <Tooltip
+                  label="The initial amount of MIST you deposited for ETH/MIST liquidity pool tokens"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Box mr={2}>
+                    <strong>Starting MIST:</strong> <br />
+                    {`${Number(lpStats?.totalMistDeposited).toFixed(3)}`}
+                  </Box>
+                </Tooltip>
+              </HStack>
+            </>
+          )}
+          {lpStats && (
+            <>
+              <HStack mt={4} justifyContent="space-between">
+                <Tooltip
+                  label="Gain/loss of ETH  represented in your liquidity pool"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Box mr={2}>
+                    <strong>{`Net ${
+                      netWethGain > 0 ? "Gain" : "Loss"
+                    } ETH`}</strong>{" "}
+                    <br />
+                    {`${netWethGain.toFixed(4)} ($${netWethGainUSD.toFixed(2)})
+                  `}
+                  </Box>
+                </Tooltip>
+                <Tooltip
+                  label="Gain/loss of MIST in your liquidity pool"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Box mr={2}>
+                    <strong>{`Net ${
+                      netMistGain > 0 ? "Gain" : "Loss"
+                    } Mist`}</strong>{" "}
+                    <br />
+                    {`${netMistGain.toFixed(4)} ($${netMistGainUSD.toFixed(2)})
+                  `}{" "}
+                  </Box>
+                </Tooltip>
+              </HStack>
+            </>
+          )}
+          {lpStats && (
+            <>
+              <HStack mt={4} justifyContent="space-between">
+                <Tooltip
+                  label="Total gains (USD) given the starting price of ETH and MIST"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Box mr={2}>
+                    <strong>Cummulative Gain/Loss</strong> <br />
+                    {`$${(
+                      crucible?.wethValueUsd * 2 -
+                      lpStats?.totalWethDeposited * lpStats.wethPriceUSD * 2
+                    ).toFixed(2)}
+                  `}
+                  </Box>
+                </Tooltip>
               </HStack>
             </>
           )}
