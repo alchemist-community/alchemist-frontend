@@ -12,6 +12,7 @@ interface LayoutProps {}
 const Layout: React.FC<LayoutProps> = () => {
   return (
     <Flex
+      px={3}
       minHeight="100vh"
       flexDirection="column"
       backgroundSize="cover"

@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import Web3Context from "../../../../../context/web3";
-import { toMaxDecimalsRound } from "../../../utils";
 import { mintAndLock } from "../../../../../contracts/alchemist";
-import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
-import { Alert } from "@chakra-ui/alert";
 import { Button, IconButton } from "@chakra-ui/button";
-import { Link, Text } from "@chakra-ui/layout";
+import { Box, HStack, Link, Text } from "@chakra-ui/layout";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import {
   Popover,
@@ -15,6 +12,15 @@ import {
   PopoverTrigger,
 } from "@chakra-ui/popover";
 import { FiInfo } from "react-icons/fi";
+import { Portal } from "@chakra-ui/portal";
+import { NumberInput, NumberInputField } from "@chakra-ui/number-input";
+import {
+  Slider,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderTrack,
+} from "@chakra-ui/slider";
+import { LightMode } from "@chakra-ui/color-mode";
 
 interface OperatePaneProps {
   handleInputChange?: (form: { [key: string]: string | number }) => void;
@@ -22,9 +28,8 @@ interface OperatePaneProps {
 }
 
 const OperatePane: React.FC<OperatePaneProps> = (props) => {
-  const { handleInputChange = () => null, isConnected } = props;
+  const { handleInputChange = () => null } = props;
 
-  // Todo: type the extended web3context
   const {
     signer,
     provider,
@@ -33,18 +38,11 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     tokenBalances,
   } = useContext(Web3Context);
 
-  const [lpBalance, setLpBalance] = useState("");
+  const [lpBalance, setLpBalance] = useState("0");
 
-  const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (valueAsString: string) => {
     //setXAmount is the amount displayed in the input, should be string
-    let value = ev.target.value;
-    if (ev.target.type === "number")
-      value =
-        ev.target.value === ""
-          ? ev.target.value
-          : toMaxDecimalsRound(ev.target.value, +ev.target.step).toString();
-
-    setLpBalance(value);
+    setLpBalance(valueAsString);
   };
 
   useEffect(() => {
@@ -56,107 +54,137 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const maxStakeAmount = tokenBalances.cleanLp;
 
   return (
-    <>
-      <Alert
-        mb={8}
-        status="info"
-        boxShadow="lg"
-        borderWidth={1}
-        borderRadius="lg"
-        background="gray.700"
-      >
-        <Text color="gray.200">
-          First you will need to provide liquidity to the{" "}
-          <span role="img" aria-label="alembic">
-            ⚗️
-          </span>
-          /ETH pair on Uniswap through{" "}
-          <Link
-            color="brand.400"
-            isExternal
-            href="https://app.uniswap.org/#/add/0x88acdd2a6425c3faae4bc9650fd7e27e0bebb7ab/ETH"
-          >
-            this
-          </Link>
-          .
-        </Text>
-      </Alert>
-
+    <Box p={8}>
       <FormControl mb={4}>
         <FormLabel>
-          LP Balance
-          <Popover placement="right-start">
-            <PopoverTrigger>
-              <IconButton
-                aria-label="info"
-                variant="ghost"
-                icon={<FiInfo />}
-                _hover={{ background: "transparent", color: "brand.400" }}
-                _focus={{ border: "none" }}
-              />
-            </PopoverTrigger>
-            <PopoverContent _focus={{ outline: "none" }}>
-              <PopoverArrow />
-              <PopoverBody>How many LP tokens you want to stake.</PopoverBody>
-            </PopoverContent>
-          </Popover>
+          <HStack>
+            <Text fontWeight="bold" fontSize="2xl">
+              LP Balance
+            </Text>
+            <Popover placement="right-start">
+              <PopoverTrigger>
+                <IconButton
+                  aria-label="info"
+                  variant="ghost"
+                  icon={<FiInfo />}
+                  _hover={{ background: "transparent", color: "brand.400" }}
+                  _focus={{ border: "none" }}
+                />
+              </PopoverTrigger>
+              <Portal>
+                <PopoverContent _focus={{ outline: "none" }}>
+                  <PopoverArrow />
+                  <PopoverBody>
+                    <Box>
+                      Enter how many LP tokens you want to stake. If you have no
+                      LP tokens, you will need to provide liquidity to the{" "}
+                      <span role="img" aria-label="alembic">
+                        ⚗️
+                      </span>
+                      /ETH pair on{" "}
+                      <Link
+                        color="brand.400"
+                        isExternal
+                        href="https://app.uniswap.org/#/add/0x88acdd2a6425c3faae4bc9650fd7e27e0bebb7ab/ETH"
+                      >
+                        Uniswap
+                      </Link>
+                    </Box>
+                  </PopoverBody>
+                </PopoverContent>
+              </Portal>
+            </Popover>
+          </HStack>
         </FormLabel>
-        <InputGroup size="md">
-          <Input
-            size="lg"
-            variant="filled"
-            _focus={{ borderColor: "brand.400" }}
-            value={lpBalance}
-            onChange={onChange}
-            name="lpBalance"
-            placeholder="0.0"
-            type="number"
-          />
-          <InputRightElement width="4.5rem" zIndex={0}>
-            <Button
-              mr={2}
-              mt={2}
-              h="2rem"
-              variant="ghost"
-              onClick={() => setLpBalance(maxStakeAmount)}
+        <LightMode>
+          <Box p={8} bg="white" borderRadius="xl">
+            <Text mb={4} fontSize="xl" textAlign="left" color="gray.800">
+              Balance: <strong>{maxStakeAmount} LP</strong>
+            </Text>
+            <NumberInput
+              size="lg"
+              px={0}
+              py={0}
+              defaultValue={0.0}
+              clampValueOnBlur={false}
+              max={20}
+              color="gray.900"
+              value={lpBalance}
+              onChange={onChange}
+              name="lpBalance"
+              type="number"
             >
-              Max
-            </Button>
-          </InputRightElement>
-        </InputGroup>
+              <NumberInputField
+                bg="gray.50"
+                textAlign="right"
+                pr={1}
+                mb={2}
+                fontWeight="bold"
+                fontSize="2xl"
+              />
+              <HStack>
+                <Slider
+                  flex="1"
+                  focusThumbOnChange={false}
+                  min={0.0}
+                  max={+maxStakeAmount || 1}
+                  step={0.1}
+                  value={+lpBalance}
+                  onChange={(val) => {
+                    setLpBalance(val.toString());
+                  }}
+                >
+                  <SliderTrack>
+                    <SliderFilledTrack />
+                  </SliderTrack>
+                  <SliderThumb
+                    ml={3}
+                    fontSize="sm"
+                    boxSize="24px"
+                    bg="#FFBF00"
+                  />
+                </Slider>
+                <Button
+                  px={0}
+                  fontWeight="bold"
+                  variant="ghost"
+                  onClick={() => setLpBalance(maxStakeAmount)}
+                  _hover={{
+                    background: "none",
+                  }}
+                  _active={{
+                    background: "none",
+                  }}
+                >
+                  USE ALL
+                </Button>
+              </HStack>
+            </NumberInput>
+          </Box>
+        </LightMode>
       </FormControl>
 
-      {/* Todo: Make this button reusable, repeated styles */}
-      {isConnected ? (
-        <Button
-          size="lg"
-          isFullWidth
-          color="white"
-          background="brand.400"
-          _focus={{ boxShadow: "none" }}
-          _hover={{ background: "brand.400" }}
-          isDisabled={lpBalance > maxStakeAmount}
-          onClick={async () => {
-            await readyToTransact();
-            const hash: string = await mintAndLock(signer, provider, lpBalance);
-            monitorTx(hash);
-          }}
-        >
-          Stake
-        </Button>
-      ) : (
-        <Button
-          size="lg"
-          isFullWidth
-          color="white"
-          background="brand.400"
-          _focus={{ boxShadow: "none" }}
-          _hover={{ background: "brand.400" }}
-          onClick={() => readyToTransact()}
-        >
-          Connect Wallet
-        </Button>
-      )}
+      <Button
+        py={8}
+        size="lg"
+        isFullWidth
+        fontSize="2xl"
+        color="gray.800"
+        fontWeight="bold"
+        borderRadius="xl"
+        background="#FFBF00"
+        isDisabled={lpBalance > maxStakeAmount}
+        onClick={async () => {
+          await readyToTransact();
+          const hash: string = await mintAndLock(signer, provider, lpBalance);
+          monitorTx(hash);
+        }}
+        _focus={{ boxShadow: "none" }}
+        _hover={{ background: "#FFBF00" }}
+      >
+        Mint and stake
+      </Button>
+
       <Text color="gray.200" fontSize="sm" mt={4} px={2}>
         Ledger wallets on Metamask don't support the signature types required,
         so they won't work. See{" "}
@@ -169,7 +197,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         </Link>{" "}
         for more info.
       </Text>
-    </>
+    </Box>
   );
 };
 

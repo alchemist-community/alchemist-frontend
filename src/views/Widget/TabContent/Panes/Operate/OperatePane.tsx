@@ -6,8 +6,9 @@ import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
 import { sendNFT } from "../../../../../contracts/sendNFT";
 import { withdraw } from "../../../../../contracts/withdraw";
 import { increaseStake } from "../../../../../contracts/increaseStake";
-import { Button } from "@chakra-ui/button";
-import { Link, Flex } from "@chakra-ui/layout";
+import { Button, IconButton } from "@chakra-ui/button";
+import { Link, Flex, Box } from "@chakra-ui/layout";
+import { HiOutlineRefresh } from "react-icons/hi";
 import {
   Modal,
   ModalOverlay,
@@ -19,7 +20,6 @@ import {
 } from "@chakra-ui/modal";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
-import { RepeatIcon } from "@chakra-ui/icons";
 import { Spinner, Text } from "@chakra-ui/react";
 import { mintAndLock } from "../../../../../contracts/alchemist";
 import CrucibleCard from "./CrucibleCard";
@@ -196,7 +196,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
 
   // Todo: Add empty state
   return (
-    <>
+    <Box p={8}>
       {modalIsOpen &&
         (modalOperation === "send" ? (
           sendModal
@@ -319,59 +319,41 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             </ModalContent>
           </Modal>
         ))}
-      {isConnected && (
-        <Flex flexDirection="column">
-          <RepeatIcon
-            onClick={refreshCrucibles}
-            _hover={{ cursor: "pointer" }}
-            alignSelf="flex-end"
-            mb={4}
-          />
-        </Flex>
-      )}
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <>
-          {isConnected &&
-            rewards &&
-            (crucibles.length ? (
-              crucibles.map((crucible: any, i: number) => {
-                return (
-                  <CrucibleCard
-                    crucible={crucible}
-                    rewards={rewards[i]}
-                    setModalOperation={setModalOperation}
-                    setModalIsOpen={setModalIsOpen}
-                    setSelectedCrucible={setSelectedCrucible}
-                    setSelectedRewards={setSelectedRewards}
-                  />
-                );
-              })
-            ) : (
-              <Text textAlign="left">
-                {`Your crucibles may not be appearing if you are on a private
-                network. Switch to the ${networkName} and click the refresh button.`}
-              </Text>
-            ))}
-        </>
-      )}
-      {isConnected ? (
-        <></>
-      ) : (
-        <Button
-          size="lg"
-          isFullWidth
-          color="white"
-          background="brand.400"
-          _focus={{ boxShadow: "none" }}
-          _hover={{ background: "brand.400" }}
-          onClick={() => readyToTransact()}
-        >
-          Connect Wallet
-        </Button>
-      )}
-    </>
+      <Flex justifyContent="space-between" mb={4}>
+        <Text fontWeight="bold" fontSize="2xl">
+          Your Crucibles
+        </Text>
+        <IconButton
+          variant="ghos"
+          onClick={refreshCrucibles}
+          icon={<HiOutlineRefresh />}
+          aria-label="refresh crucibles"
+        />
+      </Flex>
+      <Box>
+        {isLoading && <Spinner mb={4} />}
+        {rewards &&
+          (crucibles.length ? (
+            crucibles.map((crucible: any, i: number) => {
+              return (
+                <CrucibleCard
+                  crucible={crucible}
+                  rewards={rewards[i]}
+                  setModalOperation={setModalOperation}
+                  setModalIsOpen={setModalIsOpen}
+                  setSelectedCrucible={setSelectedCrucible}
+                  setSelectedRewards={setSelectedRewards}
+                />
+              );
+            })
+          ) : (
+            <Text textAlign="left">
+              Your crucibles may not be appearing if you are on a private
+              network. Switch to the Mainnet and click the refresh button.
+            </Text>
+          ))}
+      </Box>
+    </Box>
   );
 };
 
