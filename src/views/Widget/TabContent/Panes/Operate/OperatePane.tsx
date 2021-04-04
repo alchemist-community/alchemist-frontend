@@ -46,6 +46,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     monitorTx,
     reloadCrucibles,
     tokenBalances,
+    network,
   } = useContext(Web3Context);
 
   const [amount, setAmount] = useState("");
@@ -111,12 +112,14 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     // It would be nice to suggest the taichi network to the user but metamask doesn't allow suggestions for networks whose chainId it already contains
     if (cruciblesOnCurrentNetwork.length !== 0) {
       // On taichi eth_getLogs doesn't work and returns empty logs, we use this to hack together a taichi detection mechanism
-      alert("You have not changed your network yet");
+      alert(
+        "You have not changed your network yet. Follow this guide to privately withdraw your stake- https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
+      );
       return;
     }
     await unstakeAndClaim(signer, monitorTx, selectedCrucible, amount);
     alert(
-      "Unstaked! Remember to change your network back to Mainnet and hit the refresh button to see your crucibles."
+      `You have unstaked your crucible. Remember to change your network back to ${networkName} and hit the refresh button to see your crucibles.`
     );
     setModalIsOpen(false);
   };
@@ -142,6 +145,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
       setIsLoading(false);
     });
   };
+
+  const networkName = network === 1 ? "Mainnet" : "Rinkeby";
 
   const sendModal = (
     <Modal
@@ -345,8 +350,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
               })
             ) : (
               <Text textAlign="left">
-                Your crucibles may not be appearing if you are on a private
-                network. Switch to the Mainnet and click the refresh button.
+                {`Your crucibles may not be appearing if you are on a private
+                network. Switch to the ${networkName} and click the refresh button.`}
               </Text>
             ))}
         </>

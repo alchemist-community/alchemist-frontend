@@ -11,8 +11,8 @@ import "focus-visible/dist/focus-visible";
 // This app previously supported multiple color modes,
 // we need to clear out users local storage to avoid
 // color mode issues
-if (localStorage.getItem('chakra-ui-color-mode')) {
-  localStorage.removeItem('chakra-ui-color-mode')
+if (localStorage.getItem("chakra-ui-color-mode")) {
+  localStorage.removeItem("chakra-ui-color-mode");
 }
 
 ReactDOM.render(

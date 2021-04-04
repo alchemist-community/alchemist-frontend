@@ -9,7 +9,7 @@ import {
 } from "../contracts/aludel";
 import { getOwnedCrucibles } from "../contracts/getOwnedCrucibles";
 import { getTokenBalances } from "../contracts/getTokenBalances";
-
+import { getUniswapBalances } from "../contracts/getUniswapBalances";
 import { formatUnits } from "@ethersproject/units";
 
 interface Rewards {
@@ -29,6 +29,7 @@ const Web3Context = React.createContext<{
   reloadCrucibles: () => Promise<any>;
   crucibles: any;
   rewards: Rewards[];
+  network: any;
   networkStats: any;
   tokenBalances: any;
 }>({
@@ -43,6 +44,7 @@ const Web3Context = React.createContext<{
   reloadCrucibles: async () => undefined,
   crucibles: null,
   rewards: [],
+  network: null,
   networkStats: null,
   tokenBalances: null,
 });
@@ -81,8 +83,8 @@ const Web3Provider: React.FC = (props) => {
     setSigner(signer);
     window.localStorage.setItem("selectedWallet", wallet.name);
     getNetworkStats(signer).then(setNetworkStats);
-    getTokenBalances(signer).then(setTokenBalances);
-    if (signer) {
+    getTokenBalances(signer).then((balances) => {
+      setTokenBalances(balances);
       getOwnedCrucibles(signer, ethersProvider)
         .then((ownedCrucibles) => {
           let reformatted = ownedCrucibles.map((crucible) => ({
@@ -91,6 +93,16 @@ const Web3Provider: React.FC = (props) => {
             cleanLockedBalance: formatUnits(crucible.lockedBalance),
             cleanUnlockedBalance: formatUnits(
               crucible.balance.sub(crucible.lockedBalance)
+            ),
+            mistPrice: balances.mistPrice,
+            wethPrice: balances.wethPrice,
+            ...getUniswapBalances(
+              crucible.balance,
+              balances.lpMistBalance,
+              balances.lpWethBalance,
+              balances.totalLpSupply,
+              balances.wethPrice,
+              balances.mistPrice
             ),
           }));
           setCrucibles(reformatted);
@@ -109,7 +121,7 @@ const Web3Provider: React.FC = (props) => {
             ).then(setRewards);
           }
         });
-    }
+    });
   }, []);
 
   useEffect(() => {
@@ -160,12 +172,13 @@ const Web3Provider: React.FC = (props) => {
 
   async function monitorTx(hash: string) {
     const { emitter } = notify.hash(hash);
+    const networkName = network === 1 ? "mainnet" : "rinkeby";
     interface Transaction {
       hash: string;
     }
     emitter.on("txPool", (transaction: Transaction) => {
       return {
-        message: `Your transaction is pending, click <a href="https://mainnet.etherscan.io/tx/${transaction.hash}" rel="noopener noreferrer" target="_blank">here</a> for more info.`,
+        message: `Your transaction is pending, click <a href="https://${networkName}.etherscan.io/tx/${transaction.hash}" rel="noopener noreferrer" target="_blank">here</a> for more info.`,
         // onclick: () =>
         //   window.open(`https://mainnet.etherscan.io/tx/${transaction.hash}`)
       };
@@ -192,6 +205,7 @@ const Web3Provider: React.FC = (props) => {
         reloadCrucibles,
         crucibles,
         rewards,
+        network,
         networkStats,
         tokenBalances,
       }}
