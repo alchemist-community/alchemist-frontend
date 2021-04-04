@@ -110,7 +110,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const unstake = async () => {
     const cruciblesOnCurrentNetwork = await getOwnedCrucibles(signer, provider);
     // It would be nice to suggest the taichi network to the user but metamask doesn't allow suggestions for networks whose chainId it already contains
-    if (cruciblesOnCurrentNetwork.length !== 0) {
+    if (cruciblesOnCurrentNetwork.length !== 0 && network === 1) {
       // On taichi eth_getLogs doesn't work and returns empty logs, we use this to hack together a taichi detection mechanism
       alert(
         "You have not changed your network yet. Follow this guide to privately withdraw your stake- https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
@@ -222,16 +222,20 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   <>
                     You are claiming {selectedRewards?.tokenRewards} MIST and{" "}
                     {selectedRewards?.etherRewards} Ether rewards.
-                    <br />
-                    Before unstaking you'll need to add a new network provider
-                    following{" "}
-                    <Link
-                      color="brand.400"
-                      href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
-                      isExternal
-                    >
-                      this guide.
-                    </Link>
+                    {network === 1 && (
+                      <>
+                        <br />
+                        Before unstaking you'll need to add a new network
+                        provider following{" "}
+                        <Link
+                          color="brand.400"
+                          href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
+                          isExternal
+                        >
+                          this guide.
+                        </Link>
+                      </>
+                    )}
                   </>
                 ) : (
                   <>
