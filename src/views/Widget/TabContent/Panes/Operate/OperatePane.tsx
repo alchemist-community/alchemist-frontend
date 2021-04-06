@@ -6,7 +6,7 @@ import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
 import { sendNFT } from "../../../../../contracts/sendNFT";
 import { withdraw } from "../../../../../contracts/withdraw";
 import { increaseStake } from "../../../../../contracts/increaseStake";
-import { Button } from "@chakra-ui/button";
+import { Button, IconButton } from "@chakra-ui/button";
 import { Link, Flex } from "@chakra-ui/layout";
 import {
   Modal,
@@ -19,9 +19,9 @@ import {
 } from "@chakra-ui/modal";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
-import { RepeatIcon } from "@chakra-ui/icons";
 import { Spinner, Text } from "@chakra-ui/react";
 import { mintAndLock } from "../../../../../contracts/alchemist";
+import { HiOutlineRefresh } from "react-icons/hi";
 import CrucibleCard from "./CrucibleCard";
 
 interface OperatePaneProps {
@@ -324,12 +324,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           </Modal>
         ))}
       {isConnected && (
-        <Flex flexDirection="column">
-          <RepeatIcon
+        <Flex justifyContent="flex-end" mb={4}>
+          <IconButton
+            variant="ghos"
             onClick={refreshCrucibles}
-            _hover={{ cursor: "pointer" }}
-            alignSelf="flex-end"
-            mb={4}
+            icon={<HiOutlineRefresh />}
+            aria-label="refresh crucibles"
           />
         </Flex>
       )}
