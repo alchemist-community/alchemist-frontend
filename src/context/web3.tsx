@@ -31,6 +31,7 @@ const Web3Context = React.createContext<{
   reloadCrucibles: () => Promise<any>;
   crucibles: any;
   rewards: Rewards[];
+  network: any;
   networkStats: any;
   tokenBalances: any;
   lpStats: any;
@@ -46,6 +47,7 @@ const Web3Context = React.createContext<{
   reloadCrucibles: async () => undefined,
   crucibles: null,
   rewards: [],
+  network: null,
   networkStats: null,
   tokenBalances: null,
   lpStats: null,
@@ -80,7 +82,7 @@ const Web3Provider: React.FC = (props) => {
   const [notify, setNotify] = useState<any>(null);
   const { loading, error, data } = useQuery(GET_UNISWAP_MINTS, {
     variables: { userAddress: address },
-    skip: !address,
+    skip: !address, // Must have address to query uniswap LP's
   });
 
   const {
@@ -89,15 +91,14 @@ const Web3Provider: React.FC = (props) => {
     data: pricesData,
   } = useQuery(GET_PRICES, {
     variables: {
-      beforeTimestamp: Number(lpStats?.deposits[0]?.timestamp) || 1615350363,
-      afterTimestamp:
-        (Number(lpStats?.deposits[0]?.timestamp) || 1615350363) - 24 * 60 * 60,
+      beforeTimestamp: Number(lpStats?.deposits[0]?.timestamp),
+      afterTimestamp: Number(lpStats?.deposits[0]?.timestamp) - 24 * 60 * 60,
     },
-    skip: !lpStats?.deposits[0],
+    skip: !lpStats?.deposits[0], // User must have deposits in order to query prices
   });
 
   if (error) {
-    console.error("Error fetching data from subgraph", error);
+    console.error("Error fetching mints from subgraph", error);
   }
   if (pricesError) {
     console.error("Error fetching prices from subgraph", pricesError);
@@ -106,7 +107,7 @@ const Web3Provider: React.FC = (props) => {
     let totalAmountUSD = 0;
     let totalMistDeposited = 0;
     let totalWethDeposited = 0;
-    let reformatted =
+    let allDeposits =
       data.mints?.length &&
       data.mints.map((mint: any) => {
         totalAmountUSD += Number(mint.amountUSD);
@@ -119,18 +120,18 @@ const Web3Provider: React.FC = (props) => {
         };
       });
     setLpStats({
-      deposits: reformatted,
+      deposits: allDeposits,
       totalAmountUSD,
       totalMistDeposited,
       totalWethDeposited,
     });
   }
 
-  if (pricesData && !lpStats?.wethPriceUSD) {
+  if (pricesData && !lpStats?.initialWethPriceUSD) {
     setLpStats((lpStats: any) => ({
       ...lpStats,
-      wethPriceUSD: pricesData?.wethPriceUSD[0].priceUSD,
-      mistPriceUSD: pricesData?.mistPriceUSD[0].priceUSD,
+      initialWethPriceUSD: pricesData?.wethPriceUSD[0].priceUSD,
+      initialMistPriceUSD: pricesData?.mistPriceUSD[0].priceUSD,
     }));
   }
 
@@ -231,12 +232,13 @@ const Web3Provider: React.FC = (props) => {
 
   async function monitorTx(hash: string) {
     const { emitter } = notify.hash(hash);
+    const networkName = network === 1 ? "mainnet" : "rinkeby";
     interface Transaction {
       hash: string;
     }
     emitter.on("txPool", (transaction: Transaction) => {
       return {
-        message: `Your transaction is pending, click <a href="https://mainnet.etherscan.io/tx/${transaction.hash}" rel="noopener noreferrer" target="_blank">here</a> for more info.`,
+        message: `Your transaction is pending, click <a href="https://${networkName}.etherscan.io/tx/${transaction.hash}" rel="noopener noreferrer" target="_blank">here</a> for more info.`,
         // onclick: () =>
         //   window.open(`https://mainnet.etherscan.io/tx/${transaction.hash}`)
       };
@@ -263,6 +265,7 @@ const Web3Provider: React.FC = (props) => {
         reloadCrucibles,
         crucibles,
         rewards,
+        network,
         networkStats,
         tokenBalances,
         lpStats,

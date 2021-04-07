@@ -12,6 +12,7 @@
     "@uniswap/sdk": "^3.0.3",
     "bnc-notify": "^1.5.1",
     "bnc-onboard": "^1.20.0",
+    "dayjs": "^1.10.4",
     "ethers": "^5.0.32",
     "focus-visible": "^5.2.0",
     "framer-motion": "^4.0.3",
@@ -24,7 +25,9 @@
     "web3": "^1.2.11"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "REACT_APP_NETWORK_ID=1 react-scripts start",
+    "start:mainnet": "REACT_APP_NETWORK_ID=1 react-scripts start",
+    "start:rinkeby": "REACT_APP_NETWORK_ID=4 react-scripts start",
     "format": "prettier --write '**/*.{ts,tsx}'",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jest-environment-jsdom-sixteen",

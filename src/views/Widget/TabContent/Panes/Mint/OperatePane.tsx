@@ -70,7 +70,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           <span role="img" aria-label="alembic">
             ⚗️
           </span>
-          /ETH liquidity pool on
+          /ETH liquidity pool on {" "}
           <Link
             color="brand.400"
             isExternal
