@@ -348,6 +348,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     setSelectedCrucible={setSelectedCrucible}
                     setSelectedRewards={setSelectedRewards}
                     lpStats={lpStats}
+                    index={i}
                   />
                 );
               })

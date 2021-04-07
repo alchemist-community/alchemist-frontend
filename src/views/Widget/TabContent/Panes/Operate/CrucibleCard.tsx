@@ -20,6 +20,7 @@ dayjs.extend(relativeTime);
 
 
 interface CrucibleCardProps {
+  index: number;
   crucible: {
     id: string;
     balance: string;
@@ -54,6 +55,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
     setSelectedRewards,
     rewards,
     lpStats,
+    index
   } = props;
   const [expandBalance, setExpandBalance] = useState(false);
   const [expandLock, setExpandLock] = useState(false);
@@ -106,7 +108,9 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                 <Box
                   onClick={isBalanceTrunc ? expandBalanceNumber : undefined}
                   _hover={isBalanceTrunc ? { cursor: "pointer" } : undefined}
-                >
+                  as="h2"
+                  fontWeight="semibold"
+                > 
                   <strong>Total Balance: </strong>
                   {!expandBalance ? (
                     <>
@@ -186,7 +190,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   paddingRight: "16px",
                 }}
               >
-                Minted {dayjs(lpStats.deposits[0]?.timestamp*1000).fromNow()}
+                Minted {dayjs(lpStats.deposits[index]?.timestamp*1000).fromNow()}
               </span>
               )}
             </Flex>
