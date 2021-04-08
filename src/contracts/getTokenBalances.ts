@@ -6,12 +6,8 @@ import {
   ChainId,
   Token,
   WETH,
-  TokenAmount,
-  Pair,
   Fetcher,
-  Route,
 } from "@uniswap/sdk";
-import { Console } from "node:console";
 
 const { lpTokenAddress, mistTokenAddress, wethAddress, daiAddress } = config;
 

@@ -46,6 +46,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     monitorTx,
     reloadCrucibles,
     tokenBalances,
+    lpStats,
     network,
   } = useContext(Web3Context);
 
@@ -349,6 +350,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     setModalIsOpen={setModalIsOpen}
                     setSelectedCrucible={setSelectedCrucible}
                     setSelectedRewards={setSelectedRewards}
+                    lpStats={lpStats}
+                    index={i}
                   />
                 );
               })
