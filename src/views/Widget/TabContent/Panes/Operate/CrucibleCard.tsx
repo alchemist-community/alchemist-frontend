@@ -207,7 +207,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
           <Divider />
           {rewards && (
             <>
-              <StatGroup mt={4} d="flex" alignItems="baseline">
+              <StatGroup mt={4} alignItems="baseline">
                 <Tooltip
                   label="Total protocol rewards from MIST inflation"
                   placement="top"
@@ -216,11 +216,11 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   <Stat>
                     <StatLabel>Earned MIST Rewards</StatLabel>
                     <StatNumber>
-                      {Number(rewards.tokenRewards).toFixed(4)}
+                      {!isNaN(rewards.tokenRewards) ? Number(rewards.tokenRewards).toFixed(4) : "0"}
                     </StatNumber>
                     <StatHelpText>
                       <StatArrow type="increase" />$
-                      {(rewards.tokenRewards * crucible.mistPrice).toFixed(0)}
+                      {!isNaN(rewards.tokenRewards) ? (rewards.tokenRewards * crucible.mistPrice).toFixed(0) : "0"}
                     </StatHelpText>
                   </Stat>
                 </Tooltip>
@@ -233,11 +233,11 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   <Stat>
                     <StatLabel>Earned ETH Rewards</StatLabel>
                     <StatNumber>
-                      {Number(rewards.etherRewards).toFixed(4)}
+                    {!isNaN(rewards.etherRewards) ? Number(rewards.etherRewards).toFixed(4) : "0"}
                     </StatNumber>
                     <StatHelpText>
                       <StatArrow type="increase" />$
-                      {(rewards.etherRewards * crucible.wethPrice).toFixed(0)}
+                      {!isNaN(rewards.etherRewards) ? (rewards.etherRewards * crucible.wethPrice).toFixed(0) : "0"}
                     </StatHelpText>
                   </Stat>
                 </Tooltip>
