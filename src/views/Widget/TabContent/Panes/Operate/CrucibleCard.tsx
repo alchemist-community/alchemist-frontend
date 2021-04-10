@@ -2,10 +2,25 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import { decimalCount } from "../../../utils";
 import { Button } from "@chakra-ui/button";
 import { Badge, Box, Flex, HStack, Text } from "@chakra-ui/layout";
+import {
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  StatArrow,
+  StatGroup,
+  Divider,
+} from "@chakra-ui/react";
 import { FaLock } from "react-icons/fa";
 import { Tooltip } from "@chakra-ui/tooltip";
+import dayjs from "dayjs"
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
+
 
 interface CrucibleCardProps {
+  index: number;
   crucible: {
     id: string;
     balance: string;
@@ -28,6 +43,7 @@ interface CrucibleCardProps {
     tokenRewards: number;
     etherRewards: number;
   };
+  lpStats: any;
   setSelectedRewards: (rewards: any) => void;
 }
 const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
@@ -38,6 +54,8 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
     setModalIsOpen,
     setSelectedRewards,
     rewards,
+    lpStats,
+    index
   } = props;
   const [expandBalance, setExpandBalance] = useState(false);
   const [expandLock, setExpandLock] = useState(false);
@@ -54,6 +72,16 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
 
   const isBalanceTrunc = decimalCount(crucible?.cleanBalance) > 3;
   const isLockTrunc = decimalCount(crucible?.cleanLockedBalance) > 3;
+  const netWethGainLoss =
+    Number(crucible.wethValue) - Number(lpStats?.totalWethDeposited);
+  const netWethGainLossUSD = netWethGainLoss * crucible.wethPrice;
+  const netMistGainLoss =
+    Number(crucible.mistValue) - Number(lpStats?.totalMistDeposited);
+  const netMistGainLossUSD = netMistGainLoss * crucible.mistPrice;
+  const cummulativeGainLossUSD =
+    crucible?.wethValueUsd * 2 -
+    lpStats?.totalWethDeposited * lpStats.initialWethPriceUSD * 2;
+
   return (
     <Box
       key={crucible.id}
@@ -80,13 +108,13 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                 <Box
                   onClick={isBalanceTrunc ? expandBalanceNumber : undefined}
                   _hover={isBalanceTrunc ? { cursor: "pointer" } : undefined}
-                >
+                  as="h2"
+                  fontWeight="semibold"
+                > 
                   <strong>Total Balance: </strong>
                   {!expandBalance ? (
                     <>
-                      {`${
-                        Number(crucible?.cleanBalance).toFixed(4)
-                      }`}
+                      {`${Number(crucible?.cleanBalance).toFixed(4)}`}
                       {isBalanceTrunc && "..."}
                     </>
                   ) : (
@@ -112,9 +140,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                     <Box>
                       {!expandLock ? (
                         <>
-                          {
-                            Number(crucible?.cleanLockedBalance).toFixed(3)
-                          }
+                          {Number(crucible?.cleanLockedBalance).toFixed(3)}
                           {isLockTrunc && "..."}
                         </>
                       ) : (
@@ -143,8 +169,8 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
               textAlign="left"
               verticalAlign="top"
               marginTop="8px"
+              direction="column"
             >
-              <label style={{ alignSelf: "flex-start" }}>ID: </label>
               <span
                 style={{
                   wordWrap: "break-word",
@@ -153,44 +179,206 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   paddingRight: "16px",
                 }}
               >
-                {crucible["id"]}
+                ID: {crucible["id"]}
               </span>
+              {lpStats && (
+                <span
+                style={{
+                  wordWrap: "break-word",
+                  width: "100%",
+                  paddingLeft: "4px",
+                  paddingRight: "16px",
+                }}
+              >
+                Minted {dayjs(lpStats.deposits[index]?.timestamp*1000).fromNow()}
+              </span>
+              )}
             </Flex>
           </Flex>
+          <Box
+            mt="8"
+            fontWeight="semibold"
+            as="h4"
+            lineHeight="tight"
+            isTruncated
+          >
+            Rewards
+          </Box>
+          <Divider />
           {rewards && (
             <>
-              <HStack mt={4} justifyContent="space-between">
-                <Box mr={2}>
-                  <strong>MIST Rewards:</strong><br/> {`${Number(rewards.tokenRewards).toFixed(4)} ($${(rewards.tokenRewards * crucible.mistPrice).toFixed(2)})`}
-                </Box>
-                <Box mr={2}>
-                  <strong>Ether Rewards:</strong> <br/> {`${Number(rewards.etherRewards).toFixed(4)} ($${(rewards.etherRewards * crucible.wethPrice).toFixed(2)})`}
-                </Box>
-              </HStack>
+              <StatGroup mt={4} alignItems="baseline">
+                <Tooltip
+                  label="Total protocol rewards from MIST inflation"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Stat>
+                    <StatLabel>Earned MIST Rewards</StatLabel>
+                    <StatNumber>
+                      {!isNaN(rewards.tokenRewards) ? Number(rewards.tokenRewards).toFixed(4) : "0"}
+                    </StatNumber>
+                    <StatHelpText>
+                      <StatArrow type="increase" />$
+                      {!isNaN(rewards.tokenRewards) ? (rewards.tokenRewards * crucible.mistPrice).toFixed(0) : "0"}
+                    </StatHelpText>
+                  </Stat>
+                </Tooltip>
+
+                <Tooltip
+                  label="Total protocol rewards from the ETH rewards pool"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Stat>
+                    <StatLabel>Earned ETH Rewards</StatLabel>
+                    <StatNumber>
+                    {!isNaN(rewards.etherRewards) ? Number(rewards.etherRewards).toFixed(4) : "0"}
+                    </StatNumber>
+                    <StatHelpText>
+                      <StatArrow type="increase" />$
+                      {!isNaN(rewards.etherRewards) ? (rewards.etherRewards * crucible.wethPrice).toFixed(0) : "0"}
+                    </StatHelpText>
+                  </Stat>
+                </Tooltip>
+              </StatGroup>
             </>
           )}
           {crucible.mistValue && (
             <>
-              <HStack mt={4} justifyContent="space-between">
-                <Box mr={2}>
-                  <strong>Deposited WETH:</strong> <br />
-                  {`${Number(crucible?.wethValue).toFixed(3)} ($${
-                    crucible?.wethValueUsd
-                  })`}
-                </Box>
-                <Box mr={2}>
-                  <strong>Deposited MIST:</strong> <br />
-                  {`${Number(crucible?.mistValue).toFixed(3)} ($${
-                    crucible?.mistValueUsd
-                  })`}
-                </Box>
-              </HStack>
+              <Box
+                mt="8"
+                fontWeight="semibold"
+                as="h4"
+                lineHeight="tight"
+                isTruncated
+              >
+                LP Token Performance
+              </Box>
+              <Divider />
+              <StatGroup mt={4} justifyContent="space-between">
+                <Tooltip
+                  label="Current ETH deposited in your staked liquidity pool tokens"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Stat>
+                    <StatLabel>Current ETH Balance</StatLabel>
+                    <StatNumber>
+                      {`${Number(crucible?.wethValue).toFixed(3)}`}
+                    </StatNumber>
+                    <StatHelpText>
+                      <StatArrow
+                        type={netWethGainLoss > 0 ? "increase" : "decrease"}
+                      />
+                      {`${netWethGainLoss.toFixed(
+                        3
+                      )} Ξ  ($${netWethGainLossUSD.toFixed(0)})`}
+                    </StatHelpText>
+                  </Stat>
+                </Tooltip>
+                <Tooltip
+                  label="Current MIST deposited in your staked liquidity pool tokens"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Stat>
+                    <StatLabel>Current MIST Balance</StatLabel>
+                    <StatNumber>
+                      {`${Number(crucible?.mistValue).toFixed(3)}`}
+                    </StatNumber>
+                    <StatHelpText>
+                      <StatArrow
+                        type={netMistGainLoss > 0 ? "increase" : "decrease"}
+                      />
+                      {`${netMistGainLoss.toFixed(
+                        3
+                      )} · ($${netMistGainLossUSD.toFixed(0)})`}
+                    </StatHelpText>
+                  </Stat>
+                </Tooltip>
+                <Tooltip
+                  label="Total gains (USD) given the starting price of your ETH and MIST deposit into the Uniswap liquidity pool."
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Stat>
+                    <StatLabel>
+                      Cummulative {cummulativeGainLossUSD > 0 ? "Gain" : "Loss"}
+                    </StatLabel>
+                    <StatNumber>
+                      {`$${cummulativeGainLossUSD.toFixed(0)}`}
+                    </StatNumber>
+                  </Stat>
+                </Tooltip>
+              </StatGroup>
             </>
           )}
+          {/* {lpStats && (
+            <>
+              <HStack mt={4} justifyContent="space-between">
+                <Tooltip
+                  label="The initial amount of ETH you deposited for ETH/MIST liquidity pool tokens"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Box mr={2}>
+                    <strong>Starting ETH:</strong> <br />
+                    {`${Number(lpStats?.totalWethDeposited).toFixed(3)}
+                  `}
+                  </Box>
+                </Tooltip>
+                <Tooltip
+                  label="The initial amount of MIST you deposited for ETH/MIST liquidity pool tokens"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Box mr={2}>
+                    <strong>Starting MIST:</strong> <br />
+                    {`${Number(lpStats?.totalMistDeposited).toFixed(3)}`}
+                  </Box>
+                </Tooltip>
+              </HStack>
+            </>
+          )} */}
+          {/* {lpStats && (
+            <>
+              <HStack mt={4} justifyContent="space-between">
+                <Tooltip
+                  label="Cummulative Gain/Loss of underlying ETH in your liquidity pool."
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Box mr={2}>
+                    <strong>{`Net ETH ${
+                      netWethGainLoss > 0 ? "Gain" : "Loss"
+                    }`}</strong>{" "}
+                    <br />
+                    {`${netWethGainLoss.toFixed(4)} ($${netWethGainLossUSD.toFixed(0)})
+                  `}
+                  </Box>
+                </Tooltip>
+                <Tooltip
+                  label="Gain/loss of underlying MIST in your liquidity pool."
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Box mr={2}>
+                    <strong>{`Net MIST ${
+                      netMistGainLoss > 0 ? "Gain" : "Loss"
+                    }`}</strong>{" "}
+                    <br />
+                    {`${netMistGainLoss.toFixed(4)} ($${netMistGainLossUSD.toFixed(0)})
+                  `}{" "}
+                  </Box>
+                </Tooltip>
+              </HStack>
+            </>
+          )} */}
         </Text>
       </Box>
       {/* <ButtonGroup isAttached variant="outline" mb={[4, 4, 0]} spacing="4" width="100%"> */}
-      <HStack mt={4}>
+      <HStack mt={12}>
         <Button
           isFullWidth
           color="white"
@@ -208,6 +396,26 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
         >
           Increase Stake
         </Button>
+
+        <Button
+          isFullWidth
+          color="white"
+          borderWidth={1}
+          borderColor="gray.600"
+          background="brand.400"
+          fontSize={{ base: "sm", sm: "md" }}
+          _focus={{ boxShadow: "none" }}
+          _hover={{ background: "brand.400" }}
+          onClick={() => {
+            setModalOperation("send");
+            setSelectedCrucible(crucible["id"]);
+            setModalIsOpen(true);
+          }}
+        >
+          Transfer Crucible
+        </Button>
+      </HStack>
+      <HStack mt={4}>
         <Button
           isFullWidth
           color="white"
@@ -225,8 +433,6 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
         >
           Unstake & Claim Rewards
         </Button>
-      </HStack>
-      <HStack mt={4}>
         <Button
           isFullWidth
           color="white"
@@ -243,23 +449,6 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
           }}
         >
           Withdraw Unstaked
-        </Button>
-        <Button
-          isFullWidth
-          color="white"
-          borderWidth={1}
-          borderColor="gray.600"
-          background="brand.400"
-          fontSize={{ base: "sm", sm: "md" }}
-          _focus={{ boxShadow: "none" }}
-          _hover={{ background: "brand.400" }}
-          onClick={() => {
-            setModalOperation("send");
-            setSelectedCrucible(crucible["id"]);
-            setModalIsOpen(true);
-          }}
-        >
-          Transfer Crucible
         </Button>
       </HStack>
     </Box>
