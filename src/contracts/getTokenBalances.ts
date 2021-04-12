@@ -2,7 +2,12 @@ import { ethers } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { config } from "../config/app";
 import IERC20 from "./IERC20.json";
-import { ChainId, Token, WETH, Fetcher } from "@uniswap/sdk";
+import {
+  ChainId,
+  Token,
+  WETH,
+  Fetcher,
+} from "@uniswap/sdk";
 
 const { lpTokenAddress, mistTokenAddress, wethAddress, daiAddress } = config;
 

@@ -107,7 +107,6 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   _hover={isBalanceTrunc ? { cursor: "pointer" } : undefined}
                   as="h2"
                   fontWeight="semibold"
-                >
                   <strong>Total Balance: </strong>
                   {!expandBalance ? (
                     <>
