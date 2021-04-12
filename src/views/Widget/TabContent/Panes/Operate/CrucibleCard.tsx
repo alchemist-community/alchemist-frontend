@@ -193,7 +193,6 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
               )}
             </Flex>
           </Flex>
-          s
           <Box
             mt="8"
             fontWeight="semibold"
