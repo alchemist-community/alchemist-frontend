@@ -14,14 +14,12 @@ import {
 import { FaLock } from "react-icons/fa";
 import { Tooltip } from "@chakra-ui/tooltip";
 import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-
-dayjs.extend(relativeTime);
 
 interface CrucibleCardProps {
   index: number;
   crucible: {
     id: string;
+    mintTimestamp: number;
     balance: string;
     lockedBalance: string;
     cleanBalance: string;
@@ -190,7 +188,11 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   }}
                 >
                   Minted{" "}
+<<<<<<< Updated upstream
                   {dayjs(lpStats.deposits[index]?.timestamp * 1000).fromNow()}
+=======
+                  {dayjs(crucible.mintTimestamp * 1000).format("MMM-DD YYYY")}
+>>>>>>> Stashed changes
                 </span>
               )}
             </Flex>
