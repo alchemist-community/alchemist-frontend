@@ -107,7 +107,6 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   _hover={isBalanceTrunc ? { cursor: "pointer" } : undefined}
                   as="h2"
                   fontWeight="semibold"
-                >
                   <strong>Total Balance: </strong>
                   {!expandBalance ? (
                     <>
@@ -188,11 +187,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   }}
                 >
                   Minted{" "}
-<<<<<<< Updated upstream
-                  {dayjs(lpStats.deposits[index]?.timestamp * 1000).fromNow()}
-=======
                   {dayjs(crucible.mintTimestamp * 1000).format("MMM-DD YYYY")}
->>>>>>> Stashed changes
                 </span>
               )}
             </Flex>
