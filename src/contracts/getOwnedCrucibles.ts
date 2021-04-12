@@ -34,6 +34,7 @@ export async function getOwnedCrucibles(signer: any, provider: any) {
     console.log("Delegated Blanace", formatUnits(delegatedBalance));
     return {
       id,
+      mintTimestamp: (await provider.getBlock(data.blockNumber))?.timestamp,
       balance: await balance,
       lockedBalance: await lockedBalance,
       owner: await owner,

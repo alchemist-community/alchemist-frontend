@@ -13,16 +13,13 @@ import {
 } from "@chakra-ui/react";
 import { FaLock } from "react-icons/fa";
 import { Tooltip } from "@chakra-ui/tooltip";
-import dayjs from "dayjs"
-import relativeTime from 'dayjs/plugin/relativeTime';
-
-dayjs.extend(relativeTime);
-
+import dayjs from "dayjs";
 
 interface CrucibleCardProps {
   index: number;
   crucible: {
     id: string;
+    mintTimestamp: number;
     balance: string;
     lockedBalance: string;
     cleanBalance: string;
@@ -55,7 +52,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
     setSelectedRewards,
     rewards,
     lpStats,
-    index
+    index,
   } = props;
   const [expandBalance, setExpandBalance] = useState(false);
   const [expandLock, setExpandLock] = useState(false);
@@ -110,7 +107,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   _hover={isBalanceTrunc ? { cursor: "pointer" } : undefined}
                   as="h2"
                   fontWeight="semibold"
-                > 
+                >
                   <strong>Total Balance: </strong>
                   {!expandBalance ? (
                     <>
@@ -183,15 +180,16 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
               </span>
               {lpStats && (
                 <span
-                style={{
-                  wordWrap: "break-word",
-                  width: "100%",
-                  paddingLeft: "4px",
-                  paddingRight: "16px",
-                }}
-              >
-                Minted {dayjs(lpStats.deposits[index]?.timestamp*1000).fromNow()}
-              </span>
+                  style={{
+                    wordWrap: "break-word",
+                    width: "100%",
+                    paddingLeft: "4px",
+                    paddingRight: "16px",
+                  }}
+                >
+                  Minted{" "}
+                  {dayjs(crucible.mintTimestamp * 1000).format("MMM-DD YYYY")}
+                </span>
               )}
             </Flex>
           </Flex>
@@ -216,11 +214,15 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   <Stat>
                     <StatLabel>Earned MIST Rewards</StatLabel>
                     <StatNumber>
-                      {!isNaN(rewards.tokenRewards) ? Number(rewards.tokenRewards).toFixed(4) : "0"}
+                      {!isNaN(rewards.tokenRewards)
+                        ? Number(rewards.tokenRewards).toFixed(4)
+                        : "0"}
                     </StatNumber>
                     <StatHelpText>
                       <StatArrow type="increase" />$
-                      {!isNaN(rewards.tokenRewards) ? (rewards.tokenRewards * crucible.mistPrice).toFixed(0) : "0"}
+                      {!isNaN(rewards.tokenRewards)
+                        ? (rewards.tokenRewards * crucible.mistPrice).toFixed(0)
+                        : "0"}
                     </StatHelpText>
                   </Stat>
                 </Tooltip>
@@ -233,11 +235,15 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   <Stat>
                     <StatLabel>Earned ETH Rewards</StatLabel>
                     <StatNumber>
-                    {!isNaN(rewards.etherRewards) ? Number(rewards.etherRewards).toFixed(4) : "0"}
+                      {!isNaN(rewards.etherRewards)
+                        ? Number(rewards.etherRewards).toFixed(4)
+                        : "0"}
                     </StatNumber>
                     <StatHelpText>
                       <StatArrow type="increase" />$
-                      {!isNaN(rewards.etherRewards) ? (rewards.etherRewards * crucible.wethPrice).toFixed(0) : "0"}
+                      {!isNaN(rewards.etherRewards)
+                        ? (rewards.etherRewards * crucible.wethPrice).toFixed(0)
+                        : "0"}
                     </StatHelpText>
                   </Stat>
                 </Tooltip>

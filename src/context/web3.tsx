@@ -67,6 +67,7 @@ const Web3Provider: React.FC = (props) => {
   const [crucibles, setCrucibles] = useState(
     [] as {
       id: string;
+      mintTimestamp: number;
       balance: string;
       lockedBalance: string;
       owner: string;

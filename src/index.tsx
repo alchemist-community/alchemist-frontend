@@ -8,7 +8,7 @@ import { ColorModeScript } from "@chakra-ui/color-mode";
 import "../src/styles/transitions.css";
 import "focus-visible/dist/focus-visible";
 
-// we need to override the color mode in local storage
+// we need to overridhe color mode in local storage
 localStorage.setItem("chakra-ui-color-mode", "dark");
 
 ReactDOM.render(
