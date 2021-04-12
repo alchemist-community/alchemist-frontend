@@ -107,7 +107,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   _hover={isBalanceTrunc ? { cursor: "pointer" } : undefined}
                   as="h2"
                   fontWeight="semibold"
-                >
+                > 
                   <strong>Total Balance: </strong>
                   {!expandBalance ? (
                     <>
@@ -235,15 +235,11 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   <Stat>
                     <StatLabel>Earned ETH Rewards</StatLabel>
                     <StatNumber>
-                      {!isNaN(rewards.etherRewards)
-                        ? Number(rewards.etherRewards).toFixed(4)
-                        : "0"}
+                    {!isNaN(rewards.etherRewards) ? Number(rewards.etherRewards).toFixed(4) : "0"}
                     </StatNumber>
                     <StatHelpText>
                       <StatArrow type="increase" />$
-                      {!isNaN(rewards.etherRewards)
-                        ? (rewards.etherRewards * crucible.wethPrice).toFixed(0)
-                        : "0"}
+                      {!isNaN(rewards.etherRewards) ? (rewards.etherRewards * crucible.wethPrice).toFixed(0) : "0"}
                     </StatHelpText>
                   </Stat>
                 </Tooltip>
