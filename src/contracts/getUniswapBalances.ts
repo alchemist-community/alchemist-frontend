@@ -12,27 +12,13 @@ export const getUniswapBalances = (
   wethPrice: number,
   mistPrice: number
 ) => {
-  const MIST = new Token(
-    ChainId.MAINNET,
-    mistTokenAddress,
-    18,
-    "⚗",
-    "Alchemist"
-  );
-  const WETH = new Token(
-    ChainId.MAINNET,
-    wethAddress,
-    18,
-    "WETH",
-    "Wrapped Ether"
-  );
-  const LP = new Token(
-    ChainId.MAINNET,
-    lpTokenAddress,
-    18,
-    "UNI-V2",
-    "UniswapV2Pair"
-  );
+  const chainId =
+    process.env.REACT_APP_NETWORK_ID === "1"
+      ? ChainId.MAINNET
+      : ChainId.RINKEBY;
+  const MIST = new Token(chainId, mistTokenAddress, 18, "⚗", "Alchemist");
+  const WETH = new Token(chainId, wethAddress, 18, "WETH", "Wrapped Ether");
+  const LP = new Token(chainId, lpTokenAddress, 18, "UNI-V2", "UniswapV2Pair");
   const pair = new Pair(
     new TokenAmount(MIST, lpMistBalance.toString()),
     new TokenAmount(WETH, lpWethBalance.toString())

@@ -2,37 +2,22 @@ import { ethers } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { config } from "../config/app";
 import IERC20 from "./IERC20.json";
-import {
-  ChainId,
-  Token,
-  WETH,
-  TokenAmount,
-  Pair,
-  Fetcher,
-  Route,
-} from "@uniswap/sdk";
-import { Console } from "node:console";
+import { ChainId, Token, WETH, Fetcher } from "@uniswap/sdk";
 
-const { lpTokenAddress, mistTokenAddress, wethAddress } = config;
+const { lpTokenAddress, mistTokenAddress, wethAddress, daiAddress } = config;
 
 export async function getTokenBalances(signer: any) {
   const walletAddress = await signer.getAddress();
+  const chainId =
+    process.env.REACT_APP_NETWORK_ID === "1"
+      ? ChainId.MAINNET
+      : ChainId.RINKEBY;
   const lp = new ethers.Contract(lpTokenAddress, IERC20.abi, signer).balanceOf(
     walletAddress
   );
 
-  const MIST = new Token(
-    ChainId.MAINNET,
-    mistTokenAddress,
-    18,
-    "⚗",
-    "Alchemist"
-  );
-  const DAI = new Token(
-    ChainId.MAINNET,
-    "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-    18
-  );
+  const MIST = new Token(chainId, mistTokenAddress, 18, "⚗", "Alchemist");
+  const DAI = new Token(chainId, daiAddress, 18);
 
   const [
     mistBalance,

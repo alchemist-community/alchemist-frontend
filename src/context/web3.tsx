@@ -11,6 +11,8 @@ import { getOwnedCrucibles } from "../contracts/getOwnedCrucibles";
 import { getTokenBalances } from "../contracts/getTokenBalances";
 import { getUniswapBalances } from "../contracts/getUniswapBalances";
 import { formatUnits } from "@ethersproject/units";
+import { useQuery } from "@apollo/client";
+import { GET_PRICES, GET_UNISWAP_MINTS } from "../queries/uniswap";
 
 interface Rewards {
   etherRewards: any;
@@ -29,8 +31,10 @@ const Web3Context = React.createContext<{
   reloadCrucibles: () => Promise<any>;
   crucibles: any;
   rewards: Rewards[];
+  network: any;
   networkStats: any;
   tokenBalances: any;
+  lpStats: any;
 }>({
   web3: null,
   onboard: null,
@@ -43,8 +47,10 @@ const Web3Context = React.createContext<{
   reloadCrucibles: async () => undefined,
   crucibles: null,
   rewards: [],
+  network: null,
   networkStats: null,
   tokenBalances: null,
+  lpStats: null,
 });
 
 const Web3Provider: React.FC = (props) => {
@@ -57,6 +63,7 @@ const Web3Provider: React.FC = (props) => {
   const [wallet, setWallet] = useState<any>({});
   const [tokenBalances, setTokenBalances] = useState<any>({});
   const [networkStats, setNetworkStats] = useState<any>({});
+  const [lpStats, setLpStats] = useState<any>();
   const [crucibles, setCrucibles] = useState(
     [] as {
       id: string;
@@ -73,6 +80,61 @@ const Web3Provider: React.FC = (props) => {
     null as any
   );
   const [notify, setNotify] = useState<any>(null);
+  const { loading, error, data } = useQuery(GET_UNISWAP_MINTS, {
+    variables: { userAddress: address },
+    skip: !address, // Must have address to query uniswap LP's
+  });
+
+  const {
+    loading: pricesLoading,
+    error: pricesError,
+    data: pricesData,
+  } = useQuery(GET_PRICES, {
+    variables: {
+      beforeTimestamp: Number(lpStats?.deposits[0]?.timestamp),
+      afterTimestamp: Number(lpStats?.deposits[0]?.timestamp) - 24 * 60 * 60,
+    },
+    skip: !lpStats?.deposits[0], // User must have deposits in order to query prices
+  });
+
+  if (error) {
+    console.error("Error fetching mints from subgraph", error);
+  }
+  if (pricesError) {
+    console.error("Error fetching prices from subgraph", pricesError);
+  }
+  if (data && !lpStats) {
+    let totalAmountUSD = 0;
+    let totalMistDeposited = 0;
+    let totalWethDeposited = 0;
+    let allDeposits =
+      data.mints?.length &&
+      data.mints.map((mint: any) => {
+        totalAmountUSD += Number(mint.amountUSD);
+        totalMistDeposited += Number(mint.amount0);
+        totalWethDeposited += Number(mint.amount1);
+        return {
+          ...mint,
+          mistAmount: mint.amount0,
+          lpAmount: mint.amount1,
+        };
+      });
+    setLpStats({
+      deposits: allDeposits,
+      totalAmountUSD,
+      totalMistDeposited,
+      totalWethDeposited,
+    });
+  }
+
+  if (pricesData && !lpStats?.initialWethPriceUSD) {
+    setLpStats((lpStats: any) => ({
+      ...lpStats,
+      initialWethPriceUSD: pricesData?.wethPriceUSD[0].priceUSD,
+      initialMistPriceUSD: pricesData?.mistPriceUSD[0].priceUSD,
+    }));
+  }
+
   const updateWallet = useCallback((wallet: any) => {
     setWallet(wallet);
     const ethersProvider = new ethers.providers.Web3Provider(wallet.provider);
@@ -92,6 +154,8 @@ const Web3Provider: React.FC = (props) => {
             cleanUnlockedBalance: formatUnits(
               crucible.balance.sub(crucible.lockedBalance)
             ),
+            mistPrice: balances.mistPrice,
+            wethPrice: balances.wethPrice,
             ...getUniswapBalances(
               crucible.balance,
               balances.lpMistBalance,
@@ -168,12 +232,13 @@ const Web3Provider: React.FC = (props) => {
 
   async function monitorTx(hash: string) {
     const { emitter } = notify.hash(hash);
+    const networkName = network === 1 ? "mainnet" : "rinkeby";
     interface Transaction {
       hash: string;
     }
     emitter.on("txPool", (transaction: Transaction) => {
       return {
-        message: `Your transaction is pending, click <a href="https://mainnet.etherscan.io/tx/${transaction.hash}" rel="noopener noreferrer" target="_blank">here</a> for more info.`,
+        message: `Your transaction is pending, click <a href="https://${networkName}.etherscan.io/tx/${transaction.hash}" rel="noopener noreferrer" target="_blank">here</a> for more info.`,
         // onclick: () =>
         //   window.open(`https://mainnet.etherscan.io/tx/${transaction.hash}`)
       };
@@ -200,8 +265,10 @@ const Web3Provider: React.FC = (props) => {
         reloadCrucibles,
         crucibles,
         rewards,
+        network,
         networkStats,
         tokenBalances,
+        lpStats,
       }}
     >
       {props.children}

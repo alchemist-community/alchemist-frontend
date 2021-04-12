@@ -6,7 +6,7 @@ import { unstakeAndClaim } from "../../../../../contracts/unstakeAndClaim";
 import { sendNFT } from "../../../../../contracts/sendNFT";
 import { withdraw } from "../../../../../contracts/withdraw";
 import { increaseStake } from "../../../../../contracts/increaseStake";
-import { Button } from "@chakra-ui/button";
+import { Button, IconButton } from "@chakra-ui/button";
 import { Link, Flex } from "@chakra-ui/layout";
 import {
   Modal,
@@ -19,9 +19,9 @@ import {
 } from "@chakra-ui/modal";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
-import { RepeatIcon } from "@chakra-ui/icons";
 import { Spinner, Text } from "@chakra-ui/react";
 import { mintAndLock } from "../../../../../contracts/alchemist";
+import { HiOutlineRefresh } from "react-icons/hi";
 import CrucibleCard from "./CrucibleCard";
 
 interface OperatePaneProps {
@@ -46,6 +46,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     monitorTx,
     reloadCrucibles,
     tokenBalances,
+    lpStats,
+    network,
   } = useContext(Web3Context);
 
   const [amount, setAmount] = useState("");
@@ -109,7 +111,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
   const unstake = async () => {
     const cruciblesOnCurrentNetwork = await getOwnedCrucibles(signer, provider);
     // It would be nice to suggest the taichi network to the user but metamask doesn't allow suggestions for networks whose chainId it already contains
-    if (cruciblesOnCurrentNetwork.length !== 0) {
+    if (cruciblesOnCurrentNetwork.length !== 0 && network === 1) {
       // On taichi eth_getLogs doesn't work and returns empty logs, we use this to hack together a taichi detection mechanism
       alert(
         "You have not changed your network yet. Follow this guide to privately withdraw your stake- https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
@@ -118,7 +120,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     }
     await unstakeAndClaim(signer, monitorTx, selectedCrucible, amount);
     alert(
-      "You have unstaked your crucible. Remember to change your network back to Mainnet and hit the refresh button to see your crucibles."
+      `You have unstaked your crucible. Remember to change your network back to ${networkName} and hit the refresh button to see your crucibles.`
     );
     setModalIsOpen(false);
   };
@@ -144,6 +146,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
       setIsLoading(false);
     });
   };
+
+  const networkName = network === 1 ? "Mainnet" : "Rinkeby";
 
   const sendModal = (
     <Modal
@@ -219,16 +223,20 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   <>
                     You are claiming {selectedRewards?.tokenRewards} MIST and{" "}
                     {selectedRewards?.etherRewards} Ether rewards.
-                    <br />
-                    Before unstaking you'll need to add a new network provider
-                    following{" "}
-                    <Link
-                      color="brand.400"
-                      href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
-                      isExternal
-                    >
-                      this guide.
-                    </Link>
+                    {network === 1 && (
+                      <>
+                        <br />
+                        Before unstaking you'll need to add a new network
+                        provider following{" "}
+                        <Link
+                          color="brand.400"
+                          href="https://github.com/Taichi-Network/docs/blob/master/sendPriveteTx_tutorial.md"
+                          isExternal
+                        >
+                          this guide.
+                        </Link>
+                      </>
+                    )}
                   </>
                 ) : (
                   <>
@@ -317,12 +325,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           </Modal>
         ))}
       {isConnected && (
-        <Flex flexDirection="column">
-          <RepeatIcon
+        <Flex justifyContent="flex-end" mb={4}>
+          <IconButton
+            variant="ghos"
             onClick={refreshCrucibles}
-            _hover={{ cursor: "pointer" }}
-            alignSelf="flex-end"
-            mb={4}
+            icon={<HiOutlineRefresh />}
+            aria-label="refresh crucibles"
           />
         </Flex>
       )}
@@ -342,13 +350,15 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     setModalIsOpen={setModalIsOpen}
                     setSelectedCrucible={setSelectedCrucible}
                     setSelectedRewards={setSelectedRewards}
+                    lpStats={lpStats}
+                    index={i}
                   />
                 );
               })
             ) : (
               <Text textAlign="left">
-                Your crucibles may not be appearing if you are on a private
-                network. Switch to the Mainnet and click the refresh button.
+                {`Your crucibles may not be appearing if you are on a private
+                network. Switch to the ${networkName} and click the refresh button.`}
               </Text>
             ))}
         </>
