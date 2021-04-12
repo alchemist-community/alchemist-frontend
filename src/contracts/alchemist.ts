@@ -13,7 +13,7 @@ const { aludelAddress, crucibleFactoryAddress, transmuterAddress } = config;
 export async function mintAndLock(
   signer: any,
   provider: any,
-  rawAmount: string
+  rawAmount: string,
 ): Promise<string> {
   const args = {
     aludel: aludelAddress,
@@ -75,7 +75,7 @@ export async function mintAndLock(
     amount,
     deadline
   );
-
+  
   console.log("Sign Lock");
 
   const permission = await signPermission(
