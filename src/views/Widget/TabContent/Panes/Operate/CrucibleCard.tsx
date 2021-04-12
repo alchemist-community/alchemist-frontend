@@ -188,15 +188,12 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   }}
                 >
                   Minted{" "}
-<<<<<<< Updated upstream
-                  {dayjs(lpStats.deposits[index]?.timestamp * 1000).fromNow()}
-=======
                   {dayjs(crucible.mintTimestamp * 1000).format("MMM-DD YYYY")}
->>>>>>> Stashed changes
                 </span>
               )}
             </Flex>
           </Flex>
+          s
           <Box
             mt="8"
             fontWeight="semibold"
