@@ -107,6 +107,7 @@ const Web3Provider: React.FC = (props) => {
       skip: !crucibles[0], // Must have address to query uniswap LP's
     }
   );
+  console.log("Crucibles", crucibles);
 
   if (pairHistoryData) {
     console.log("PAIRS", pairHistoryData);

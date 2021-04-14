@@ -82,14 +82,14 @@ export const createPairHistoryQuery = (
   timestamps: number[]
 ) => {
   let queryString = ``;
-  console.log("TIMESTAMPS", timestamps);
+  console.log("Lt", timestamps[0], "Gt", timestamps[0] - 3600);
   timestamps.map((timestamp) => {
     queryString += `
       pairHourDatas(
         where: {
           pair: "${address}"
-          hourStartUnix_lt: ${timestamp}
-          hourStartUnix_gt: ${timestamp - 3600}
+          hourStartUnix_lte: ${timestamp}
+          hourStartUnix_gte: ${timestamp - 3600}
         }
       ) {
         id
