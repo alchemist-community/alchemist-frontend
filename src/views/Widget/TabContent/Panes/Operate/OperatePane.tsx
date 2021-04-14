@@ -217,7 +217,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 {modalOperation === "withdraw" ? (
                   <>
                     Before withdrawing your LP tokens from your crucible, you
-                    must first unstake and claim your rewards.
+                    must first unsubscribe them from the Aludel program and claim your rewards.
                   </>
                 ) : modalOperation === "unstake" ? (
                   <>
@@ -226,7 +226,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     {network === 1 && (
                       <>
                         <br /><br />
-                        Your unsubscribed LP tokens will be retrained in your Crucible, and you'll be able to then withdraw them into your wallet.
+                        Your unsubscribed LP tokens will be retained in your Crucible, and you'll be able to then withdraw them into your wallet.
                         <br /><br />
                         Before unstaking you'll need to add a new network
                         provider following{" "}

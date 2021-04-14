@@ -400,7 +400,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          <Text fontSize="sm">
+          <Text fontSize={["xs", "sm"]}>
             Increase Aludel LP Subscription
           </Text>
         </Button>
@@ -420,7 +420,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          <Text fontSize="sm">
+          <Text fontSize={["xs", "sm"]}>
             Transfer Crucible
           </Text>
         </Button>
@@ -439,7 +439,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          <Text fontSize="sm">
+          <Text fontSize={["xs", "sm"]}>
             Claim Rewards and Unsubscribe LP
           </Text>
         </Button>
@@ -458,7 +458,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-         <Text fontSize="sm">
+         <Text fontSize={["xs", "sm"]}>
             Withdraw Unsubscribed LP
           </Text>
         </Button>

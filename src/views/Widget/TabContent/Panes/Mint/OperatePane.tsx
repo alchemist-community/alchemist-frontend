@@ -76,7 +76,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             isExternal
             href="https://app.uniswap.org/#/add/0x88acdd2a6425c3faae4bc9650fd7e27e0bebb7ab/ETH"
           >
-            Uniswap.
+            Uniswap
           </Link>
           .
         </Text>
