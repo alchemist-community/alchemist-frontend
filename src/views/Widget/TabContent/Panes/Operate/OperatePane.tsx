@@ -207,7 +207,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             <ModalContent>
               <ModalHeader>
                 {modalOperation === "withdraw"
-                  ? "Unstake Unsubscribed LP"
+                  ? "Withdraw Unsubscribed LP from Crucible"
                   : modalOperation === "unstake"
                   ? "Claim Aludel Rewards and Unsubscribe LP"
                   : "Increase Aludel LP Subscription"}

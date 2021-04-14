@@ -455,7 +455,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
           }}
         >
          <Text fontSize="sm">
-            Unstake Unsubscribed LP
+            Withdraw Unsubscribed LP
           </Text>
         </Button>
         </SimpleGrid>
