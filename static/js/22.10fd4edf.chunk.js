@@ -1,2 +1,0 @@
-(this["webpackJsonpln2tbtc-client"]=this["webpackJsonpln2tbtc-client"]||[]).push([[22],{1e3:function(n,t){},1075:function(n,t){},1098:function(n,t){},1123:function(n,t){},997:function(n,t){}}]);
-//# sourceMappingURL=22.10fd4edf.chunk.js.map
