@@ -207,10 +207,10 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             <ModalContent>
               <ModalHeader>
                 {modalOperation === "withdraw"
-                  ? "Withdraw"
+                  ? "Unstake Unsubscribed LP"
                   : modalOperation === "unstake"
-                  ? "Unstake and claim"
-                  : "Increase Stake"}
+                  ? "Claim Aludel Rewards and Unsubscribe LP"
+                  : "Increase Aludel LP Subscription"}
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
@@ -222,10 +222,12 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 ) : modalOperation === "unstake" ? (
                   <>
                     You are claiming {selectedRewards?.tokenRewards} MIST and{" "}
-                    {selectedRewards?.etherRewards} Ether rewards.
+                    {selectedRewards?.etherRewards} Ether rewards. <br /><br />Claiming rewards comes with the penalty of unsubscribing your MIST-ETH LP tokens from the Aludel Rewards program and resetting your rewards multiplier.
                     {network === 1 && (
                       <>
-                        <br />
+                        <br /><br />
+                        Your unsubscribed LP tokens will be retrained in your Crucible, and you'll be able to then withdraw them into your wallet.
+                        <br /><br />
                         Before unstaking you'll need to add a new network
                         provider following{" "}
                         <Link
@@ -317,7 +319,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   {modalOperation === "withdraw"
                     ? "Withdraw"
                     : modalOperation === "unstake"
-                    ? "Unstake and claim"
+                    ? "Claim Rewards and Unsubscribe LP"
                     : "Increase stake"}
                 </Button>
               </ModalFooter>

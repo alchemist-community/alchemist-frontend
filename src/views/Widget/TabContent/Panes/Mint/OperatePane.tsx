@@ -142,7 +142,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             monitorTx(hash);
           }}
         >
-          Mint Crucible and Stake
+          <Text fontSize={['xs', 'xs', 'md']}>
+            Mint Crucible and Subscribe LP to Aludel
+          </Text>
         </Button>
       ) : (
         <Button
