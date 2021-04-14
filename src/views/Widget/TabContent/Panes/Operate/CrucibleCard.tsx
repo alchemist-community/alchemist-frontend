@@ -107,7 +107,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   _hover={isBalanceTrunc ? { cursor: "pointer" } : undefined}
                   as="h2"
                   fontWeight="semibold"
-                > 
+                >
                   <strong>Total Balance: </strong>
                   {!expandBalance ? (
                     <>
@@ -235,11 +235,15 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   <Stat>
                     <StatLabel>Earned ETH Rewards</StatLabel>
                     <StatNumber>
-                    {!isNaN(rewards.etherRewards) ? Number(rewards.etherRewards).toFixed(4) : "0"}
+                      {!isNaN(rewards.etherRewards)
+                        ? Number(rewards.etherRewards).toFixed(4)
+                        : "0"}
                     </StatNumber>
                     <StatHelpText>
                       <StatArrow type="increase" />$
-                      {!isNaN(rewards.etherRewards) ? (rewards.etherRewards * crucible.wethPrice).toFixed(0) : "0"}
+                      {!isNaN(rewards.etherRewards)
+                        ? (rewards.etherRewards * crucible.wethPrice).toFixed(0)
+                        : "0"}
                     </StatHelpText>
                   </Stat>
                 </Tooltip>
@@ -269,14 +273,14 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                     <StatNumber>
                       {`${Number(crucible?.wethValue).toFixed(3)}`}
                     </StatNumber>
-                    <StatHelpText>
+                    {/* <StatHelpText>
                       <StatArrow
                         type={netWethGainLoss > 0 ? "increase" : "decrease"}
                       />
                       {`${netWethGainLoss.toFixed(
                         3
                       )} Ξ  ($${netWethGainLossUSD.toFixed(0)})`}
-                    </StatHelpText>
+                    </StatHelpText> */}
                   </Stat>
                 </Tooltip>
                 <Tooltip
@@ -289,17 +293,17 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                     <StatNumber>
                       {`${Number(crucible?.mistValue).toFixed(3)}`}
                     </StatNumber>
-                    <StatHelpText>
+                    {/* <StatHelpText>
                       <StatArrow
                         type={netMistGainLoss > 0 ? "increase" : "decrease"}
                       />
                       {`${netMistGainLoss.toFixed(
                         3
                       )} · ($${netMistGainLossUSD.toFixed(0)})`}
-                    </StatHelpText>
+                    </StatHelpText> */}
                   </Stat>
                 </Tooltip>
-                <Tooltip
+                {/* <Tooltip
                   label="Total gains (USD) given the starting price of your ETH and MIST deposit into the Uniswap liquidity pool."
                   placement="top"
                   hasArrow={true}
@@ -312,7 +316,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                       {`$${cummulativeGainLossUSD.toFixed(0)}`}
                     </StatNumber>
                   </Stat>
-                </Tooltip>
+                </Tooltip> */}
               </StatGroup>
             </>
           )}
