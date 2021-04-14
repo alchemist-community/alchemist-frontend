@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { decimalCount } from "../../../utils";
 import { Button } from "@chakra-ui/button";
-import { Badge, Box, Flex, HStack, Text } from "@chakra-ui/layout";
+import { Badge, Box, Flex, HStack, SimpleGrid, Text } from "@chakra-ui/layout";
 import {
   Stat,
   StatLabel,
@@ -107,7 +107,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   _hover={isBalanceTrunc ? { cursor: "pointer" } : undefined}
                   as="h2"
                   fontWeight="semibold"
-                > 
+                >
                   <strong>Total Balance: </strong>
                   {!expandBalance ? (
                     <>
@@ -235,11 +235,15 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   <Stat>
                     <StatLabel>Earned ETH Rewards</StatLabel>
                     <StatNumber>
-                    {!isNaN(rewards.etherRewards) ? Number(rewards.etherRewards).toFixed(4) : "0"}
+                      {!isNaN(rewards.etherRewards)
+                        ? Number(rewards.etherRewards).toFixed(4)
+                        : "0"}
                     </StatNumber>
                     <StatHelpText>
                       <StatArrow type="increase" />$
-                      {!isNaN(rewards.etherRewards) ? (rewards.etherRewards * crucible.wethPrice).toFixed(0) : "0"}
+                      {!isNaN(rewards.etherRewards)
+                        ? (rewards.etherRewards * crucible.wethPrice).toFixed(0)
+                        : "0"}
                     </StatHelpText>
                   </Stat>
                 </Tooltip>
@@ -269,14 +273,14 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                     <StatNumber>
                       {`${Number(crucible?.wethValue).toFixed(3)}`}
                     </StatNumber>
-                    <StatHelpText>
+                    {/* <StatHelpText>
                       <StatArrow
                         type={netWethGainLoss > 0 ? "increase" : "decrease"}
                       />
                       {`${netWethGainLoss.toFixed(
                         3
                       )} Ξ  ($${netWethGainLossUSD.toFixed(0)})`}
-                    </StatHelpText>
+                    </StatHelpText> */}
                   </Stat>
                 </Tooltip>
                 <Tooltip
@@ -289,17 +293,17 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                     <StatNumber>
                       {`${Number(crucible?.mistValue).toFixed(3)}`}
                     </StatNumber>
-                    <StatHelpText>
+                    {/* <StatHelpText>
                       <StatArrow
                         type={netMistGainLoss > 0 ? "increase" : "decrease"}
                       />
                       {`${netMistGainLoss.toFixed(
                         3
                       )} · ($${netMistGainLossUSD.toFixed(0)})`}
-                    </StatHelpText>
+                    </StatHelpText> */}
                   </Stat>
                 </Tooltip>
-                <Tooltip
+                {/* <Tooltip
                   label="Total gains (USD) given the starting price of your ETH and MIST deposit into the Uniswap liquidity pool."
                   placement="top"
                   hasArrow={true}
@@ -312,7 +316,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                       {`$${cummulativeGainLossUSD.toFixed(0)}`}
                     </StatNumber>
                   </Stat>
-                </Tooltip>
+                </Tooltip> */}
               </StatGroup>
             </>
           )}
@@ -380,7 +384,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
         </Text>
       </Box>
       {/* <ButtonGroup isAttached variant="outline" mb={[4, 4, 0]} spacing="4" width="100%"> */}
-      <HStack mt={12}>
+      <SimpleGrid columns={[1,1,2]} spacing={4}>
         <Button
           isFullWidth
           color="white"
@@ -396,7 +400,9 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Increase Stake
+          <Text fontSize="sm">
+            Increase Aludel LP Subscription
+          </Text>
         </Button>
 
         <Button
@@ -414,10 +420,10 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Transfer Crucible
+          <Text fontSize="sm">
+            Transfer Crucible
+          </Text>
         </Button>
-      </HStack>
-      <HStack mt={4}>
         <Button
           isFullWidth
           color="white"
@@ -433,7 +439,9 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Unstake & Claim Rewards
+          <Text fontSize="sm">
+            Claim Rewards and Unsubscribe LP
+          </Text>
         </Button>
         <Button
           isFullWidth
@@ -450,9 +458,11 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Withdraw Unstaked
+         <Text fontSize="sm">
+            Withdraw Unsubscribed LP
+          </Text>
         </Button>
-      </HStack>
+        </SimpleGrid>
     </Box>
   );
 };
