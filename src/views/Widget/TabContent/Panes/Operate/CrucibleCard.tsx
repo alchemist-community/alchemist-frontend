@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { decimalCount } from "../../../utils";
 import { Button } from "@chakra-ui/button";
-import { Badge, Box, Flex, HStack, Text } from "@chakra-ui/layout";
+import { Badge, Box, Flex, HStack, SimpleGrid, Text } from "@chakra-ui/layout";
 import {
   Stat,
   StatLabel,
@@ -384,7 +384,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
         </Text>
       </Box>
       {/* <ButtonGroup isAttached variant="outline" mb={[4, 4, 0]} spacing="4" width="100%"> */}
-      <HStack mt={12}>
+      <SimpleGrid columns={[1,1,2]} spacing={4}>
         <Button
           isFullWidth
           color="white"
@@ -400,7 +400,9 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Increase Stake
+          <Text fontSize="sm">
+            Increase Aludel LP Subscription
+          </Text>
         </Button>
 
         <Button
@@ -418,10 +420,10 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Transfer Crucible
+          <Text fontSize="sm">
+            Transfer Crucible
+          </Text>
         </Button>
-      </HStack>
-      <HStack mt={4}>
         <Button
           isFullWidth
           color="white"
@@ -437,7 +439,9 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Unstake & Claim Rewards
+          <Text fontSize="sm">
+            Claim Rewards and Unsubscribe LP
+          </Text>
         </Button>
         <Button
           isFullWidth
@@ -454,9 +458,11 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
             setModalIsOpen(true);
           }}
         >
-          Withdraw Unstaked
+         <Text fontSize="sm">
+            Withdraw Unsubscribed LP
+          </Text>
         </Button>
-      </HStack>
+        </SimpleGrid>
     </Box>
   );
 };
