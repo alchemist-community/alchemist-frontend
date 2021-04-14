@@ -59,3 +59,97 @@ export const GET_PRICES = gql`
     }
   }
 `;
+// gql`
+// query getPrices{
+//       pairHourDatas(
+//         where: {
+//           pair: 0xcd6bcca48069f8588780dfa274960f15685aee0e
+//           hourStartUnix_lt: 1613653200
+//           hourStartUnix_gt: 1613649600
+//         }
+//       ) {
+//         id
+//         reserve0
+//         reserve1
+//         hourStartUnix
+//         reserveUSD
+//       }
+//     )
+// `
+
+export const createPairHistoryQuery = (
+  address: string,
+  timestamps: number[]
+) => {
+  let queryString = ``;
+  console.log("TIMESTAMPS", timestamps);
+  timestamps.map((timestamp) => {
+    queryString += `
+      pairHourDatas(
+        where: {
+          pair: "${address}"
+          hourStartUnix_lt: ${timestamp}
+          hourStartUnix_gt: ${timestamp - 3600}
+        }
+      ) {
+        id
+        reserve0
+        reserve1
+        hourStartUnix
+        reserveUSD
+      }
+    `;
+  });
+  let wrappedQuery = `query getPrices{${queryString}}`;
+  console.log("WRAPPED", wrappedQuery);
+  return gql`
+    ${wrappedQuery}
+  `;
+};
+
+// {
+//   liquidityPositions(id: "0x365595AB460cB664c77d4e038c9051f09D781065-0xcd6bcca48069f8588780dfa274960f15685aee0e") {
+//     id
+//     user{
+//       id
+//     }
+//     liquidityTokenBalance
+//   }
+// }
+
+// {
+//   pairDayDatas (where: {pairAddress: "0xcd6bcca48069f8588780dfa274960f15685aee0e", }){
+//     id
+//     pairAddress
+//     reserve0
+//     reserve1
+//     reserveUSD
+//     totalSupply
+//     token0{
+//       id
+//     }
+//     token1{
+//       id
+//     }
+//   }
+// }
+
+// pairHourDatas(where:{pair:"0xcd6bcca48069f8588780dfa274960f15685aee0e"} ){
+//   id
+//   reserve0
+//   reserve1
+//   hourStartUnix
+//   reserveUSD
+// }
+
+// pairHourDatas(where:{
+//   pair:"0xcd6bcca48069f8588780dfa274960f15685aee0e"
+//   hourStartUnix_gt: 1613653200
+//   hourStartUnix_lt: 1613658200
+// } ){
+//   id
+//   reserve0
+//   reserve1
+//   hourStartUnix
+//   reserveUSD
+// }

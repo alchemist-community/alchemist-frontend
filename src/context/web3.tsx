@@ -12,7 +12,11 @@ import { getTokenBalances } from "../contracts/getTokenBalances";
 import { getUniswapBalances } from "../contracts/getUniswapBalances";
 import { formatUnits } from "@ethersproject/units";
 import { useQuery } from "@apollo/client";
-import { GET_PRICES, GET_UNISWAP_MINTS } from "../queries/uniswap";
+import {
+  GET_PRICES,
+  GET_UNISWAP_MINTS,
+  createPairHistoryQuery,
+} from "../queries/uniswap";
 
 interface Rewards {
   etherRewards: any;
@@ -81,10 +85,39 @@ const Web3Provider: React.FC = (props) => {
     null as any
   );
   const [notify, setNotify] = useState<any>(null);
+
+  // GET USER'S LP DEPOSITS
   const { loading, error, data } = useQuery(GET_UNISWAP_MINTS, {
     variables: { userAddress: address },
     skip: !address, // Must have address to query uniswap LP's
   });
+
+  // GET PAIR HISTORY FOR MINTS
+  const {
+    loading: pairHistoryLoading,
+    error: pairHistoryError,
+    data: pairHistoryData,
+  } = useQuery(
+    createPairHistoryQuery(
+      "0xcd6bcca48069f8588780dfa274960f15685aee0e",
+      [1613653200]
+      // crucibles.map((crucible) => crucible.mintTimestamp)
+    ),
+    {
+      skip: !crucibles[0], // Must have address to query uniswap LP's
+    }
+  );
+
+  if (pairHistoryData) {
+    console.log("PAIRS", pairHistoryData);
+  }
+  if (pairHistoryError) {
+    console.log("ERROR", pairHistoryError);
+  }
+
+  if (pairHistoryLoading) {
+    console.log("LOADING", pairHistoryLoading);
+  }
 
   const {
     loading: pricesLoading,
