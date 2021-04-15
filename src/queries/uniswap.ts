@@ -82,7 +82,6 @@ export const createPairHistoryQuery = (
   timestamps: number[]
 ) => {
   let queryString = ``;
-  console.log("Lt", timestamps[0], "Gt", timestamps[0] - 3600);
   timestamps.map((timestamp) => {
     queryString += `
       pairHourDatas(
@@ -97,11 +96,23 @@ export const createPairHistoryQuery = (
         reserve1
         hourStartUnix
         reserveUSD
+        pair {
+          totalSupply
+        }
+      }
+      pairDayDatas(
+        where: {
+          pairAddress:"0xcd6bcca48069f8588780dfa274960f15685aee0e", 
+          date_lte:${timestamp}
+          date_gte:${timestamp - 3600 * 24} 
+        }){
+          totalSupply
+          reserve0
+          reserve1
       }
     `;
   });
   let wrappedQuery = `query getPrices{${queryString}}`;
-  console.log("WRAPPED", wrappedQuery);
   return gql`
     ${wrappedQuery}
   `;

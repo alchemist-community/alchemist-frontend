@@ -11,7 +11,7 @@ import { getOwnedCrucibles } from "../contracts/getOwnedCrucibles";
 import { getTokenBalances } from "../contracts/getTokenBalances";
 import { getUniswapBalances } from "../contracts/getUniswapBalances";
 import { formatUnits } from "@ethersproject/units";
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import {
   GET_PRICES,
   GET_UNISWAP_MINTS,
@@ -68,18 +68,26 @@ const Web3Provider: React.FC = (props) => {
   const [tokenBalances, setTokenBalances] = useState<any>({});
   const [networkStats, setNetworkStats] = useState<any>({});
   const [lpStats, setLpStats] = useState<any>();
-  const [crucibles, setCrucibles] = useState(
-    [] as {
-      id: string;
-      mintTimestamp: number;
-      balance: string;
-      lockedBalance: string;
-      owner: string;
-      cleanBalance?: string;
-      cleanLockedBalance?: string;
-      cleanUnlockedBalance?: any;
-    }[]
-  );
+  const [crucibles, setCrucibles] = useState([
+    {
+      cleanBalance: 0,
+      initialMistInLP: 0,
+      initialEthInLP: 0,
+      totalLpSupply: 0,
+    },
+  ] as {
+    id: string;
+    mintTimestamp: number;
+    balance: string;
+    lockedBalance: string;
+    owner: string;
+    cleanBalance: any;
+    totalLpSupply: any;
+    cleanLockedBalance?: any;
+    cleanUnlockedBalance?: any;
+    initialMistInLP?: any;
+    initialEthInLP?: any;
+  }[]);
   const [rewards, setRewards] = useState<any>();
   const [onboard, setOnboard] = useState<ReturnType<typeof initOnboard>>(
     null as any
@@ -93,33 +101,14 @@ const Web3Provider: React.FC = (props) => {
   });
 
   // GET PAIR HISTORY FOR MINTS
-  const {
-    loading: pairHistoryLoading,
-    error: pairHistoryError,
-    data: pairHistoryData,
-  } = useQuery(
+  const [loadPairs, { loading: loadingPairs, data: pairData }] = useLazyQuery(
     createPairHistoryQuery(
       "0xcd6bcca48069f8588780dfa274960f15685aee0e",
-      [1613653200]
-      // crucibles.map((crucible) => crucible.mintTimestamp)
-    ),
-    {
-      skip: !crucibles[0], // Must have address to query uniswap LP's
-    }
+      crucibles.length
+        ? crucibles.map((crucible) => crucible.mintTimestamp)
+        : [1615464000]
+    )
   );
-  console.log("Crucibles", crucibles);
-
-  if (pairHistoryData) {
-    console.log("PAIRS", pairHistoryData);
-  }
-  if (pairHistoryError) {
-    console.log("ERROR", pairHistoryError);
-  }
-
-  if (pairHistoryLoading) {
-    console.log("LOADING", pairHistoryLoading);
-  }
-
   const {
     loading: pricesLoading,
     error: pricesError,
@@ -170,54 +159,57 @@ const Web3Provider: React.FC = (props) => {
     }));
   }
 
-  const updateWallet = useCallback((wallet: any) => {
-    setWallet(wallet);
-    const ethersProvider = new ethers.providers.Web3Provider(wallet.provider);
-    let signer = ethersProvider.getSigner();
-    setProvider(ethersProvider);
-    setSigner(signer);
-    window.localStorage.setItem("selectedWallet", wallet.name);
-    getNetworkStats(signer).then(setNetworkStats);
-    getTokenBalances(signer).then((balances) => {
-      setTokenBalances(balances);
-      getOwnedCrucibles(signer, ethersProvider)
-        .then((ownedCrucibles) => {
-          let reformatted = ownedCrucibles.map((crucible) => ({
-            ...crucible,
-            cleanBalance: formatUnits(crucible.balance),
-            cleanLockedBalance: formatUnits(crucible.lockedBalance),
-            cleanUnlockedBalance: formatUnits(
-              crucible.balance.sub(crucible.lockedBalance)
-            ),
-            mistPrice: balances.mistPrice,
-            wethPrice: balances.wethPrice,
-            ...getUniswapBalances(
-              crucible.balance,
-              balances.lpMistBalance,
-              balances.lpWethBalance,
-              balances.totalLpSupply,
-              balances.wethPrice,
-              balances.mistPrice
-            ),
-          }));
-          setCrucibles(reformatted);
-          return getUserRewards(signer, ownedCrucibles);
-        })
-        .then((rewards) => {
-          if (rewards?.length) {
-            Promise.all(
-              rewards.map((reward: any) => {
-                return new Promise((resolve, reject) => {
-                  resolve(
-                    calculateMistRewards(signer, reward.currStakeRewards)
-                  );
-                });
-              })
-            ).then(setRewards);
-          }
-        });
-    });
-  }, []);
+  const updateWallet = useCallback(
+    (wallet: any) => {
+      setWallet(wallet);
+      const ethersProvider = new ethers.providers.Web3Provider(wallet.provider);
+      let signer = ethersProvider.getSigner();
+      setProvider(ethersProvider);
+      setSigner(signer);
+      window.localStorage.setItem("selectedWallet", wallet.name);
+      getNetworkStats(signer).then(setNetworkStats);
+      getTokenBalances(signer).then((balances) => {
+        setTokenBalances(balances);
+        getOwnedCrucibles(signer, ethersProvider)
+          .then((ownedCrucibles) => {
+            let reformatted = ownedCrucibles.map((crucible) => ({
+              ...crucible,
+              cleanUnlockedBalance: formatUnits(
+                crucible.balance.sub(crucible.lockedBalance)
+              ),
+              mistPrice: balances.mistPrice,
+              wethPrice: balances.wethPrice,
+              totalLpSupply: formatUnits(balances.totalLpSupply),
+              ...getUniswapBalances(
+                crucible.balance,
+                balances.lpMistBalance,
+                balances.lpWethBalance,
+                balances.totalLpSupply,
+                balances.wethPrice,
+                balances.mistPrice
+              ),
+            }));
+            setCrucibles(reformatted);
+            return getUserRewards(signer, ownedCrucibles);
+          })
+          .then((rewards) => {
+            !!crucibles.length && loadPairs();
+            if (rewards?.length) {
+              Promise.all(
+                rewards.map((reward: any) => {
+                  return new Promise((resolve, reject) => {
+                    resolve(
+                      calculateMistRewards(signer, reward.currStakeRewards)
+                    );
+                  });
+                })
+              ).then(setRewards);
+            }
+          });
+      });
+    },
+    [crucibles.length, loadPairs]
+  );
 
   useEffect(() => {
     const onboard = initOnboard({
@@ -237,6 +229,26 @@ const Web3Provider: React.FC = (props) => {
     setOnboard(onboard);
     setNotify(initNotify());
   }, [updateWallet]);
+
+  useEffect(() => {
+    if (pairData?.pairHourDatas?.length) {
+      setCrucibles((crucibles) => {
+        return crucibles.map((crucible, i) => {
+          let percentOfPool =
+            crucible.cleanBalance / pairData.pairDayDatas[i].totalSupply;
+          return {
+            ...crucible,
+            initialMistInLP: percentOfPool * pairData.pairDayDatas[i].reserve0,
+            initialEthInLP: percentOfPool * pairData.pairDayDatas[i].reserve1,
+            // supply: pairData.pairHourDatas[i].totalSupply,
+            ratio:
+              pairData.pairHourDatas[i].reserve0 /
+              pairData.pairHourDatas[i].reserve1,
+          };
+        });
+      });
+    }
+  }, [pairData]);
 
   useEffect(() => {
     const previouslySelectedWallet = window.localStorage.getItem(
