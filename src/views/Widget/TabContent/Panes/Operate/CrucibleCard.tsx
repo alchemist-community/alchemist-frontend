@@ -283,14 +283,16 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                     <StatNumber>
                       {`${Number(crucible?.wethValue).toFixed(3)}`}
                     </StatNumber>
-                    <StatHelpText>
-                      <StatArrow
-                        type={netWethGainLoss > 0 ? "increase" : "decrease"}
-                      />
-                      {`${netWethGainLoss.toFixed(
-                        3
-                      )} Ξ  ($${netWethGainLossUSD.toFixed(0)})`}
-                    </StatHelpText>
+                    {!!netWethGainLoss && (
+                      <StatHelpText>
+                        <StatArrow
+                          type={netWethGainLoss > 0 ? "increase" : "decrease"}
+                        />
+                        {`${netWethGainLoss.toFixed(
+                          3
+                        )} Ξ  ($${netWethGainLossUSD.toFixed(0)})`}
+                      </StatHelpText>
+                    )}
                   </Stat>
                 </Tooltip>
                 <Tooltip
@@ -303,30 +305,35 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                     <StatNumber>
                       {`${Number(crucible?.mistValue).toFixed(3)}`}
                     </StatNumber>
-                    <StatHelpText>
-                      <StatArrow
-                        type={netMistGainLoss > 0 ? "increase" : "decrease"}
-                      />
-                      {`${netMistGainLoss.toFixed(
-                        3
-                      )} · ($${netMistGainLossUSD.toFixed(0)})`}
-                    </StatHelpText>
+                    {!!netMistGainLoss && (
+                      <StatHelpText>
+                        <StatArrow
+                          type={netMistGainLoss > 0 ? "increase" : "decrease"}
+                        />
+                        {`${netMistGainLoss.toFixed(
+                          3
+                        )} · ($${netMistGainLossUSD.toFixed(0)})`}
+                      </StatHelpText>
+                    )}
                   </Stat>
                 </Tooltip>
-                <Tooltip
-                  label="Total gains (USD) given the starting price of your ETH and MIST deposit into the Uniswap liquidity pool."
-                  placement="top"
-                  hasArrow={true}
-                >
-                  <Stat>
-                    <StatLabel>
-                      Net {cummulativeGainLossUSD > 0 ? "Gain" : "Loss"}
-                    </StatLabel>
-                    <StatNumber>
-                      {`$${cummulativeGainLossUSD.toFixed(0)}`}
-                    </StatNumber>
-                  </Stat>
-                </Tooltip>
+                {!!cummulativeGainLossUSD && (
+                  <Tooltip
+                    label="Total gains (USD) given the starting price of your ETH and MIST deposit into the Uniswap liquidity pool."
+                    placement="top"
+                    hasArrow={true}
+                  >
+                    <Stat>
+                      <StatLabel>
+                        Net {cummulativeGainLossUSD > 0 ? "Gain" : "Loss"}
+                      </StatLabel>
+                      <StatNumber>
+                        {`$${cummulativeGainLossUSD.toFixed(0)}`}
+                      </StatNumber>
+                    </Stat>
+                  </Tooltip>
+                )}
+
                 <Tooltip
                   label="Total gains (USD) given the starting price of your ETH and MIST deposit into the Uniswap liquidity pool."
                   placement="top"
