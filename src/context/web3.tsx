@@ -103,9 +103,13 @@ const Web3Provider: React.FC = (props) => {
   });
 
   // GET PAIR HISTORY FOR MINTS
-  const [loadPairs, { loading: loadingPairs, data: pairData }] = useLazyQuery(
+  const [
+    loadPairs,
+    { loading: loadingPairs, error: pairError, data: pairData },
+  ] = useLazyQuery(
     createPairHistoryQuery(
       pairAddress,
+      // [1615464001, 1615264001]
       crucibles.length
         ? crucibles.map((crucible) => crucible.mintTimestamp)
         : [1615464000]
@@ -129,6 +133,10 @@ const Web3Provider: React.FC = (props) => {
   if (pricesError) {
     console.error("Error fetching prices from subgraph", pricesError);
   }
+  if (pairError) {
+    console.error("Error fetching prices from subgraph", pairError);
+  }
+
   if (data && !lpStats) {
     let totalAmountUSD = 0;
     let totalMistDeposited = 0;
@@ -233,19 +241,20 @@ const Web3Provider: React.FC = (props) => {
   }, [updateWallet]);
 
   useEffect(() => {
-    if (pairData?.pairHourDatas?.length) {
+    if (pairData) {
+      console.log("expand this", pairData);
       setCrucibles((crucibles) => {
         return crucibles.map((crucible, i) => {
           let percentOfPool =
-            crucible.cleanBalance / pairData.pairDayDatas[i].totalSupply;
+            crucible.cleanBalance / pairData[`pairDay${i}`][0].totalSupply;
           return {
             ...crucible,
-            initialMistInLP: percentOfPool * pairData.pairDayDatas[i].reserve0,
-            initialEthInLP: percentOfPool * pairData.pairDayDatas[i].reserve1,
-            // supply: pairData.pairHourDatas[i].totalSupply,
+            initialMistInLP:
+              percentOfPool * pairData[`pairDay${i}`][0].reserve0,
+            initialEthInLP: percentOfPool * pairData[`pairDay${i}`][0].reserve1,
             ratio:
-              pairData.pairHourDatas[i].reserve0 /
-              pairData.pairHourDatas[i].reserve1,
+              pairData[`pairHour${i}`][0].reserve0 /
+              pairData[`pairHour${i}`][0].reserve1,
           };
         });
       });

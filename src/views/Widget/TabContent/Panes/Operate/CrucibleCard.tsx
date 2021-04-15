@@ -222,7 +222,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   hasArrow={true}
                 >
                   <Stat>
-                    <StatLabel>Earned MIST Rewards</StatLabel>
+                    <StatLabel>MIST Rewards</StatLabel>
                     <StatNumber>
                       {!isNaN(rewards.tokenRewards)
                         ? Number(rewards.tokenRewards).toFixed(4)
@@ -243,7 +243,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   hasArrow={true}
                 >
                   <Stat>
-                    <StatLabel>Earned ETH Rewards</StatLabel>
+                    <StatLabel>ETH Rewards</StatLabel>
                     <StatNumber>
                       {!isNaN(rewards.etherRewards)
                         ? Number(rewards.etherRewards).toFixed(4)
@@ -255,6 +255,24 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                         ? (rewards.etherRewards * crucible.wethPrice).toFixed(0)
                         : "0"}
                     </StatHelpText>
+                  </Stat>
+                </Tooltip>
+                <Tooltip
+                  label="Total earned rewards in USD"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Stat>
+                    <StatLabel>Net Rewards</StatLabel>
+                    <StatNumber>
+                      {!isNaN(rewards.etherRewards) &&
+                      !isNaN(rewards.tokenRewards)
+                        ? `$${(
+                            rewards.etherRewards * crucible.wethPrice +
+                            rewards.tokenRewards * crucible.mistPrice
+                          ).toFixed(0)}`
+                        : "0"}
+                    </StatNumber>
                   </Stat>
                 </Tooltip>
               </StatGroup>
@@ -274,28 +292,6 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
               <Divider />
               <StatGroup mt={4} justifyContent="space-between">
                 <Tooltip
-                  label="Current ETH deposited in your staked liquidity pool tokens"
-                  placement="top"
-                  hasArrow={true}
-                >
-                  <Stat>
-                    <StatLabel>ETH Balance</StatLabel>
-                    <StatNumber>
-                      {`${Number(crucible?.wethValue).toFixed(3)}`}
-                    </StatNumber>
-                    {!!netWethGainLoss && (
-                      <StatHelpText>
-                        <StatArrow
-                          type={netWethGainLoss > 0 ? "increase" : "decrease"}
-                        />
-                        {`${netWethGainLoss.toFixed(
-                          3
-                        )} Ξ  ($${netWethGainLossUSD.toFixed(0)})`}
-                      </StatHelpText>
-                    )}
-                  </Stat>
-                </Tooltip>
-                <Tooltip
                   label="Current MIST deposited in your staked liquidity pool tokens"
                   placement="top"
                   hasArrow={true}
@@ -313,6 +309,28 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                         {`${netMistGainLoss.toFixed(
                           3
                         )} · ($${netMistGainLossUSD.toFixed(0)})`}
+                      </StatHelpText>
+                    )}
+                  </Stat>
+                </Tooltip>
+                <Tooltip
+                  label="Current ETH deposited in your staked liquidity pool tokens"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Stat>
+                    <StatLabel>ETH Balance</StatLabel>
+                    <StatNumber>
+                      {`${Number(crucible?.wethValue).toFixed(3)}`}
+                    </StatNumber>
+                    {!!netWethGainLoss && (
+                      <StatHelpText>
+                        <StatArrow
+                          type={netWethGainLoss > 0 ? "increase" : "decrease"}
+                        />
+                        {`${netWethGainLoss.toFixed(
+                          3
+                        )} Ξ  ($${netWethGainLossUSD.toFixed(0)})`}
                       </StatHelpText>
                     )}
                   </Stat>
