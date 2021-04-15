@@ -12,12 +12,14 @@ import { getTokenBalances } from "../contracts/getTokenBalances";
 import { getUniswapBalances } from "../contracts/getUniswapBalances";
 import { formatUnits } from "@ethersproject/units";
 import { useQuery, useLazyQuery } from "@apollo/client";
+import { config } from "../config/app";
 import {
   GET_PRICES,
   GET_UNISWAP_MINTS,
   createPairHistoryQuery,
 } from "../queries/uniswap";
 
+const { pairAddress, networkId } = config;
 interface Rewards {
   etherRewards: any;
   tokenRewards: any;
@@ -103,7 +105,7 @@ const Web3Provider: React.FC = (props) => {
   // GET PAIR HISTORY FOR MINTS
   const [loadPairs, { loading: loadingPairs, data: pairData }] = useLazyQuery(
     createPairHistoryQuery(
-      "0xcd6bcca48069f8588780dfa274960f15685aee0e",
+      pairAddress,
       crucibles.length
         ? crucibles.map((crucible) => crucible.mintTimestamp)
         : [1615464000]
@@ -193,7 +195,7 @@ const Web3Provider: React.FC = (props) => {
             return getUserRewards(signer, ownedCrucibles);
           })
           .then((rewards) => {
-            !!crucibles.length && loadPairs();
+            !!crucibles.length && networkId === 1 && loadPairs();
             if (rewards?.length) {
               Promise.all(
                 rewards.map((reward: any) => {
