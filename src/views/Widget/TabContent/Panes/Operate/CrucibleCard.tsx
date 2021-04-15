@@ -22,14 +22,17 @@ interface CrucibleCardProps {
     mintTimestamp: number;
     balance: string;
     lockedBalance: string;
-    cleanBalance: string;
-    cleanLockedBalance: string;
+    cleanBalance: any;
+    cleanLockedBalance: any;
     mistValue: string;
     wethValue: string;
     wethValueUsd: number;
     mistValueUsd: number;
     wethPrice: number;
     mistPrice: number;
+    initialMistInLP: any;
+    initialEthInLP: any;
+    totalLpSupply: any;
   };
   setModalOperation: Dispatch<
     SetStateAction<"withdraw" | "unstake" | "send" | "increaseStake">
@@ -69,15 +72,22 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
 
   const isBalanceTrunc = decimalCount(crucible?.cleanBalance) > 3;
   const isLockTrunc = decimalCount(crucible?.cleanLockedBalance) > 3;
+
   const netWethGainLoss =
-    Number(crucible.wethValue) - Number(lpStats?.totalWethDeposited);
-  const netWethGainLossUSD = netWethGainLoss * crucible.wethPrice;
+    Number(crucible.wethValue) - Number(crucible.initialEthInLP);
+
   const netMistGainLoss =
-    Number(crucible.mistValue) - Number(lpStats?.totalMistDeposited);
+    Number(crucible.mistValue) - Number(crucible.initialMistInLP);
+
   const netMistGainLossUSD = netMistGainLoss * crucible.mistPrice;
+  const netWethGainLossUSD = netWethGainLoss * crucible.wethPrice;
+
+  // const cummulativeGainLossUSD =
+  //   crucible?.wethValueUsd * 2 -
+  //   lpStats?.totalWethDeposited * lpStats.initialWethPriceUSD * 2;
+
   const cummulativeGainLossUSD =
-    crucible?.wethValueUsd * 2 -
-    lpStats?.totalWethDeposited * lpStats.initialWethPriceUSD * 2;
+    Number(netMistGainLossUSD) + Number(netWethGainLossUSD);
 
   return (
     <Box
@@ -212,7 +222,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   hasArrow={true}
                 >
                   <Stat>
-                    <StatLabel>Earned MIST Rewards</StatLabel>
+                    <StatLabel>MIST Rewards</StatLabel>
                     <StatNumber>
                       {!isNaN(rewards.tokenRewards)
                         ? Number(rewards.tokenRewards).toFixed(4)
@@ -233,7 +243,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   hasArrow={true}
                 >
                   <Stat>
-                    <StatLabel>Earned ETH Rewards</StatLabel>
+                    <StatLabel>ETH Rewards</StatLabel>
                     <StatNumber>
                       {!isNaN(rewards.etherRewards)
                         ? Number(rewards.etherRewards).toFixed(4)
@@ -245,6 +255,24 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                         ? (rewards.etherRewards * crucible.wethPrice).toFixed(0)
                         : "0"}
                     </StatHelpText>
+                  </Stat>
+                </Tooltip>
+                <Tooltip
+                  label="Total earned rewards in USD"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Stat>
+                    <StatLabel>Net Rewards</StatLabel>
+                    <StatNumber>
+                      {!isNaN(rewards.etherRewards) &&
+                      !isNaN(rewards.tokenRewards)
+                        ? `$${(
+                            rewards.etherRewards * crucible.wethPrice +
+                            rewards.tokenRewards * crucible.mistPrice
+                          ).toFixed(0)}`
+                        : "0"}
+                    </StatNumber>
                   </Stat>
                 </Tooltip>
               </StatGroup>
@@ -264,59 +292,80 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
               <Divider />
               <StatGroup mt={4} justifyContent="space-between">
                 <Tooltip
-                  label="Current ETH deposited in your staked liquidity pool tokens"
-                  placement="top"
-                  hasArrow={true}
-                >
-                  <Stat>
-                    <StatLabel>Current ETH Balance</StatLabel>
-                    <StatNumber>
-                      {`${Number(crucible?.wethValue).toFixed(3)}`}
-                    </StatNumber>
-                    {/* <StatHelpText>
-                      <StatArrow
-                        type={netWethGainLoss > 0 ? "increase" : "decrease"}
-                      />
-                      {`${netWethGainLoss.toFixed(
-                        3
-                      )} Ξ  ($${netWethGainLossUSD.toFixed(0)})`}
-                    </StatHelpText> */}
-                  </Stat>
-                </Tooltip>
-                <Tooltip
                   label="Current MIST deposited in your staked liquidity pool tokens"
                   placement="top"
                   hasArrow={true}
                 >
                   <Stat>
-                    <StatLabel>Current MIST Balance</StatLabel>
+                    <StatLabel>MIST Balance</StatLabel>
                     <StatNumber>
                       {`${Number(crucible?.mistValue).toFixed(3)}`}
                     </StatNumber>
-                    {/* <StatHelpText>
-                      <StatArrow
-                        type={netMistGainLoss > 0 ? "increase" : "decrease"}
-                      />
-                      {`${netMistGainLoss.toFixed(
-                        3
-                      )} · ($${netMistGainLossUSD.toFixed(0)})`}
-                    </StatHelpText> */}
+                    {!!netMistGainLoss && (
+                      <StatHelpText>
+                        <StatArrow
+                          type={netMistGainLoss > 0 ? "increase" : "decrease"}
+                        />
+                        {`${netMistGainLoss.toFixed(
+                          3
+                        )} · ($${netMistGainLossUSD.toFixed(0)})`}
+                      </StatHelpText>
+                    )}
                   </Stat>
                 </Tooltip>
-                {/* <Tooltip
-                  label="Total gains (USD) given the starting price of your ETH and MIST deposit into the Uniswap liquidity pool."
+                <Tooltip
+                  label="Current ETH deposited in your staked liquidity pool tokens"
                   placement="top"
                   hasArrow={true}
                 >
                   <Stat>
-                    <StatLabel>
-                      Cummulative {cummulativeGainLossUSD > 0 ? "Gain" : "Loss"}
-                    </StatLabel>
+                    <StatLabel>ETH Balance</StatLabel>
                     <StatNumber>
-                      {`$${cummulativeGainLossUSD.toFixed(0)}`}
+                      {`${Number(crucible?.wethValue).toFixed(3)}`}
+                    </StatNumber>
+                    {!!netWethGainLoss && (
+                      <StatHelpText>
+                        <StatArrow
+                          type={netWethGainLoss > 0 ? "increase" : "decrease"}
+                        />
+                        {`${netWethGainLoss.toFixed(
+                          3
+                        )} Ξ  ($${netWethGainLossUSD.toFixed(0)})`}
+                      </StatHelpText>
+                    )}
+                  </Stat>
+                </Tooltip>
+                <Tooltip
+                  label="Your percent of the Uniswap ETH/MIST liquidity pool"
+                  placement="top"
+                  hasArrow={true}
+                >
+                  <Stat>
+                    <StatLabel>% of Pool</StatLabel>
+                    <StatNumber>
+                      {`${(
+                        (crucible.cleanBalance / crucible.totalLpSupply) *
+                        100
+                      ).toFixed(4)}%`}
                     </StatNumber>
                   </Stat>
-                </Tooltip> */}
+                </Tooltip>
+                {!!cummulativeGainLossUSD && (
+                  <Tooltip
+                    label="Impermanment gains or loss (USD) due to arbitrage and fees on the Uniswap liquidity pool."
+                    placement="top"
+                    hasArrow={true}
+                  >
+                    <Stat>
+                      <StatLabel>
+                        Net LP {cummulativeGainLossUSD > 0 ? "Gain" : "Loss"}
+                      </StatLabel>
+                      <StatNumber>
+                        {`$${cummulativeGainLossUSD.toFixed(0)}`}
+                      </StatNumber>
+                    </Stat>
+                  </Tooltip>
+                )}
               </StatGroup>
             </>
           )}

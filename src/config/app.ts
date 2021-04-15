@@ -15,6 +15,7 @@ type Config = {
   appName: string;
   portisApiKey: string;
   infuraApiKey: string;
+  pairAddress: string;
 };
 
 export const config: Config =
@@ -34,6 +35,7 @@ export const config: Config =
         infuraApiKey: "00a5b13ef0cf467698571093487743e6",
         dappId: "ad454b00-3218-4403-95e9-22c3c7d3adc0",
         appName: "Alchemist",
+        pairAddress: "0xcd6bcca48069f8588780dfa274960f15685aee0e",
       }
     : {
         networkId: Network.RINKEBY,
@@ -50,4 +52,5 @@ export const config: Config =
         infuraApiKey: "00a5b13ef0cf467698571093487743e6",
         dappId: "ad454b00-3218-4403-95e9-22c3c7d3adc0",
         appName: "Alchemist",
+        pairAddress: "",
       };

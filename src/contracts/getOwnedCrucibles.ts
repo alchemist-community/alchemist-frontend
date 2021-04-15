@@ -27,17 +27,14 @@ export async function getOwnedCrucibles(signer: any, provider: any) {
     const owner = crucibleFactory.ownerOf(id);
     const balance = token.balanceOf(crucible.address);
     const lockedBalance = crucible.getBalanceLocked(lpTokenAddress);
-    const delegatedBalance = await crucible.getBalanceDelegated(
-      lpTokenAddress,
-      walletAddress
-    );
-    console.log("Delegated Blanace", formatUnits(delegatedBalance));
     return {
       id,
       mintTimestamp: (await provider.getBlock(data.blockNumber))?.timestamp,
       balance: await balance,
       lockedBalance: await lockedBalance,
       owner: await owner,
+      cleanBalance: formatUnits(await balance),
+      cleanLockedBalance: formatUnits(await lockedBalance),
     };
   });
   return (await Promise.all(crucibles)).filter(
