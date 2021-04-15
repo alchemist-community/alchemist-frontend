@@ -335,25 +335,8 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                     )}
                   </Stat>
                 </Tooltip>
-                {!!cummulativeGainLossUSD && (
-                  <Tooltip
-                    label="Total gains (USD) given the starting price of your ETH and MIST deposit into the Uniswap liquidity pool."
-                    placement="top"
-                    hasArrow={true}
-                  >
-                    <Stat>
-                      <StatLabel>
-                        Net {cummulativeGainLossUSD > 0 ? "Gain" : "Loss"}
-                      </StatLabel>
-                      <StatNumber>
-                        {`$${cummulativeGainLossUSD.toFixed(0)}`}
-                      </StatNumber>
-                    </Stat>
-                  </Tooltip>
-                )}
-
                 <Tooltip
-                  label="Total gains (USD) given the starting price of your ETH and MIST deposit into the Uniswap liquidity pool."
+                  label="Your percent of the Uniswap ETH/MIST liquidity pool"
                   placement="top"
                   hasArrow={true}
                 >
@@ -367,6 +350,22 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                     </StatNumber>
                   </Stat>
                 </Tooltip>
+                {!!cummulativeGainLossUSD && (
+                  <Tooltip
+                    label="Impermanment gains or loss (USD) due to arbitrage and fees on the Uniswap liquidity pool."
+                    placement="top"
+                    hasArrow={true}
+                  >
+                    <Stat>
+                      <StatLabel>
+                        Net LP {cummulativeGainLossUSD > 0 ? "Gain" : "Loss"}
+                      </StatLabel>
+                      <StatNumber>
+                        {`$${cummulativeGainLossUSD.toFixed(0)}`}
+                      </StatNumber>
+                    </Stat>
+                  </Tooltip>
+                )}
               </StatGroup>
             </>
           )}
