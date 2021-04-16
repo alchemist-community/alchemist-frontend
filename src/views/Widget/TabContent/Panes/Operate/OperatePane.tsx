@@ -136,7 +136,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     }
     await unstakeAndClaim(signer, monitorTx, selectedCrucible, amount);
     alert(
-      `You have unstaked your crucible. Remember to change your network back to ${networkName} and hit the refresh button to see your crucibles.`
+      `You have unsubscribed your crucible. Remember to change your network back to ${networkName} and hit the refresh button to see your crucibles.`
     );
     setModalIsOpen(false);
   };
@@ -278,7 +278,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   </>
                 ) : (
                   <>
-                    Increase your Crucible Subscription by depositing Uniswap
+                    Increase your Aludel Subscription by depositing Uniswap
                     Liquidity Pool tokens. You can get LP tokens by depositing
                     ETH and MIST to the trading pair{" "}
                     <Link
