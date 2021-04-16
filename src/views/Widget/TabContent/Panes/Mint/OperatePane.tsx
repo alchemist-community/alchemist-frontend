@@ -97,7 +97,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             </PopoverTrigger>
             <PopoverContent _focus={{ outline: "none" }}>
               <PopoverArrow />
-              <PopoverBody>How many LP tokens you want to stake.</PopoverBody>
+              <PopoverBody>How many LP tokens you want to subscribe to the Aludel rewards program.</PopoverBody>
             </PopoverContent>
           </Popover>
         </FormLabel>
