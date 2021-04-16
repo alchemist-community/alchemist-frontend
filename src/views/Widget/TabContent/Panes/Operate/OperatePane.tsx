@@ -19,7 +19,7 @@ import {
 } from "@chakra-ui/modal";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
-import { Spinner, Text } from "@chakra-ui/react";
+import { Spinner, Text, toast, useToast } from "@chakra-ui/react";
 import { mintAndLock } from "../../../../../contracts/alchemist";
 import { HiOutlineRefresh } from "react-icons/hi";
 import CrucibleCard from "./CrucibleCard";
@@ -70,6 +70,22 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
     constantFee: "",
     nodeAddress: "",
   });
+
+  const toast = useToast();
+
+  const id = "loading-crucibles";
+
+  useEffect(() => {
+    if (isLoading && !toast.isActive(id)) {
+      toast({
+        description: "Loading crucibles",
+        status: "info",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading]);
 
   // Check user LP balances and user's selected crucible for locked/unlocked balances
   const foundCrucible =
@@ -217,18 +233,27 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                 {modalOperation === "withdraw" ? (
                   <>
                     Before withdrawing your LP tokens from your crucible, you
-                    must first unsubscribe them from the Aludel program and claim your rewards.
+                    must first unsubscribe them from the Aludel program and
+                    claim your rewards.
                   </>
                 ) : modalOperation === "unstake" ? (
                   <>
                     You are claiming {selectedRewards?.tokenRewards} MIST and{" "}
-                    {selectedRewards?.etherRewards} Ether rewards. <br /><br />Claiming rewards comes with the penalty of unsubscribing your MIST-ETH LP tokens from the Aludel Rewards program and resetting your rewards multiplier.
+                    {selectedRewards?.etherRewards} Ether rewards. <br />
+                    <br />
+                    Claiming rewards results in unsubscribing your MIST-ETH LP
+                    tokens from the Aludel Rewards program and resetting your
+                    rewards multiplier.
                     {network === 1 && (
                       <>
-                        <br /><br />
-                        Your unsubscribed LP tokens will be retained in your Crucible, and you'll be able to then withdraw them into your wallet.
-                        <br /><br />
-                        Before unstaking you'll need to add a new network
+                        <br />
+                        <br />
+                        Your unsubscribed LP tokens will be retained in your
+                        Crucible, and you'll be able to then withdraw them into
+                        your wallet.
+                        <br />
+                        <br />
+                        Before unsubscribing you'll need to add a new network
                         provider following{" "}
                         <Link
                           color="brand.400"
@@ -237,14 +262,25 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                         >
                           this guide.
                         </Link>
+                        <br />
+                        <br />
+                        Further help can be found on the{" "}
+                        <Link
+                          color="brand.400"
+                          href="https://hackmd.io/@thegostep/%E2%9A%97%EF%B8%8F"
+                          isExternal
+                        >
+                          FAQs
+                        </Link>
+                        .
                       </>
                     )}
                   </>
                 ) : (
                   <>
-                    Increase your Crucible Stake by depositing Uniswap Liquidity
-                    Pool tokens. You can get LP tokens by depositing ETH and
-                    MIST to the trading pair{" "}
+                    Increase your Crucible Subscription by depositing Uniswap
+                    Liquidity Pool tokens. You can get LP tokens by depositing
+                    ETH and MIST to the trading pair{" "}
                     <Link
                       color="brand.400"
                       isExternal
@@ -320,7 +356,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     ? "Withdraw"
                     : modalOperation === "unstake"
                     ? "Claim Rewards and Unsubscribe LP"
-                    : "Increase stake"}
+                    : "Increase subscription"}
                 </Button>
               </ModalFooter>
             </ModalContent>
