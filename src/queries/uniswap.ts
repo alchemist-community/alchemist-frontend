@@ -113,7 +113,7 @@ export const createPairHistoryQuery = (
     `;
   });
   let wrappedQuery = `query getPrices{${queryString}}`;
-  console.log(wrappedQuery);
+  // console.log(wrappedQuery);
   return gql`
     ${wrappedQuery}
   `;
