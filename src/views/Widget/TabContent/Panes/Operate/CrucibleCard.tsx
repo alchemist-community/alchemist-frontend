@@ -130,7 +130,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                 </Box>
               </Tooltip>
               <Tooltip
-                label="View staked balance"
+                label="View subscribed balance"
                 placement="top"
                 hasArrow={true}
                 isDisabled={expandLock || !isLockTrunc}
@@ -156,7 +156,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                     </Box>
                     <Tooltip
                       hasArrow
-                      label="Staked amount"
+                      label="Subscribed amount"
                       bg="gray.600"
                       color="white"
                       placement="bottom-end"
@@ -292,7 +292,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
               <Divider />
               <StatGroup mt={4} justifyContent="space-between">
                 <Tooltip
-                  label="Current MIST deposited in your staked liquidity pool tokens"
+                  label="Current MIST deposited in your subscribed liquidity pool tokens"
                   placement="top"
                   hasArrow={true}
                 >
@@ -314,7 +314,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                   </Stat>
                 </Tooltip>
                 <Tooltip
-                  label="Current ETH deposited in your staked liquidity pool tokens"
+                  label="Current ETH deposited in your subscribed liquidity pool tokens"
                   placement="top"
                   hasArrow={true}
                 >
@@ -352,7 +352,7 @@ const CrucibleCard: React.FC<CrucibleCardProps> = (props) => {
                 </Tooltip>
                 {!!cummulativeGainLossUSD && (
                   <Tooltip
-                    label="Impermanment gains or loss (USD) due to arbitrage and fees on the Uniswap liquidity pool."
+                    label="Impermanent gains or loss (USD) due to arbitrage and fees on the Uniswap liquidity pool."
                     placement="top"
                     hasArrow={true}
                   >
