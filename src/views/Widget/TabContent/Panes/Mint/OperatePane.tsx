@@ -70,7 +70,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           <span role="img" aria-label="alembic">
             ⚗️
           </span>
-          /ETH liquidity pool on {" "}
+          /ETH liquidity pool on{" "}
           <Link
             color="brand.400"
             isExternal
@@ -142,7 +142,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
             monitorTx(hash);
           }}
         >
-          <Text fontSize={['xs', 'xs', 'md']}>
+          <Text fontSize={["xs", "xs", "md"]}>
             Mint Crucible and Subscribe LP to Aludel
           </Text>
         </Button>
@@ -160,16 +160,8 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         </Button>
       )}
       <Text color="gray.200" fontSize="sm" mt={4} px={2}>
-        Ledger wallets on Metamask don't support the signature types required,
-        so they won't work. See{" "}
-        <Link
-          color="brand.400"
-          href="https://github.com/MetaMask/metamask-extension/issues/10240"
-          isExternal
-        >
-          the github issue
-        </Link>{" "}
-        for more info.
+        Users have reported problems using Brave browser, Hardware wallets and
+        interacting through mobile phones.
       </Text>
     </>
   );
