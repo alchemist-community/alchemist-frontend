@@ -264,13 +264,13 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                         </Link>
                         <br />
                         <br />
-                        Further help can be found on the{" "}
+                        Further help can be found{" "}
                         <Link
                           color="brand.400"
-                          href="https://hackmd.io/@thegostep/%E2%9A%97%EF%B8%8F"
+                          href="https://hackmd.io/@alchemistcoin/SJibHzPUu"
                           isExternal
                         >
-                          FAQs
+                          here
                         </Link>
                         .
                       </>
