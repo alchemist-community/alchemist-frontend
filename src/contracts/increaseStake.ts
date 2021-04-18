@@ -47,7 +47,7 @@ export async function increaseStake(
 
   // validate balances
   // If unlocked LP balance is < amount, throw error
-  if ((await stakingToken.balanceOf(walletAddress)) < amount) {
+  if ((await stakingToken.balanceOf(walletAddress)).lt(amount)) {
     alert("You must have more Alchemist Liquidity Pool tokens");
     throw new Error("Stake amount exceeds available LP token balance");
   }
