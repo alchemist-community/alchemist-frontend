@@ -14,7 +14,7 @@ const links = [
   },
   {
     label: "FAQ",
-    href: "https://hackmd.io/@thegostep/BJ40PSVQd",
+    href: "https://hackmd.io/@alchemistcoin/HyJXT7tL_",
     isExternal: true,
   },
   {
