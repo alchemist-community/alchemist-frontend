@@ -284,7 +284,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     <Link
                       color="brand.400"
                       isExternal
-                      href="https://app.uniswap.org/#/add/0x88acdd2a6425c3faae4bc9650fd7e27e0bebb7ab/ETH"
+                      href="https://app.uniswap.org/#/add/v2/0x88ACDd2a6425c3FaAE4Bc9650Fd7E27e0Bebb7aB/ETH"
                     >
                       here.
                     </Link>
