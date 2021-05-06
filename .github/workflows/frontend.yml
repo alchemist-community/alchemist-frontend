@@ -28,7 +28,7 @@ jobs:
       - run: npm ci
       - run: CI=false REACT_APP_NETWORK_ID=1 npm run build
       - name: Deploy to Github Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v3.7.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: build
