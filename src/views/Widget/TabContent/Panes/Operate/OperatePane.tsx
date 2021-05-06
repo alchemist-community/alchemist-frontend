@@ -278,7 +278,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                   </>
                 ) : (
                   <>
-                    Increase your Aludel Subscription by depositing Uniswap
+                    Increase your Aludel Subscription by depositing Uniswap V2
                     Liquidity Pool tokens. You can get LP tokens by depositing
                     ETH and MIST to the trading pair{" "}
                     <Link
