@@ -131,11 +131,11 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         <Button
           size="lg"
           isFullWidth
-          isDisabled
           color="white"
           background="brand.400"
           _focus={{ boxShadow: "none" }}
           _hover={{ background: "brand.400" }}
+          isDisabled={lpBalance > maxStakeAmount}
           onClick={async () => {
             await readyToTransact();
             const hash: string = await mintAndLock(signer, provider, lpBalance);
@@ -159,8 +159,9 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           Connect Wallet
         </Button>
       )}
-      <Text color="white" fontSize="sm" mt={4} px={2}>
-        Minting on alchemist.farm has been disabled with the launch of our new beta site: <Link color="blue.400" href='https://crucible.alchemist.wtf' target="_blank">crucible.alchemist.wtf</Link>. For all the wallets that are not yet supported on the beta release, you will be able to continue using Alchemist.Farm for your interactions with existing Crucibles.
+      <Text color="gray.200" fontSize="sm" mt={4} px={2}>
+        Users have reported problems using Brave browser, Hardware wallets and
+        interacting through mobile phones.
       </Text>
     </>
   );
