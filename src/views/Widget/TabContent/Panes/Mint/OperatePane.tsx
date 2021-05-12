@@ -74,7 +74,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
           <Link
             color="brand.400"
             isExternal
-            href="https://app.uniswap.org/#/add/v2/0x88ACDd2a6425c3FaAE4Bc9650Fd7E27e0Bebb7aB/ETH"
+            href="http://lp.mist.alchemist.wtf"
           >
             Uniswap V2
           </Link>
