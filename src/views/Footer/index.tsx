@@ -14,7 +14,7 @@ const links = [
   },
   {
     label: "FAQ",
-    href: "https://hackmd.io/@alchemistcoin/HyJXT7tL_",
+    href: "https://docs.alchemist.wtf/mist/crucible/getting-started",
     isExternal: true,
   },
   {

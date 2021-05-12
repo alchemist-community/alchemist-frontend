@@ -267,7 +267,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                         Further help can be found{" "}
                         <Link
                           color="brand.400"
-                          href="https://hackmd.io/@alchemistcoin/SJibHzPUu"
+                          href="https://docs.alchemist.wtf/mist/crucible/guides-alchemist.farm/how-to-claim-rewards-and-unsubscribe-your-lp-from-the-aludel-using-the-taichi-network"
                           isExternal
                         >
                           here
@@ -284,7 +284,7 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
                     <Link
                       color="brand.400"
                       isExternal
-                      href="https://app.uniswap.org/#/add/v2/0x88ACDd2a6425c3FaAE4Bc9650Fd7E27e0Bebb7aB/ETH"
+                      href="http://lp.mist.alchemist.wtf"
                     >
                       here.
                     </Link>
