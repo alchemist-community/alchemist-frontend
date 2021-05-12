@@ -131,11 +131,11 @@ const OperatePane: React.FC<OperatePaneProps> = (props) => {
         <Button
           size="lg"
           isFullWidth
-          isDisabled
           color="white"
           background="brand.400"
           _focus={{ boxShadow: "none" }}
           _hover={{ background: "brand.400" }}
+          isDisabled
           onClick={async () => {
             await readyToTransact();
             const hash: string = await mintAndLock(signer, provider, lpBalance);
