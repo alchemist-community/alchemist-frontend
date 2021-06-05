@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/layout";
+import { Box, Flex, Link, Text } from "@chakra-ui/layout";
 import { Image } from "@chakra-ui/image";
 import Footer from "../views/Footer";
 import Header from "../views/Header";
@@ -6,8 +6,9 @@ import Body from "../views/Body";
 import bg from "../img/bg.jpg";
 import pool from "../img/pool.png";
 import React from "react";
+import { Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/modal";
 
-interface LayoutProps {}
+interface LayoutProps { }
 
 const Layout: React.FC<LayoutProps> = () => {
   return (
@@ -37,6 +38,16 @@ const Layout: React.FC<LayoutProps> = () => {
         <Body />
       </Box>
       <Footer />
+      <Modal isOpen onClose={() => null} closeOnOverlayClick={false} closeOnEsc={false} size='xl'>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>This site is no longer being maintained</ModalHeader>
+          <ModalBody mb={4}>
+            <Text>Our new and improved site can be found here:</Text>
+            <Link href='https://crucible.alchemist.wtf' color="blue.400">https://crucible.alchemist.wtf</Link>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Flex>
   );
 };
